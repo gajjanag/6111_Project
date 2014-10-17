@@ -1,0 +1,6 @@
+# doc stuff
+*.pdf
+*.dvi
+*.log
+*.ps
+*.synctex.gz
