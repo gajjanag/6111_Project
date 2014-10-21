@@ -4,3 +4,4 @@
 *.log
 *.ps
 *.synctex.gz
+*.aux
