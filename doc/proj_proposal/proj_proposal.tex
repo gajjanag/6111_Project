@@ -26,10 +26,52 @@
 \section{Implementation}
 %TODO: Fill out module details (James), also insert the block diagram
 
+
+
 \section{Timeline}
 %TODO: Add a week by week timeline (Shawn), Gantt chart if it is not too hard
+There is five weeks time in which to complete the project. In these five weeks, we envision four major stages to the project: 
+\begin{enumerate}
+	\item Initial attempt at implementing each block \hfill \\
+		Time: 2 weeks \hfill \\
+		In this stage, each team member will create an initial implementation of modules he is responsible for. He is expected to have his modules working as a standalone component. Each module will include simple test benches in order to facilitate this goal. 
+	\item Module Integration; System Building \hfill \\
+		Time: 2 weeks \hfill \\
+		This stage will connect the individual modules from stage 1 together to form the initial system. This is expected to be the most hands-on and collaborative stage, as mistakes will often have a domino effect on the system. In the worst case, we may have to modify parts of our system design or change the behavior of some modules in order to compensate; in lesser situations, bugs may be uncovered and fixed. This is expected to be the lengthiest stage. 
+	\item Intensive debugging \hfill \\
+		Time: 1 week \hfill \\
+		After the system has been put together and functions minimally, the team will focus on debugging. The goal of debugging is to make the system robust. Testing will include the common usage scenarios as well as edge cases, and a limited set of malicious inputs. 
+	\item Stretch Goals \hfill \\ 
+		Time: As available \hfill \\
+		Once the system satisfies the test coverage plan, the team will focus on adding additional features to the system, as constrained by time. These possible additional features are described below.
+
+\end{enumerate}
 
 \section{Individual Responsibility}
-%TODO: Add a few lines about each of our work (Shawn)
+\begin{description}
+	\item{Ganesh}
+	\begin{itemize}
+		\item Algorithm - Identifying the appropriate algorithm, considering factors of complexity, hardware constraints, and implementability. 
+		\item Transform Module - Implementing the algorithm, with input parameters
+	\end{itemize}
+	\item{James}
+	\begin{itemize}
+		\item Accelerometer - Identifying the appropriate type and model, interfacing with the labkit.
+		\item Calibration module - Entering calibration mode, collecting data, making it available as necessary. 
+	\end{itemize}
+	\item{Shantanu}
+	\begin{itemize}
+		\item Audio output - Identifying necessary audio outputs, triggers for audio. Recording audio, transforming it into the appropriate format. 
+		\item Audio module - loading audio onto the labkit, standardizing trigger parameters. 
+		\item Test Setup - attaching accelerometer to projector, wiring to labkit. 
+	\end{itemize}
+\end{description}
 
+\section{Stretch Goals}
+	\begin{itemize}
+		\item Camera-based adjustment \hfill \\
+			The camera-based adjustment would augment the accelerometer by displaying a test pattern output to the projector and using an edge detection/corner detection algorithm to determine the skew caused by the projector's tilt. It would be able to correct the projector image in a wider variety of scenarios, including variable distance to the screen. This is difficult as it is complex and time consuming to interface the camera with the labkit and implement these additional algorithms. 
+		\item External display of transformed image\hfill \\
+			View the transformed image on a non-distorted screen, such as a PC LCD monitor. 
+	\end{itemize}
 \end{document}
