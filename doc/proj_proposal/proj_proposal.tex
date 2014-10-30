@@ -24,7 +24,36 @@
 %TODO: Fill out introduction/motivation (Ganesh)
 
 \section{Implementation}
-%TODO: Fill out module details (James), also insert the block diagram
+
+\subsection{Block Diagram}
+\includegraphics{img/block_diag}
+
+\subsection{Modules}
+\begin{description}
+	\item{Accelerometer}
+	\begin{itemize}
+		\item Includes logic to convert signals from the accelerometer (whether in analog or SPI digital format) to normalized digital values that can be fed to the tilt angle estimation engine
+	\end{itemize}
+	\item{Tilt angle estimation engine}
+	\begin{itemize}
+		\item When calibration button is pressed, updates state to set the current values from the accelerometer as the reference values for an untitled projector
+		\item By comparing the values from the accelerometer to the stored reference values, produces estimates of the angles of tilt in the two axes of interest
+	\end{itemize}
+	\item{Audio}
+	\begin{itemize}
+		\item When the calibration help button is pressed, goes into state in which it periodically plays a recording instructing the user to adjust the projector so that its output looks unskewed and then hit the calibration button
+		\item When the calibration button is pressed, exits the help state if it is in it
+    \item When a change in the current angles of projector tilt is detected, plays recordings that specify the angles
+		\item Audio samples are stored on compact flash
+	\end{itemize}
+  \item{Frame correction system}
+	\begin{itemize}
+		\item Based on the current angles of projector tilt, adjusts an incoming frame from the camera using a linear transformation (implemented with a matrix multiplication) so that when it is projected it appears unskewed
+		\item Uses the ZBT scratch space to store each frame from the camera (reading pixels from the stored frame for the matrix multiplication) and possibly the results of intermediate computations
+    \item Stores the output frame from the linear transformation in a display buffer (also ZBT)
+    \item An auxiliary module will feed the pixels in the display buffer to the VGA output at the appropriate clock edges
+	\end{itemize}
+\end{description}
 
 
 
