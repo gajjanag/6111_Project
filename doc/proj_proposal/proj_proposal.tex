@@ -22,11 +22,22 @@
 
 \section{Introduction}
 %TODO: Fill out introduction/motivation (Ganesh)
+Due to the advances in semiconductor technology, today's display projectors can incorporate fairly sophisticated digital processing algorithms for various enhancements to the visual appearance.
+Moreover, there is an increasing prevalence of portable projectors that benefit from fast, automated setup.
+One desired functionality is keystone/tilt correction.
+This means that even when the projector is tilted, the projector is able to ``pre-warp'' the image so that its output appears unskewed.
+In this project, we will be projecting the output of a camera, and will connect the camera's output to the FPGA board, and the FPGA board's VGA output to the projector.
+We will mount an accelerometer on the projector and measure its signals to determine the projector's tilt angles on two axes.
+We will run algorithms on the FPGA that correct the camera output based on the tilt angles and produce the results at the VGA output for the projector to display.
+We will calibrate the accelerometer through a special calibration mode.
+As a stretch goal, we will also attempt to use the camera combined with the accelerometer itself to calibrate by projecting a known image, such as a white rectangle.
+This should result in a gain to the quality of keystone/tilt correction, and one of our goals is to qualitatively observe and quantify such differences in quality.
+Finally, we will design digital logic that produces a voice with help commands, and also lets the user know of the new tilt angles whenever they are changed.
 
 \section{Implementation}
 
 \subsection{Block Diagram}
-\includegraphics{img/block_diag}
+\includegraphics[width=\textwidth]{img/block_diag}
 
 \subsection{Modules}
 \begin{description}
@@ -59,18 +70,18 @@
 
 \section{Timeline}
 %TODO: Add a week by week timeline (Shawn), Gantt chart if it is not too hard
-There is five weeks time in which to complete the project. In these five weeks, we envision four major stages to the project: 
+There is five weeks time in which to complete the project. In these five weeks, we envision four major stages to the project:
 \begin{enumerate}
 	\item Initial attempt at implementing each block \hfill \\
 		Time: 2 weeks \hfill \\
-		In this stage, each team member will create an initial implementation of modules he is responsible for. He is expected to have his modules working as a standalone component. Each module will include simple test benches in order to facilitate this goal. 
+		In this stage, each team member will create an initial implementation of modules he is responsible for. He is expected to have his modules working as a standalone component. Each module will include simple test benches in order to facilitate this goal.
 	\item Module Integration; System Building \hfill \\
 		Time: 2 weeks \hfill \\
-		This stage will connect the individual modules from stage 1 together to form the initial system. This is expected to be the most hands-on and collaborative stage, as mistakes will often have a domino effect on the system. In the worst case, we may have to modify parts of our system design or change the behavior of some modules in order to compensate; in lesser situations, bugs may be uncovered and fixed. This is expected to be the lengthiest stage. 
+		This stage will connect the individual modules from stage 1 together to form the initial system. This is expected to be the most hands-on and collaborative stage, as mistakes will often have a domino effect on the system. In the worst case, we may have to modify parts of our system design or change the behavior of some modules in order to compensate; in lesser situations, bugs may be uncovered and fixed. This is expected to be the lengthiest stage.
 	\item Intensive debugging \hfill \\
 		Time: 1 week \hfill \\
-		After the system has been put together and functions minimally, the team will focus on debugging. The goal of debugging is to make the system robust. Testing will include the common usage scenarios as well as edge cases, and a limited set of malicious inputs. 
-	\item Stretch Goals \hfill \\ 
+		After the system has been put together and functions minimally, the team will focus on debugging. The goal of debugging is to make the system robust. Testing will include the common usage scenarios as well as edge cases, and a limited set of malicious inputs.
+	\item Stretch Goals \hfill \\
 		Time: As available \hfill \\
 		Once the system satisfies the test coverage plan, the team will focus on adding additional features to the system, as constrained by time. These possible additional features are described below.
 
@@ -80,27 +91,27 @@ There is five weeks time in which to complete the project. In these five weeks, 
 \begin{description}
 	\item{Ganesh}
 	\begin{itemize}
-		\item Algorithm - Identifying the appropriate algorithm, considering factors of complexity, hardware constraints, and implementability. 
+		\item Algorithm - Identifying the appropriate algorithm, considering factors of complexity, hardware constraints, and implementability.
 		\item Transform Module - Implementing the algorithm, with input parameters
 	\end{itemize}
 	\item{James}
 	\begin{itemize}
 		\item Accelerometer - Identifying the appropriate type and model, interfacing with the labkit.
-		\item Calibration module - Entering calibration mode, collecting data, making it available as necessary. 
+		\item Calibration module - Entering calibration mode, collecting data, making it available as necessary.
 	\end{itemize}
 	\item{Shantanu}
 	\begin{itemize}
-		\item Audio output - Identifying necessary audio outputs, triggers for audio. Recording audio, transforming it into the appropriate format. 
-		\item Audio module - loading audio onto the labkit, standardizing trigger parameters. 
-		\item Test Setup - attaching accelerometer to projector, wiring to labkit. 
+		\item Audio output - Identifying necessary audio outputs, triggers for audio. Recording audio, transforming it into the appropriate format.
+		\item Audio module - loading audio onto the labkit, standardizing trigger parameters.
+		\item Test Setup - attaching accelerometer to projector, wiring to labkit.
 	\end{itemize}
 \end{description}
 
 \section{Stretch Goals}
 	\begin{itemize}
 		\item Camera-based adjustment \hfill \\
-			The camera-based adjustment would augment the accelerometer by displaying a test pattern output to the projector and using an edge detection/corner detection algorithm to determine the skew caused by the projector's tilt. It would be able to correct the projector image in a wider variety of scenarios, including variable distance to the screen. This is difficult as it is complex and time consuming to interface the camera with the labkit and implement these additional algorithms. 
+			The camera-based adjustment would augment the accelerometer by displaying a test pattern output to the projector and using an edge detection/corner detection algorithm to determine the skew caused by the projector's tilt. It would be able to correct the projector image in a wider variety of scenarios, including variable distance to the screen. This is difficult as it is complex and time consuming to interface the camera with the labkit and implement these additional algorithms.
 		\item External display of transformed image\hfill \\
-			View the transformed image on a non-distorted screen, such as a PC LCD monitor. 
+			View the transformed image on a non-distorted screen, such as a PC LCD monitor.
 	\end{itemize}
 \end{document}
