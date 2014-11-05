@@ -1,0 +1,163 @@
+\documentclass{beamer}
+% beamer is 128x96 mm
+\usepackage{pgf,tikz}
+\usepackage{import}
+\usepackage{subfig}
+\usepackage{float}
+\usepackage{xmpmulti}
+\usepackage{hyperref}
+
+\usetikzlibrary{arrows}
+
+\title{The Power of Transformations in Geometry}
+\author{Ganesh Ajjanagadde \and Shantanu Jain \and James Thomas}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+%AREA REVIEW SLIDE-------------------------------------------------------------
+\begin{frame}
+\frametitle{Areas of Shapes}
+
+\begin{columns}[c]
+
+\column{0.5\textwidth}
+\begin{figure}[t]
+\onslide<1-> \includegraphics[height=0.3\textheight]{./img/rectangle.pdf}
+\end{figure}
+\begin{figure}[b]
+\onslide<3-> \includegraphics[height=0.3\textheight]{./img/right_triangle.pdf}
+\end{figure}
+
+\column{0.5 \textwidth}
+\onslide<1-> Area =
+\onslide<2-> $AB \times BC$ \\
+\vspace{40mm}
+\onslide<3-> Area =
+\onslide<4-> $\frac{AB \times BC}{2}$
+
+\end{columns}
+\end{frame}
+%AREA REVIEW SLIDE-------------------------------------------------------------
+
+%SIMILAR TRIANGLES REVIEW SLIDE------------------------------------------------
+\begin{frame}
+\frametitle{Similar Triangles}
+
+\begin{figure}[t]
+\begin{center}
+\onslide<1-> \includegraphics[height=0.4\textheight]{./img/similar_triangles.pdf}
+\end{center}
+\end{figure}
+
+\onslide<1-> All equilateral triangles are similar to each other!
+
+\end{frame}
+%SIMILAR TRIANGLES REVIEW SLIDE------------------------------------------------
+
+%PYTHAGOREAN THEOREM STATEMENT SLIDE-------------------------------------------
+\begin{frame}
+\frametitle{The Pythagorean Theorem}
+
+\begin{figure}[t]
+\begin{center}
+\onslide<1-> \includegraphics[height=0.6\textheight]{./img/pythag_thm/pythag_thm_statement.pdf}
+\end{center}
+\end{figure}
+
+\onslide<2-> Over 1000 proofs known for this theorem!
+
+\end{frame}
+%PYTHAGOREAN THEOREM STATEMENT SLIDE-------------------------------------------
+
+%PYTHAGOREAN THEOREM PROOF-----------------------------------------------------
+\begin{frame}
+\frametitle{A Proof of the Pythagoren Theorem}
+\multiinclude[format=pdf,graphics={height=0.5\textheight},start=1]{./img/pythag_thm/pythag_thm_proof_new}
+
+\pause
+
+\begin{align*}
+\onslide<5-> {(a + b)^2 &= c^2 + 4\frac{ab}{2}} \\
+\onslide<6-> {a^2 + 2ab + b^2 &= c^2 + 2ab} \\
+\onslide<7-> {a^2 + b^2 &= c^2}
+\end{align*}
+\end{frame}
+%PYTHAGOREAN THEOREM PROOF-----------------------------------------------------
+
+%NAPOLEON THEOREM STATEMENT SLIDE----------------------------------------------
+\begin{frame}
+\frametitle{Napoleon's Theorem}
+
+\begin{columns}[c]
+\column{0.5\textwidth}
+\onslide<1-> \includegraphics[height=0.6\textheight]{./img/napoleon.jpg}
+
+\column{0.5\textwidth}
+\onslide<2-> \includegraphics[height=0.6\textheight]{./img/napoleon_thm/napoleon_thm_proof-start_new.pdf}
+\end{columns}
+\vspace{10mm}
+\onslide<2-> {For an arbitrary $\triangle ABC$, outer triangles $\triangle ABC_1, \triangle BCA_1, \triangle CAB_1$ are equilateral.
+Then, the theorem claims that $\triangle DEF$ is equilateral, where $D, E, F$ are the centers of the outer triangles. }
+\end{frame}
+%NAPOLEON THEOREM STATEMENT SLIDE----------------------------------------------
+
+%NAPOLEON THEOREM ANIMATION SLIDE--------------------------------------------------
+\begin{frame}
+\frametitle{Two Interesting Rotations}
+
+\begin{columns}[c]
+
+\column{0.5\textwidth}
+\onslide<1-> \includegraphics[height=0.8\textheight]{./img/napoleon_thm/napoleon_thm_proof-start_new.pdf}
+
+\pause
+\column{0.5\textwidth}
+\multiinclude[format=pdf,graphics={height=0.8\textheight},start=1]{./img/napoleon_thm/napoleon_thm_proof_new}
+
+\end{columns}
+\end{frame}
+%NAPOLEON THEOREM ANIMATION SLIDE--------------------------------------------------
+
+%NAPOLEON THEOREM PROOF SLIDE------------------------------------------------------
+\begin{frame}[fragile]
+\frametitle{A Proof of Napoleon's Theorem}
+
+\begin{columns}[c]
+
+\column{0.5\textwidth}
+\multiinclude[format=pdf,graphics={height=0.8\textheight},start=1]{./img/napoleon_thm/napoleon_thm_proof_diag}
+%\onslide<1-> \includegraphics[width=0.9\textwidth]{./img/napoleon_thm/napoleon_thm_proof_new-14.pdf}
+
+\column{0.5\textwidth}
+\begin{small}
+\begin{itemize}
+\onslide<1-> \item  $\frac{AF}{AB} = \frac{AE}{AB_1}$
+\onslide<2-> \item  $AF = AG, AE = AH$
+\onslide<3-> \item  $\frac{AG}{AB} = \frac{AH}{AB_1}$
+\onslide<4-> \item  $\angle GAH = \angle BAB_1$ $\Rightarrow \triangle AGH$ is similar to $\triangle ABB_1$, with ratio $\frac{AG}{AB}$
+\onslide<5-> \item  $\frac{FE}{BB_1} = \frac{GH}{BB_1} = \frac{AG}{AB}$
+\onslide<6-> \item  $\frac{DE}{BB_1} = \frac{IJ}{BB_1} = \frac{CI}{CB}$
+\onslide<7-> \item $\frac{AG}{AB} =  \frac{AF}{AB} $ \onslide<8-> $= \frac{CD}{CB} = \frac{CI}{CB}$
+\onslide<9-> \item  $\frac{FE}{BB_1} = \frac{DE}{BB_1} \Rightarrow FE = DE$
+\onslide<10-> \item  $\triangle DEF$ is equilateral
+\end{itemize}
+\end{small}
+\end{columns}
+\end{frame}
+%NAPOLEON THEOREM PROOF SLIDE--------------------------------------------------
+
+%MORLEY THEOREM SLIDE----------------------------------------------------------
+\begin{frame}
+\frametitle{More Fun Geometry}
+
+\begin{itemize}
+\item If you are interested, check out \url{http://www.cs.toronto.edu/~mackay/conway.pdf}.
+\item It contains a proof of the very remarkable ``Morley Theorem''.
+\end{itemize}
+
+\end{frame}
+%MORLEY THEOREM SLIDE----------------------------------------------------------
+
+\end{document}

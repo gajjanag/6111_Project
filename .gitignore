@@ -5,3 +5,8 @@
 *.ps
 *.synctex.gz
 *.aux
+*.toc
+*.vrb
+*.nav
+*.snm
+*.out
