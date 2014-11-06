@@ -6,158 +6,107 @@
 \usepackage{float}
 \usepackage{xmpmulti}
 \usepackage{hyperref}
+\usepackage{natbib}
 
 \usetikzlibrary{arrows}
 
-\title{The Power of Transformations in Geometry}
+\title{Projector Keystone Correction using FPGA }
 \author{Ganesh Ajjanagadde \and Shantanu Jain \and James Thomas}
 \date{\today}
 
 \begin{document}
 \maketitle
 
-%AREA REVIEW SLIDE-------------------------------------------------------------
 \begin{frame}
-\frametitle{Areas of Shapes}
-
-\begin{columns}[c]
-
-\column{0.5\textwidth}
-\begin{figure}[t]
-\onslide<1-> \includegraphics[height=0.3\textheight]{./img/rectangle.pdf}
-\end{figure}
-\begin{figure}[b]
-\onslide<3-> \includegraphics[height=0.3\textheight]{./img/right_triangle.pdf}
-\end{figure}
-
-\column{0.5 \textwidth}
-\onslide<1-> Area =
-\onslide<2-> $AB \times BC$ \\
-\vspace{40mm}
-\onslide<3-> Area =
-\onslide<4-> $\frac{AB \times BC}{2}$
-
-\end{columns}
-\end{frame}
-%AREA REVIEW SLIDE-------------------------------------------------------------
-
-%SIMILAR TRIANGLES REVIEW SLIDE------------------------------------------------
-\begin{frame}
-\frametitle{Similar Triangles}
-
-\begin{figure}[t]
-\begin{center}
-\onslide<1-> \includegraphics[height=0.4\textheight]{./img/similar_triangles.pdf}
-\end{center}
-\end{figure}
-
-\onslide<1-> All equilateral triangles are similar to each other!
-
-\end{frame}
-%SIMILAR TRIANGLES REVIEW SLIDE------------------------------------------------
-
-%PYTHAGOREAN THEOREM STATEMENT SLIDE-------------------------------------------
-\begin{frame}
-\frametitle{The Pythagorean Theorem}
-
-\begin{figure}[t]
-\begin{center}
-\onslide<1-> \includegraphics[height=0.6\textheight]{./img/pythag_thm/pythag_thm_statement.pdf}
-\end{center}
-\end{figure}
-
-\onslide<2-> Over 1000 proofs known for this theorem!
-
-\end{frame}
-%PYTHAGOREAN THEOREM STATEMENT SLIDE-------------------------------------------
-
-%PYTHAGOREAN THEOREM PROOF-----------------------------------------------------
-\begin{frame}
-\frametitle{A Proof of the Pythagoren Theorem}
-\multiinclude[format=pdf,graphics={height=0.5\textheight},start=1]{./img/pythag_thm/pythag_thm_proof_new}
-
-\pause
-
-\begin{align*}
-\onslide<5-> {(a + b)^2 &= c^2 + 4\frac{ab}{2}} \\
-\onslide<6-> {a^2 + 2ab + b^2 &= c^2 + 2ab} \\
-\onslide<7-> {a^2 + b^2 &= c^2}
-\end{align*}
-\end{frame}
-%PYTHAGOREAN THEOREM PROOF-----------------------------------------------------
-
-%NAPOLEON THEOREM STATEMENT SLIDE----------------------------------------------
-\begin{frame}
-\frametitle{Napoleon's Theorem}
-
-\begin{columns}[c]
-\column{0.5\textwidth}
-\onslide<1-> \includegraphics[height=0.6\textheight]{./img/napoleon.jpg}
-
-\column{0.5\textwidth}
-\onslide<2-> \includegraphics[height=0.6\textheight]{./img/napoleon_thm/napoleon_thm_proof-start_new.pdf}
-\end{columns}
-\vspace{10mm}
-\onslide<2-> {For an arbitrary $\triangle ABC$, outer triangles $\triangle ABC_1, \triangle BCA_1, \triangle CAB_1$ are equilateral.
-Then, the theorem claims that $\triangle DEF$ is equilateral, where $D, E, F$ are the centers of the outer triangles. }
-\end{frame}
-%NAPOLEON THEOREM STATEMENT SLIDE----------------------------------------------
-
-%NAPOLEON THEOREM ANIMATION SLIDE--------------------------------------------------
-\begin{frame}
-\frametitle{Two Interesting Rotations}
-
-\begin{columns}[c]
-
-\column{0.5\textwidth}
-\onslide<1-> \includegraphics[height=0.8\textheight]{./img/napoleon_thm/napoleon_thm_proof-start_new.pdf}
-
-\pause
-\column{0.5\textwidth}
-\multiinclude[format=pdf,graphics={height=0.8\textheight},start=1]{./img/napoleon_thm/napoleon_thm_proof_new}
-
-\end{columns}
-\end{frame}
-%NAPOLEON THEOREM ANIMATION SLIDE--------------------------------------------------
-
-%NAPOLEON THEOREM PROOF SLIDE------------------------------------------------------
-\begin{frame}[fragile]
-\frametitle{A Proof of Napoleon's Theorem}
-
-\begin{columns}[c]
-
-\column{0.5\textwidth}
-\multiinclude[format=pdf,graphics={height=0.8\textheight},start=1]{./img/napoleon_thm/napoleon_thm_proof_diag}
-%\onslide<1-> \includegraphics[width=0.9\textwidth]{./img/napoleon_thm/napoleon_thm_proof_new-14.pdf}
-
-\column{0.5\textwidth}
-\begin{small}
+\frametitle{Background}
 \begin{itemize}
-\onslide<1-> \item  $\frac{AF}{AB} = \frac{AE}{AB_1}$
-\onslide<2-> \item  $AF = AG, AE = AH$
-\onslide<3-> \item  $\frac{AG}{AB} = \frac{AH}{AB_1}$
-\onslide<4-> \item  $\angle GAH = \angle BAB_1$ $\Rightarrow \triangle AGH$ is similar to $\triangle ABB_1$, with ratio $\frac{AG}{AB}$
-\onslide<5-> \item  $\frac{FE}{BB_1} = \frac{GH}{BB_1} = \frac{AG}{AB}$
-\onslide<6-> \item  $\frac{DE}{BB_1} = \frac{IJ}{BB_1} = \frac{CI}{CB}$
-\onslide<7-> \item $\frac{AG}{AB} =  \frac{AF}{AB} $ \onslide<8-> $= \frac{CD}{CB} = \frac{CI}{CB}$
-\onslide<9-> \item  $\frac{FE}{BB_1} = \frac{DE}{BB_1} \Rightarrow FE = DE$
-\onslide<10-> \item  $\triangle DEF$ is equilateral
+\item Portable projectors are everywhere today!
+\includegraphics[height=0.6\textheight]{./img/digital_projector}
+\item What's the catch?
+\pause
+\item They are often tricky to setup due to the keystone effect
 \end{itemize}
-\end{small}
-\end{columns}
 \end{frame}
-%NAPOLEON THEOREM PROOF SLIDE--------------------------------------------------
 
-%MORLEY THEOREM SLIDE----------------------------------------------------------
 \begin{frame}
-\frametitle{More Fun Geometry}
-
-\begin{itemize}
-\item If you are interested, check out \url{http://www.cs.toronto.edu/~mackay/conway.pdf}.
-\item It contains a proof of the very remarkable ``Morley Theorem''.
-\end{itemize}
-
+\frametitle{Keystone Effect}
+\includegraphics[height=0.8\textheight]{./img/keystone_effect}
 \end{frame}
-%MORLEY THEOREM SLIDE----------------------------------------------------------
+
+\begin{frame}
+\frametitle{Previous Work}
+\begin{itemize}
+\item \citet{raskar2001self}
+\item \citet{sukthankar2001smarter}
+\item Both of these use complex software algorithms
+\pause
+\item Our contribution is creating a simple, FPGA prototype
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Block Diagram}
+\includegraphics[width=\textwidth]{./img/block_diag}
+\end{frame}
+
+\begin{frame}
+\frametitle{The Physics of a Projector}
+\includegraphics[height=0.5\textheight]{./img/projector_physics}
+\end{frame}
+
+\begin{frame}
+\frametitle{A Mathematical Model}
+\includegraphics[height=0.5\textheight]{./img/projective_frustrum}
+\end{frame}
+
+\begin{frame}
+\frametitle{Projective Transformation}
+\includegraphics[height=0.5\textheight]{./img/projective_transform}
+\end{frame}
+
+\begin{frame}
+\frametitle{The Projection Equation}
+\begin{itemize}
+\item Let $(x, y)$ denote the source image coordinates
+\item Let $(X, Y)$ denote the coordinates on the screen
+\item $(X, Y)$ = $\left( \frac{p_1x + p_2y + 1}{p_3x + p_4y + 1}, \frac{p_5x + p_6y + 1}{p_7x + p_8y + 1} \right)$
+\item Coefficients depend on the tilt of the projector through trigonometry
+\pause
+\item By projecting a known image, we have 8 equations in 8 unknowns
+\item Will require implementing a full-fledged Gaussian elimination routine on the FPGA
+\item Too hard, will be final (unlikely) stretch goal
+\item How can we simplify?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{The Simplification}
+\begin{itemize}
+\item Focus on the 2 axes of interest, and compute inverse mapping
+\item Vertical direction is relatively easy
+\item Side-to-side direction is harder
+\pause
+\item Have to compute maximum rectangle of correct aspect ratio
+\includegraphics[height=0.7\textheight]{./img/rectangle_in_trapezoid.png}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Accelerometer}
+\includegraphics[scale=0.4]{img/spi}
+\begin{itemize}
+\item SPI digital interface -- FPGA is master, accelerometer slave
+\item Accelerometer has different registers for x, y, z acceleration, signal which register to read
+\item Configurable SPI clock, but will still need to cross clock domains
+\item Accelerometer is noisy -- some sort of low pass filter needed
+\item Accelerometer nonlinearities -- lookup table needed?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{References}
+\bibliographystyle{plainnat}
+\bibliography{references}
+\end{frame}
 
 \end{document}
