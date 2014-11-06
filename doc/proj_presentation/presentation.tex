@@ -104,6 +104,98 @@
 \end{frame}
 
 \begin{frame}
+\frametitle{Audio System - Motivation}
+\begin{itemize}
+	\item Auditory feedback is more effective
+	\item Important for frequent setups or adjustments
+	\item Highlight important details without affecting UI
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Audio System - Functionality}
+\begin{itemize}
+	\item Calibration instructions
+	\item Two-Axis Tilt Angle
+	\item Percentage of pixels utilized
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Audio System - Implementation}
+\begin{itemize}
+	\item Wave files -{software}-> Bit Files -{USB/FTDI}-> Labkit -{labkit_receiver.v}-> CF Card
+	\item // ADD in image with data flow
+	\item Pre-recorded audio samples on CF Card
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Audio System - Interface}
+\begin{itemize}
+	\item // ADD in image with an enlarged version of the module highlighting interface
+	\item Set of triggers and data as interface.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Responsibilities}
+\begin{itemize}
+	\item{Ganesh}
+	\begin{itemize}
+		\item Identifying Tilt Compensation Algorithm, considering:
+		\begin{itemize}
+			\item Complexity
+			\item hardware constraints
+			\item implementability
+		\end{itemize}
+		\item Transform Module
+	\end{itemize}
+	\item{James}
+	\begin{itemize}
+		\item Accelerometer
+		\begin{itemize}
+			\item Interfacing
+			\item Noise reduction
+		\end{itemize}
+		\item Calibration module
+	\end{itemize}
+	\item{Shantanu}
+	\begin{itemize}
+		\item Audio output
+		\begin{itemize}
+			\item Audio Samples
+			\item Triggers for each output
+		\end{itemize}
+		\item Audio module
+		\item Test Setup
+	\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Timeline}
+\begin{description}
+	\item{Nov. 10}
+	\begin{itemize}
+		\item Initial module implementation
+	\end{itemize}
+	\item{Nov. 17}
+	\begin{itemize}
+		\item Module Integration & module debugging
+	\end{itemize}
+	\item{Nov. 24}
+	\begin{itemize}
+		\item System Integration debugging
+	\end{itemize}
+	\item{Dec. 1}
+	\begin{itemize}
+		\item Real World Testing & Stretch Goals
+	\end{itemize}
+\end{description}
+\end{frame}
+
+\begin{frame}
 \frametitle{References}
 \bibliographystyle{plainnat}
 \bibliography{references}
