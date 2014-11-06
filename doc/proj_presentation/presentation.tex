@@ -50,6 +50,18 @@
 \end{frame}
 
 \begin{frame}
+\frametitle{Accelerometer}
+\includegraphics[scale=0.4]{img/spi}
+\begin{itemize}
+\item SPI digital interface -- FPGA is master, accelerometer slave
+\item Accelerometer has different registers for $x, y, z$ acceleration, signal which register to read
+\item Configurable SPI clock, but will still need to cross clock domains
+\pause
+\item Accelerometer is noisy -- some sort of low pass filter needed
+\item Accelerometer nonlinearities -- lookup table needed?
+\end{itemize}
+\end{frame}
+\begin{frame}
 \frametitle{The Physics of a Projector}
 \includegraphics[height=0.5\textheight]{./img/projector_physics}
 \end{frame}
@@ -92,39 +104,36 @@
 \end{frame}
 
 \begin{frame}
-\frametitle{Accelerometer}
-\includegraphics[scale=0.4]{img/spi}
-\begin{itemize}
-\item SPI digital interface -- FPGA is master, accelerometer slave
-\item Accelerometer has different registers for x, y, z acceleration, signal which register to read
-\item Configurable SPI clock, but will still need to cross clock domains
-\item Accelerometer is noisy -- some sort of low pass filter needed
-\item Accelerometer nonlinearities -- lookup table needed?
-\end{itemize}
-\end{frame}
-
-\begin{frame}
 \frametitle{Audio System - Motivation}
 \begin{itemize}
-	\item Auditory feedback is more effective
-	\item Important for frequent setups or adjustments
-	\item Highlight important details without affecting UI
+\item Auditory feedback is more effective
+\item Important for frequent setups or adjustments
+\item Highlight important details without affecting UI
 \end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Audio System - Functionality}
 \begin{itemize}
-	\item Calibration instructions
-	\item Two-Axis Tilt Angle
-	\item Percentage of pixels utilized
+\item Calibration instructions
+\item Two-Axis Tilt Angle
+\item Percentage of pixels utilized
 \end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Audio System - Implementation}
+\includegraphics[scale=0.24]{./img/audioimpl}
 \begin{itemize}
-	\includegraphics[scale=0.24]{img/audioimpl}
+\item Wave files $\rightarrow$ Bit Files $\rightarrow$ Labkit $\rightarrow$ CF Card
+\item Pre-recorded audio samples on CF Card
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Audio System - Interface}
+\begin{itemize}
+\item Set of triggers and data as interface.
 \end{itemize}
 \end{frame}
 
