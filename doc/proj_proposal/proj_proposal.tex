@@ -21,11 +21,11 @@
 %\end{abstract}
 
 \section{Introduction}
-%TODO: Fill out introduction/motivation (Ganesh)
 Due to the advances in semiconductor technology, today's display projectors can incorporate fairly sophisticated digital processing algorithms for various enhancements to the visual appearance.
 Moreover, there is an increasing prevalence of portable projectors that benefit from fast, automated setup.
 One desired functionality is keystone/tilt correction.
 This means that even when the projector is tilted, the projector is able to ``pre-warp'' the image so that its output appears unskewed.
+
 In this project, we will be projecting the output of a camera, and will connect the camera's output to the FPGA board, and the FPGA board's VGA output to the projector.
 We will mount an accelerometer on the projector and measure its signals to determine the projector's tilt angles on two axes.
 We will run algorithms on the FPGA that correct the camera output based on the tilt angles and produce the results at the VGA output for the projector to display.
@@ -40,36 +40,36 @@ Finally, we will design digital logic that produces a voice with help commands, 
 \includegraphics[width=\textwidth]{img/block_diag}
 
 \subsection{Modules}
-\begin{description}
-	\item{Accelerometer}
-	\begin{itemize}
-		\item Includes logic to convert signals from the accelerometer (whether in analog or SPI digital format) to normalized digital values that can be fed to the tilt angle estimation engine
-	\end{itemize}
-	\item{Tilt angle estimation engine}
-	\begin{itemize}
-		\item When calibration button is pressed, updates state to set the current values from the accelerometer as the reference values for an untitled projector
-		\item By comparing the values from the accelerometer to the stored reference values, produces estimates of the angles of tilt in the two axes of interest
-	\end{itemize}
-	\item{Audio}
-	\begin{itemize}
-		\item When the calibration help button is pressed, goes into state in which it periodically plays a recording instructing the user to adjust the projector so that its output looks unskewed and then hit the calibration button
-		\item When the calibration button is pressed, exits the help state if it is in it
-    \item When a change in the current angles of projector tilt is detected, plays recordings that specify the angles
-		\item Audio samples are stored on compact flash
-	\end{itemize}
-  \item{Frame correction system}
-	\begin{itemize}
-		\item Based on the current angles of projector tilt, adjusts an incoming frame from the camera using a linear transformation (implemented with a matrix multiplication) so that when it is projected it appears unskewed
-		\item Uses the ZBT scratch space to store each frame from the camera (reading pixels from the stored frame for the matrix multiplication) and possibly the results of intermediate computations
-    \item Stores the output frame from the linear transformation in a display buffer (also ZBT)
-    \item An auxiliary module will feed the pixels in the display buffer to the VGA output at the appropriate clock edges
-	\end{itemize}
-\end{description}
 
+\subsubsection{Accelerometer}
+The accelerometer is an Analog Devices 3 axis accelerometer ADXL362.
+The ADXL362 gives acceleration values at an 8 bit resolution, and is controlled via a SPI interface.
+Thus, this module will implement the appropriate SPI interface so as to make the raw data available to the FPGA.
+Unfortunately, this data is extremely noisy.
+As such, this module will also implement a low-pass filter in order to suppress this noise.
+For simplicity, we will use a moving average filter.
 
+\subsubsection{Tilt Angle Estimation Engine}
+The tilt estimation engine will accept a calibration input (e.g a button) in order to normalize the accelerometer readings based on the values for zero tilt.
+Basically, it subtracts off the readings for a neutral position in order to get a consistent value for the tilt reading.
+
+\subsubsection{Audio}
+The audio module will read audio from the stored compact flash and will play the appropriate audio depending on the input signal to the module.
+For instance, when the user requests help regarding calibration via pressing the appropriate button,
+it goes into a state in which it does a looping playback instructing the user how to adjust the projector so that the output appears unskewed.
+When a change in tilt is detected,
+the percentage of pixels lost due to the ``pre-warping'' will change and the audio enine will play a recording specifying the new percentage.
+Other audio will be added/updated as needed as our user interface changes.
+
+\subsubsection{Frame correction system}
+The frame correction system will be responsible for ``pre-warping'' the image based on the current accelerometer readings from the tilt estimation engine.
+The camera output is stored in a ZBT buffer, and is updated on every NTSC clock cycle.
+The ``pre-warping'' transformation (mathematically a perspective transform) is computed in a ZBT scratch buffer.
+The output frame from the ``pre-warping'' is stored in a ZBT display buffer.
+An auxiliary module will then feed the pixels in the display buffer to the VGA output at the appropriate vsync clock edge.
 
 \section{Timeline}
-%TODO: Add a week by week timeline (Shawn), Gantt chart if it is not too hard
+% TODO: Add Gantt chart/graphical timeline (Shawn)
 There is five weeks time in which to complete the project. In these five weeks, we envision four major stages to the project:
 \begin{enumerate}
 	\item Initial attempt at implementing each block \hfill \\
