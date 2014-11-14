@@ -69,18 +69,18 @@ The output frame from the ``pre-warping'' is stored in a ZBT display buffer.
 An auxiliary module will then feed the pixels in the display buffer to the VGA output at the appropriate vsync clock edge.
 
 \section{Timeline}
-% TODO: Add Gantt chart/graphical timeline (Shawn)
+\includegraphics[width=\textwidth]{img/Timeline}
 There is five weeks time in which to complete the project. In these five weeks, we envision four major stages to the project:
 \begin{enumerate}
-	\item Initial attempt at implementing each block \hfill \\
+	\item Initial Implementation and Unit Testing \hfill \\
 		Time: 2 weeks \hfill \\
-		In this stage, each team member will create an initial implementation of modules he is responsible for. He is expected to have his modules working as a standalone component. Each module will include simple test benches in order to facilitate this goal.
+		In this stage, each team member will create an initial implementation of modules he is responsible for. He is expected to have his modules working as a standalone component. Each module will include simple test benches to confirm the module's standalone functionality. Following the unit testing style will reduce bugs during the module integration stage. Ganesh will focus on the ``Frame Correction System'', working to create an implementation of his algorithm. Shantanu will focus on the ``Audio System'', implementing the playback system for a set of audio tracks. He will be challenged in testing the system's ability to switch between a set of non-predetermined audio tracks based on arbitrary triggers. James will focus on the ``Accelerometer''. Because he is dealing with an external component, he will face challenges of how to interpret the data coming from the accelerometer. He may have to compensate for non-linear data from the device, and adjust his module's implementation to compensate. He will be challenged by having to test some of his code by physically manipulating the accelerometer by hand, instead of entirely automatically by test benches. 
 	\item Module Integration; System Building \hfill \\
 		Time: 2 weeks \hfill \\
-		This stage will connect the individual modules from stage 1 together to form the initial system. This is expected to be the most hands-on and collaborative stage, as mistakes will often have a domino effect on the system. In the worst case, we may have to modify parts of our system design or change the behavior of some modules in order to compensate; in lesser situations, bugs may be uncovered and fixed. This is expected to be the lengthiest stage.
-	\item Intensive debugging \hfill \\
+		This stage will connect the individual modules from the implementation stage together to form the initial system. This is expected to be the most hands-on and collaborative stage, as mistakes will often have a domino effect on the system. In the worst case, we may have to modify parts of our system design or change the behavior of some modules in order to compensate; in lesser situations, bugs may be uncovered and fixed. This is expected to be the lengthiest stage.
+	\item System-Integration Testing \hfill \\
 		Time: 1 week \hfill \\
-		After the system has been put together and functions minimally, the team will focus on debugging. The goal of debugging is to make the system robust. Testing will include the common usage scenarios as well as edge cases, and a limited set of malicious inputs.
+		After the system has been put together and functions minimally, the team will focus on system-integration testing. The goal of testing is to make the system robust. In this stage of testing, all three team members will be involved in testing the system holistically. Testing will reflect the user workflows comprehensively - all the routes through the system will be tested. Because of this requirement, this stage of testing will require knowledge about the implementation of all the modules, requiring all members to be involved. The team may recruit additional testers to check for the user-friendliness of the systemas well. These test subjects will be other students in the lab and friends of the team members. 
 	\item Stretch Goals \hfill \\
 		Time: As available \hfill \\
 		Once the system satisfies the test coverage plan, the team will focus on adding additional features to the system, as constrained by time. These possible additional features are described below.
@@ -98,12 +98,13 @@ There is five weeks time in which to complete the project. In these five weeks, 
 	\begin{itemize}
 		\item Accelerometer - Identifying the appropriate type and model, interfacing with the labkit.
 		\item Calibration module - Entering calibration mode, collecting data, making it available as necessary.
+		\item Test Setup - attaching accelerometer to projector, wiring to labkit.
+		\item Camera - Receiving the data from the camera and displaying it on the projector. Will lead the development of this module and will collaborate with Shantanu. 
 	\end{itemize}
 	\item{Shantanu}
 	\begin{itemize}
 		\item Audio output - Identifying necessary audio outputs, triggers for audio. Recording audio, transforming it into the appropriate format.
 		\item Audio module - loading audio onto the labkit, standardizing trigger parameters.
-		\item Test Setup - attaching accelerometer to projector, wiring to labkit.
 	\end{itemize}
 \end{description}
 
