@@ -36,14 +36,15 @@ Finally, we will design digital logic that produces a voice with help commands, 
 
 \section{Implementation}
 
-\subsection{Modules and Dataflow in Our Projector Tilt Compensation System}
+\subsection{Overview of Modules and Dataflow}
+. 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{img/block_diag}
 \caption{An overview of the modules in our system. An accelerometer will feed acceleration data for the two dimensions of interest into an engine that estimates the actual tilt angles for these two dimensions. These angles will be sent as input to a module that accordingly pre-warps the camera input and sends it to the VGA output to be projected. We will have a calibration system that will instruct the user with audio to position the projector so that its output is rectangular and then hit a calibration button, giving the tilt angle estimation engine some reference points. The audio system will also announce the tilt angles when they change. There will also be some switches that allow the user to manually adjust the quadrilateral into which the camera input is pre-warped, which will help us during development in determining the warping required for different tilt angles. Some of the most challenging parts of this system include reading sufficiently granular data from the accelerometer, properly converting from accelerometer data to tilt angles and warping quadrilaterals, and pipelining and optimizing the algorithms for warping the camera input so that they can run in real time.}
 \end{figure}
 
-\subsection{Modules}
+\subsection{Module Descriptions}
 
 \subsubsection{Accelerometer}
 The accelerometer is an Analog Devices 3 axis accelerometer ADXL362.
