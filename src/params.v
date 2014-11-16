@@ -12,6 +12,7 @@
 'define NUM_PIXELS      19'd307_200
 'define SCR_WIDTH       10'd640
 'define SCR_HEIGHT      9'd480
+'define SCR_LCM         11'd1920
 
 // bitwdiths of image sizes
 'define LOG_NUM_PIXELS  19
