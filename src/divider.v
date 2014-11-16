@@ -12,7 +12,7 @@ module divider #(parameter WIDTH = 8)
    input [WIDTH-1:0] dividend, 
    input [WIDTH-1:0] divider,
    output reg [WIDTH-1:0] quotient,
-   output [WIDTH-1:0] remainder;
+   output [WIDTH-1:0] remainder,
    output ready);
 
    reg [WIDTH-1:0]  quotient_temp;
