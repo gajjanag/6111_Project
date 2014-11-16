@@ -12,3 +12,6 @@
 *.out
 *.bbl
 *.blg
+
+# verilog test compilations
+*.vvp
