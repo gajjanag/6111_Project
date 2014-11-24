@@ -1,7 +1,7 @@
 `default_nettype none
 `define assert(condition) if(!((|{condition{)===1)) begin $display("FAIL"); $finish(1); end
 
-module pixels_lot_test;
+module pixels_lost_test;
 
 reg[9:0] x1;
 reg[8:0] y1;
