@@ -1,0 +1,5 @@
+verilog work "assets/flash_IO/test_fsm.v"
+verilog work "assets/flash_IO/flash_int.v"
+verilog work "src/display_16hex.v"
+verilog work "assets/flash_IO/flash_manager.v"
+verilog work "src/lab5.v"
