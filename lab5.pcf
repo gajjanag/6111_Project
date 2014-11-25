@@ -1,5 +1,5 @@
 //! **************************************************************************
-// Written by: Map K.39 on Tue Nov 25 14:48:27 2014
+// Written by: Map K.39 on Tue Nov 25 18:05:59 2014
 //! **************************************************************************
 
 SCHEMATIC START;
@@ -191,8 +191,8 @@ COMP "button2" LOCATE = SITE "AD11" LEVEL 1;
 COMP "button3" LOCATE = SITE "AB12" LEVEL 1;
 COMP "switch<0>" LOCATE = SITE "AK26" LEVEL 1;
 COMP "switch<1>" LOCATE = SITE "AL26" LEVEL 1;
-COMP "tv_out_subcar_reset" LOCATE = SITE "K27" LEVEL 1;
 COMP "switch<2>" LOCATE = SITE "AK25" LEVEL 1;
+COMP "tv_out_subcar_reset" LOCATE = SITE "K27" LEVEL 1;
 COMP "analyzer4_clock" LOCATE = SITE "AD9" LEVEL 1;
 COMP "switch<3>" LOCATE = SITE "AC21" LEVEL 1;
 COMP "switch<4>" LOCATE = SITE "AB20" LEVEL 1;
@@ -502,8 +502,8 @@ COMP "user3<24>" LOCATE = SITE "H10" LEVEL 1;
 COMP "user3<16>" LOCATE = SITE "G8" LEVEL 1;
 COMP "user2<2>" LOCATE = SITE "H19" LEVEL 1;
 COMP "user1<6>" LOCATE = SITE "A10" LEVEL 1;
-COMP "tv_out_reset_b" LOCATE = SITE "G27" LEVEL 1;
 COMP "flash_data<5>" LOCATE = SITE "AL12" LEVEL 1;
+COMP "tv_out_reset_b" LOCATE = SITE "G27" LEVEL 1;
 COMP "flash_address<5>" LOCATE = SITE "AJ19" LEVEL 1;
 COMP "user3<25>" LOCATE = SITE "G10" LEVEL 1;
 COMP "user3<17>" LOCATE = SITE "F9" LEVEL 1;

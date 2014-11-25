@@ -1,11 +1,14 @@
 NUM_USER_FILES
-10
+11
 s
 user_file_1
 src/display_16hex.v
 s
 user_file_10
 assets/flash_IO/test_fsm.v
+s
+user_file_11
+assets/USB_transfer/usb_input.v
 s
 user_file_2
 src/lab5.v

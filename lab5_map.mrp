@@ -11,30 +11,30 @@ Target Device  : xc2v6000
 Target Package : bf957
 Target Speed   : -4
 Mapper Version : virtex2 -- $Revision: 1.46.12.2 $
-Mapped Date    : Tue Nov 25 14:48:24 2014
+Mapped Date    : Tue Nov 25 18:05:57 2014
 
 Design Summary
 --------------
 Number of errors:      0
-Number of warnings:  308
+Number of warnings:  332
 Logic Utilization:
-  Number of Slice Flip Flops:           399 out of  67,584    1%
-  Number of 4 input LUTs:               612 out of  67,584    1%
+  Number of Slice Flip Flops:           212 out of  67,584    1%
+  Number of 4 input LUTs:               299 out of  67,584    1%
 Logic Distribution:
-  Number of occupied Slices:            468 out of  33,792    1%
-    Number of Slices containing only related logic:     468 out of     468 100%
-    Number of Slices containing unrelated logic:          0 out of     468   0%
+  Number of occupied Slices:            234 out of  33,792    1%
+    Number of Slices containing only related logic:     234 out of     234 100%
+    Number of Slices containing unrelated logic:          0 out of     234   0%
       *See NOTES below for an explanation of the effects of unrelated logic.
-  Total Number of 4 input LUTs:         759 out of  67,584    1%
-    Number used as logic:               605
-    Number used as a route-thru:        147
+  Total Number of 4 input LUTs:         375 out of  67,584    1%
+    Number used as logic:               292
+    Number used as a route-thru:         76
     Number used as Shift registers:       7
   Number of bonded IOBs:                576 out of     684   84%
   Number of BUFGMUXs:                     3 out of      16   18%
 
-Peak Memory Usage:  488 MB
+Peak Memory Usage:  481 MB
 Total REAL time to MAP completion:  3 secs 
-Total CPU time to MAP completion:   3 secs 
+Total CPU time to MAP completion:   2 secs 
 
 NOTES:
 
@@ -77,7 +77,7 @@ Section 1 - Errors
 Section 2 - Warnings
 --------------------
 WARNING:LIT:243 - Logical network user3<28>_IBUF has no load.
-WARNING:LIT:395 - The above warning message base_net_load_rule is repeated 305
+WARNING:LIT:395 - The above warning message base_net_load_rule is repeated 329
    more times for the following (max. 5 shown):
    user3<4>_IBUF,
    user3<29>_IBUF,
@@ -239,6 +239,8 @@ WARNING:PhysDesignRules:367 - The signal <tv_in_ycrcb<17>_IBUF> is incomplete.
    The signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <tv_in_ycrcb<18>_IBUF> is incomplete.
    The signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <button_enter_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <tv_in_ycrcb<19>_IBUF> is incomplete.
    The signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <systemace_data<10>_IBUF> is
@@ -265,12 +267,24 @@ WARNING:PhysDesignRules:367 - The signal <button1_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <button2_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <button3_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <switch<0>_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <switch<1>_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <switch<2>_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <switch<3>_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <switch<4>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <switch<5>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <daughtercard<10>_IBUF> is incomplete.
    The signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <switch<7>_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <clock_feedback_in_IBUF> is incomplete.
    The signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <daughtercard<11>_IBUF> is incomplete.
@@ -339,6 +353,8 @@ WARNING:PhysDesignRules:367 - The signal <daughtercard<38>_IBUF> is incomplete.
    The signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <daughtercard<39>_IBUF> is incomplete.
    The signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <flash_sts_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <button_left_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <rs232_cts_IBUF> is incomplete. The
@@ -443,32 +459,44 @@ WARNING:PhysDesignRules:367 - The signal <user1<21>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<13>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <flash_data<10>_IBUF> is incomplete.
+   The signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<30>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<22>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<14>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <flash_data<11>_IBUF> is incomplete.
+   The signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<31>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<23>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<15>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <flash_data<12>_IBUF> is incomplete.
+   The signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<24>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<16>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <flash_data<13>_IBUF> is incomplete.
+   The signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<25>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<17>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <flash_data<14>_IBUF> is incomplete.
+   The signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<26>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<18>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user2<10>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <flash_data<15>_IBUF> is incomplete.
+   The signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<27>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<19>_IBUF> is incomplete. The
@@ -523,6 +551,8 @@ WARNING:PhysDesignRules:367 - The signal <user2<19>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<1>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <flash_data<0>_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user3<20>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user3<12>_IBUF> is incomplete. The
@@ -531,6 +561,8 @@ WARNING:PhysDesignRules:367 - The signal <user2<28>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<2>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <flash_data<1>_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user3<21>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user3<13>_IBUF> is incomplete. The
@@ -538,6 +570,8 @@ WARNING:PhysDesignRules:367 - The signal <user3<13>_IBUF> is incomplete. The
 WARNING:PhysDesignRules:367 - The signal <user2<29>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<3>_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <flash_data<2>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user3<30>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
@@ -551,6 +585,8 @@ WARNING:PhysDesignRules:367 - The signal <user1<4>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <tv_in_aef_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <flash_data<3>_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user3<31>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user3<23>_IBUF> is incomplete. The
@@ -563,6 +599,8 @@ WARNING:PhysDesignRules:367 - The signal <user1<5>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <tv_in_aff_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <flash_data<4>_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user3<24>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user3<16>_IBUF> is incomplete. The
@@ -571,6 +609,8 @@ WARNING:PhysDesignRules:367 - The signal <user2<2>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<6>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <flash_data<5>_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user3<25>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user3<17>_IBUF> is incomplete. The
@@ -578,6 +618,8 @@ WARNING:PhysDesignRules:367 - The signal <user3<17>_IBUF> is incomplete. The
 WARNING:PhysDesignRules:367 - The signal <user2<3>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<7>_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <flash_data<6>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user3<26>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
@@ -591,6 +633,8 @@ WARNING:PhysDesignRules:367 - The signal <user4<10>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<8>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <flash_data<7>_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user3<27>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user3<1>_IBUF> is incomplete. The
@@ -603,6 +647,8 @@ WARNING:PhysDesignRules:367 - The signal <user4<11>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user1<9>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <flash_data<8>_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user3<2>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user2<6>_IBUF> is incomplete. The
@@ -612,6 +658,8 @@ WARNING:PhysDesignRules:367 - The signal <user4<20>_IBUF> is incomplete. The
 WARNING:PhysDesignRules:367 - The signal <user4<12>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user3<28>_IBUF> is incomplete. The
+   signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <flash_data<9>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <user3<3>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
@@ -892,22 +940,22 @@ Section 6 - IOB Properties
 | flash_address<23>                  | IOB              | OUTPUT    | LVTTL                | 12       | SLOW |              |          |          |
 | flash_byte_b                       | IOB              | OUTPUT    | LVDCI_33             |          |      |              |          |          |
 | flash_ce_b                         | IOB              | OUTPUT    | LVDCI_33             |          |      |              |          |          |
-| flash_data<0>                      | IOB              | BIDIR     | LVTTL                | 12       | SLOW |              |          |          |
-| flash_data<1>                      | IOB              | BIDIR     | LVTTL                | 12       | SLOW |              |          |          |
-| flash_data<2>                      | IOB              | BIDIR     | LVTTL                | 12       | SLOW |              |          |          |
-| flash_data<3>                      | IOB              | BIDIR     | LVTTL                | 12       | SLOW |              |          |          |
-| flash_data<4>                      | IOB              | BIDIR     | LVTTL                | 12       | SLOW |              |          |          |
-| flash_data<5>                      | IOB              | BIDIR     | LVTTL                | 12       | SLOW |              |          |          |
-| flash_data<6>                      | IOB              | BIDIR     | LVTTL                | 12       | SLOW |              |          |          |
-| flash_data<7>                      | IOB              | BIDIR     | LVTTL                | 12       | SLOW |              |          |          |
-| flash_data<8>                      | IOB              | BIDIR     | LVTTL                | 12       | SLOW |              |          |          |
-| flash_data<9>                      | IOB              | BIDIR     | LVTTL                | 12       | SLOW |              |          |          |
-| flash_data<10>                     | IOB              | BIDIR     | LVTTL                | 12       | SLOW |              |          |          |
-| flash_data<11>                     | IOB              | BIDIR     | LVTTL                | 12       | SLOW |              |          |          |
-| flash_data<12>                     | IOB              | BIDIR     | LVTTL                | 12       | SLOW |              |          |          |
-| flash_data<13>                     | IOB              | BIDIR     | LVTTL                | 12       | SLOW |              |          |          |
-| flash_data<14>                     | IOB              | BIDIR     | LVTTL                | 12       | SLOW |              |          |          |
-| flash_data<15>                     | IOB              | BIDIR     | LVTTL                | 12       | SLOW |              |          |          |
+| flash_data<0>                      | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
+| flash_data<1>                      | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
+| flash_data<2>                      | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
+| flash_data<3>                      | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
+| flash_data<4>                      | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
+| flash_data<5>                      | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
+| flash_data<6>                      | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
+| flash_data<7>                      | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
+| flash_data<8>                      | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
+| flash_data<9>                      | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
+| flash_data<10>                     | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
+| flash_data<11>                     | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
+| flash_data<12>                     | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
+| flash_data<13>                     | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
+| flash_data<14>                     | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
+| flash_data<15>                     | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
 | flash_oe_b                         | IOB              | OUTPUT    | LVDCI_33             |          |      |              |          |          |
 | flash_reset_b                      | IOB              | OUTPUT    | LVDCI_33             |          |      |              |          |          |
 | flash_sts                          | IOB              | INPUT     | LVTTL                |          |      |              | PULLUP   |          |

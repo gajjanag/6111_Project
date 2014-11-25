@@ -570,16 +570,6 @@ module lab5   (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
   assign clock_feedback_out = 1'b0;
   // clock_feedback_in is an input
   
-  // Flash ROM
-  // assign flash_data = 16'hZ;
-  // assign flash_address = 24'h0;
-  // assign flash_ce_b = 1'b1;
-  // assign flash_oe_b = 1'b1;
-  // assign flash_we_b = 1'b1;
-  // assign flash_reset_b = 1'b0;
-  // assign flash_byte_b = 1'b1;
-  // flash_sts is an input
-
   // RS-232 Interface
   assign rs232_txd = 1'b1;
   assign rs232_rts = 1'b1;
@@ -704,35 +694,59 @@ module lab5   (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
   wire filter;
   debounce sw0(.reset(reset),.clock(clock_27mhz),.noisy(~button3),.clean(filter));
 
-  wire busy;
-  // light up LED when CF is busy
-  // led is active low
-  assign led = ~{busy, startSwitch, 5'h00, filter};
+  wire triggerButton;
+  debounce bu0(.reset(reset),.clock(clock_27mhz),.noisy(switch[0]),.clean(triggerButton));
 
+  wire busy;
+
+  // led is active low
+  assign led = ~{busy, startSwitch, 6'h00};
+
+  // Data Switches
   wire [3:0] otherSwitches;
   assign otherSwitches = switch[3:0];
 
-  // record module
-  audioManager management(
-    .clock(clock_27mhz), 
-    .reset(memReset), 
-    .writeSwitch(writeSwitch), 
-    .ready(ready),
-    .filter(filter),
-    .from_ac97_data(from_ac97_data),
-    .to_ac97_data(to_ac97_data),
-    .hexdisp(hexdisp),
-    .flash_data(flash_data),
-    .flash_address(flash_address),
-    .flash_ce_b(flash_ce_b),
-    .flash_oe_b(flash_oe_b),
-    .flash_we_b(flash_we_b),
-    .flash_reset_b(flash_reset_b),
-    .flash_byte_b(flash_byte_b),
-    .flash_sts(flash_sts),
-    .busy(busy),
-    .startSwitch(startSwitch),
-    .otherSwitches(otherSwitches)
+  // Flash ROM -- enable either this or audioManager Module
+  assign flash_data = 16'hZ;
+  assign flash_address = 24'h0;
+  assign flash_ce_b = 1'b1;
+  assign flash_oe_b = 1'b1;
+  assign flash_we_b = 1'b1;
+  assign flash_reset_b = 1'b0;
+  assign flash_byte_b = 1'b1;
+  // flash_sts is an input
+
+  // // record module
+  // audioManager management(
+  //   .clock(clock_27mhz), 
+  //   .reset(memReset), 
+  //   .writeSwitch(writeSwitch), 
+  //   .ready(ready),
+  //   .filter(filter),
+  //   .from_ac97_data(from_ac97_data),
+  //   .to_ac97_data(to_ac97_data),
+  //   .hexdisp(hexdisp),
+  //   .flash_data(flash_data),
+  //   .flash_address(flash_address),
+  //   .flash_ce_b(flash_ce_b),
+  //   .flash_oe_b(flash_oe_b),
+  //   .flash_we_b(flash_we_b),
+  //   .flash_reset_b(flash_reset_b),
+  //   .flash_byte_b(flash_byte_b),
+  //   .flash_sts(flash_sts),
+  //   .busy(busy),
+  //   .startSwitch(startSwitch),
+  //   .otherSwitches(otherSwitches)
+  // );
+
+  // USB Test - wire up inputs
+  usbRxTest usbInput(
+    .clock(clock_27mhz),
+    .reset(memReset),
+    .data(user1[31:24]), //the data pins from the USB fifo
+    .rxf(user1[23]), //the rxf pin from the USB fifo
+    .triggerSwitch(triggerButton),
+    .hexdisp(hexdisp)
   );
 
   // output useful things to the logic analyzer connectors
@@ -747,115 +761,41 @@ module lab5   (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
   assign analyzer3_data = {from_ac97_data, to_ac97_data};
 endmodule
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// Record/playback
-//
-///////////////////////////////////////////////////////////////////////////////
-
-module audioManager(
-  input wire clock,            // 27mhz system clock
-  input wire reset,                // 1 to reset to initial state
-  input wire writeSwitch,             // 1 for writeSwitch, 0 for record
-  input wire ready,                // 1 when AC97 data is available
-  input wire filter,               // 1 when using low-pass filter
-  input wire [7:0] from_ac97_data, // 8-bit PCM data from mic
-  output reg [7:0] to_ac97_data,    // 8-bit PCM data to headphone
-  output wire [63:0] hexdisp, 
-  output wire [15:0] flash_data,
-  output wire [23:0] flash_address,
-  output wire flash_ce_b,
-  output wire flash_oe_b,
-  output wire flash_we_b,
-  output wire flash_reset_b,
-  output wire flash_byte_b,
-  input wire flash_sts,
-  output wire busy,
-  input wire startSwitch,
-  input wire [3:0] otherSwitches
+module usbRxTest(
+  input wire clock,
+  input wire reset,
+  input wire [7:0] data, //the data pins from the USB fifo
+  input wire rxf, //the rxf pin from the USB fifo
+  input wire triggerSwitch,
+  output reg [63:0] hexdisp
 );
   
-  wire [639:0] dots;
-  reg writemode = 0;         //1=write mode; 0=read mode
-  reg [15:0] wdata = 0;      //writeData
-  reg dowrite = 0;           //1=new data, write it
-  reg [22:0] raddr = 1;      //readAddress
-  wire [15:0] frdata;     //readData
-  reg doread = 0;            //1=execute read
-  //wire busy;              //1=busy, wait
-  
-  // UNUSED -- LOW LEVEL ACCESS
-  //direct passthrough from labkit to low-level modules (flash_int and test_fsm)
-  // wire [15:0] flash_data; 
-  // wire [23:0] flash_address;
-  // wire flash_ce_b;
-  // wire flash_oe_b;
-  // wire flash_we_b;
-  // wire flash_reset_b;
-  // wire flash_sts;
-  // wire flash_byte_b;
+  wire rd;        // the rd pin from the USB fifo (OUTPUT)
+  wire [7:0] out; // data from FIFO (OUTPUT)
+  wire newout;  // newout=1 out contains new data (OUTPUT)
+  reg hold;     //hold=1 the module will not accept new data from the FIFO
+  wire [3:0] state; //for debugging purposes
 
-  wire [11:0] fsmstate;
-  // END UNUSED
-
-  // FlashManager
-  flash_manager fm(
-    .clock(clock), 
-    .reset(reset), 
-    .dots(dots), 
-    .writemode(writemode), 
-    .wdata(wdata), 
-    .dowrite(dowrite), 
-    .raddr(raddr), 
-    .frdata(frdata), 
-    .doread(doread), 
-    .busy(busy), 
-    .flash_data(flash_data), 
-    .flash_address(flash_address), 
-    .flash_ce_b(flash_ce_b), 
-    .flash_oe_b(flash_oe_b), 
-    .flash_we_b(flash_we_b), 
-    .flash_reset_b(flash_reset_b), 
-    .flash_sts(flash_sts), 
-    .flash_byte_b(flash_byte_b), 
-    .fsmstate(fsmstate)
+  usb_input usbtest(
+    .clk(clock),
+    .reset(reset),
+    .data(data[7:0]),
+    .rxf(rxf),
+    .rd(rd),
+    .out(out[7:0]),
+    .newout(newout),
+    .hold(hold),
+    .state(state)
   );
-  
-  // frdata has no guaruntees when not in read mode
-  assign hexdisp = {1'h0, fsmstate[11:9], 3'h0, fsmstate[8], 44'h0, frdata};
 
   always @ (posedge clock) begin
-    if (startSwitch) begin
-      // write arbitrary data to CF if writeSwitch is UP
-      if (writeSwitch) begin
-        writemode <= 1'b1;
-        doread <= 1'b0;
-        //if (~busy) begin
-          wdata <= {12'h000, otherSwitches};
-          dowrite <= 1'b1;
-        //end
-      end
+    if (newout) begin
+      // display most recent byte RX'ed
+      hexdisp <= {56'h0, out};
+    end
+    if (~triggerSwitch) begin // if triggerSwitch is off, hold
+      hold <= 1'b1;
+    end
+  end
 
-      // if button is DOWN
-      if (~writeSwitch) begin // filter = button3
-        // show on display
-        dowrite <= 1'b0;
-        writemode <= 1'b0;
-        raddr <= 2;
-        doread <= 1'b1;
-      end // if (writeSwitch)
-    end
-    else begin
-      // TO ENABLE RESET:
-      // writemode <= 1
-      // dowrite <= 0
-      // doread <= 0 // to be safe
-      writemode <= 1'h1;
-      doread <= 1'h0;
-      // wdata <= 1'h0;
-      dowrite <= 1'h0;
-      // raddr <= 1'h0;
-      // doread <= 1'h0;
-    end
-  end // always @
 endmodule

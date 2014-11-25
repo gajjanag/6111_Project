@@ -836,6 +836,7 @@ proc restore { { project_dir "" } } {
   } "A problem occured while restoring project settings."
 
   set user_files { 
+      "assets/USB_transfer/usb_input.v" 
       "assets/flash_IO/flash_int.v" 
       "assets/flash_IO/flash_manager.v" 
       "assets/flash_IO/test_fsm.v" 
