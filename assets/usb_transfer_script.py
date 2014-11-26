@@ -22,6 +22,8 @@ sends line by line.
 
 ser = serial.Serial(port='/dev/tty.usbserial-FTDHKA57')
 
+# ser = serial.Serial(port='/dev/tty.usbserial-A900a0YF')
+
 a = open('test.coe','r')
 
 for line in a:
