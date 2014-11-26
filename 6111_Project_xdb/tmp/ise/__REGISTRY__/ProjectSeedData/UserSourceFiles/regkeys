@@ -1,5 +1,5 @@
 NUM_USER_FILES
-11
+13
 s
 user_file_1
 src/display_16hex.v
@@ -9,6 +9,12 @@ assets/flash_IO/test_fsm.v
 s
 user_file_11
 assets/USB_transfer/usb_input.v
+s
+user_file_12
+src/audioManager.v
+s
+user_file_13
+src/usbRxTest.v
 s
 user_file_2
 src/lab5.v

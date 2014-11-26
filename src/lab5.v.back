@@ -691,17 +691,11 @@ module lab5   (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
   debounce benter(.reset(reset),.clock(clock_27mhz),.noisy(~button_enter),.clean(memReset));
 
   // switch 0 up for filtering, down for no filtering
-  wire switch0;
-  debounce sw0(.reset(reset),.clock(clock_27mhz),.noisy(~button3),.clean(switch0));
+  wire filter;
+  debounce sw0(.reset(reset),.clock(clock_27mhz),.noisy(~button3),.clean(filter));
 
   wire triggerButton;
   debounce bu0(.reset(reset),.clock(clock_27mhz),.noisy(switch[0]),.clean(triggerButton));
-
-  wire buttonup;
-  debounce buup(.reset(reset),.clock(clock_27mhz),.noisy(~button_up),.clean(buttonup));
-
-  wire buttondown;
-  debounce budo(.reset(reset),.clock(clock_27mhz),.noisy(~button_down),.clean(buttondown));
 
   wire busy;
   wire newout;
@@ -713,62 +707,50 @@ module lab5   (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
   wire [3:0] otherSwitches;
   assign otherSwitches = switch[3:0];
 
-  // // Flash ROM -- enable either this or audioManager Module
-  // assign flash_data = 16'hZ;
-  // assign flash_address = 24'h0;
-  // assign flash_ce_b = 1'b1;
-  // assign flash_oe_b = 1'b1;
-  // assign flash_we_b = 1'b1;
-  // assign flash_reset_b = 1'b0;
-  // assign flash_byte_b = 1'b1;
-  // // flash_sts is an input
+  // Flash ROM -- enable either this or audioManager Module
+  assign flash_data = 16'hZ;
+  assign flash_address = 24'h0;
+  assign flash_ce_b = 1'b1;
+  assign flash_oe_b = 1'b1;
+  assign flash_we_b = 1'b1;
+  assign flash_reset_b = 1'b0;
+  assign flash_byte_b = 1'b1;
+  // flash_sts is an input
 
-  // Receive and Playback module
-  audioManager management(
-    .clock(clock_27mhz), 
-    .reset(memReset), 
+  // // record module
+  // audioManager management(
+  //   .clock(clock_27mhz), 
+  //   .reset(memReset), 
+  //   .writeSwitch(writeSwitch), 
+  //   .ready(ready),
+  //   .filter(filter),
+  //   .from_ac97_data(from_ac97_data),
+  //   .to_ac97_data(to_ac97_data),
+  //   .hexdisp(hexdisp),
+  //   .flash_data(flash_data),
+  //   .flash_address(flash_address),
+  //   .flash_ce_b(flash_ce_b),
+  //   .flash_oe_b(flash_oe_b),
+  //   .flash_we_b(flash_we_b),
+  //   .flash_reset_b(flash_reset_b),
+  //   .flash_byte_b(flash_byte_b),
+  //   .flash_sts(flash_sts),
+  //   .busy(busy),
+  //   .startSwitch(startSwitch),
+  //   .otherSwitches(otherSwitches)
+  // );
 
-    // User I/O
-    .startSwitch(startSwitch),
-    .otherSwitches(otherSwitches),
-    .writeSwitch(writeSwitch), 
-    .hexdisp(hexdisp),
-    .buttonup(buttonup),
-    .buttondown(buttondown),
-
-    // AC97 I/O
-    .ready(ready),
-    .from_ac97_data(from_ac97_data),
-    .to_ac97_data(to_ac97_data),
-
-    // Flash I/O
-    .flash_data(flash_data),
-    .flash_address(flash_address),
-    .flash_ce_b(flash_ce_b),
-    .flash_oe_b(flash_oe_b),
-    .flash_we_b(flash_we_b),
-    .flash_reset_b(flash_reset_b),
-    .flash_byte_b(flash_byte_b),
-    .flash_sts(flash_sts),
-    .busy(busy),
-
-    // USB I/O
+  // USB Test - wire up inputs
+  usbRxTest usbInput(
+    .clock(clock_27mhz),
+    .reset(memReset),
     .data(user1[31:24]), //the data pins from the USB fifo
     .rxf(user1[23]), //the rxf pin from the USB fifo
-    .rd(user1[22]) //the rd pin TO the USB FIFO (OUTPUT)
+    .rd(user1[22]), //the rd pin TO the USB FIFO (OUTPUT)
+    .triggerSwitch(triggerButton),
+    .hexdisp(hexdisp),
+    .newout_on(newout)
   );
-
-  // // USB Test - wire up inputs
-  // usbRxTest usbInput(
-  //   .clock(clock_27mhz),
-  //   .reset(memReset),
-  //   .data(user1[31:24]), //the data pins from the USB fifo
-  //   .rxf(user1[23]), //the rxf pin from the USB fifo
-  //   .rd(user1[22]), //the rd pin TO the USB FIFO (OUTPUT)
-  //   .triggerSwitch(triggerButton),
-  //   .hexdisp(hexdisp),
-  //   .newout_on(newout)
-  // );
 
   // output useful things to the logic analyzer connectors
   assign analyzer1_clock = ac97_bit_clock;

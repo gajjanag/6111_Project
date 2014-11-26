@@ -3,21 +3,12 @@
 module audioManager(
   input wire clock,            // 27mhz system clock
   input wire reset,                // 1 to reset to initial state
-
-  // User I/O
-  input wire startSwitch,
-  input wire [3:0] otherSwitches,
   input wire writeSwitch,             // 1 for writeSwitch, 0 for record
-  output wire [63:0] hexdisp,
-  input wire buttonup,
-  input wire buttondown, 
-  
-  // AC97 I/O
   input wire ready,                // 1 when AC97 data is available
+  input wire filter,               // 1 when using low-pass filter
   input wire [7:0] from_ac97_data, // 8-bit PCM data from mic
   output reg [7:0] to_ac97_data,    // 8-bit PCM data to headphone
-
-  // Flash I/O
+  output wire [63:0] hexdisp, 
   output wire [15:0] flash_data,
   output wire [23:0] flash_address,
   output wire flash_ce_b,
@@ -27,17 +18,15 @@ module audioManager(
   output wire flash_byte_b,
   input wire flash_sts,
   output wire busy,
-
-  // USB I/O
-  input wire [7:0] data, //the data pins from the USB fifo
-  input wire rxf, //the rxf pin from the USB fifo
-  output wire rd // the rd pin from the USB fifo (OUTPUT)
+  input wire startSwitch,
+  input wire [3:0] otherSwitches
 );
   
+  wire [639:0] dots;
   reg writemode = 0;         //1=write mode; 0=read mode
   reg [15:0] wdata = 0;      //writeData
   reg dowrite = 0;           //1=new data, write it
-  reg [22:0] raddr = 2;      //readAddress
+  reg [22:0] raddr = 1;      //readAddress
   wire [15:0] frdata;        //readData
   reg doread = 0;            //1=execute read
 
@@ -49,8 +38,7 @@ module audioManager(
   flash_manager fm(
     .clock(clock), 
     .reset(reset), 
-
-    // Interface I/O
+    .dots(dots), 
     .writemode(writemode), 
     .wdata(wdata), 
     .dowrite(dowrite), 
@@ -58,8 +46,6 @@ module audioManager(
     .frdata(frdata), 
     .doread(doread), 
     .busy(busy), 
-
-    // Flash I/O
     .flash_data(flash_data), 
     .flash_address(flash_address), 
     .flash_ce_b(flash_ce_b), 
@@ -68,73 +54,31 @@ module audioManager(
     .flash_reset_b(flash_reset_b), 
     .flash_sts(flash_sts), 
     .flash_byte_b(flash_byte_b), 
-
-    // Debug
     .fsmstate(fsmstate)
   );
-
-  //wire rd;        
-  wire [7:0] out; // data from FIFO (OUTPUT)
-  wire newout;  // newout=1 out contains new data (OUTPUT)
-  wire hold;     //hold=1 the module will not accept new data from the FIFO
-  wire [3:0] state; //for debugging purposes
-
-  assign hold = 1'b0; 
-
-  usb_input usbtest(
-    .clk(clock),
-    .reset(reset),
-
-    // USB FTDI I/O
-    .data(data[7:0]),
-    .rxf(rxf),
-    .rd(rd),
-
-    // Interface
-    .out(out[7:0]),
-    .newout(newout),
-    .hold(hold),
-
-    // Debug
-    .state(state)
-  );
-
+  
   // frdata has no guaruntees when not in read mode
-  assign hexdisp = {out, 8'h0, raddr[15:0], 12'h0, 1'h0, fsmstate[11:9], frdata};
-
-  reg lastButtonup;
-  reg lastButtondown;
+  assign hexdisp = {1'h0, fsmstate[11:9], 48'h0, frdata};
 
   always @ (posedge clock) begin
-    lastButtonup <= buttonup;
-    lastButtondown <= buttondown;
-
     if (startSwitch) begin
-      // write USB RX data if switch is up
+      // write arbitrary data to CF if writeSwitch is UP
       if (writeSwitch) begin
         writemode <= 1'b1;
         doread <= 1'b0;
-        dowrite <= 1'b0; // only write on new data // WATCH OUT!!
-        if (newout) begin
-          wdata <= {out, 8'b0};
+        //if (~busy) begin
+          wdata <= {12'h000, otherSwitches};
           dowrite <= 1'b1;
-        end
+        //end
       end
 
-      // if button is DOWN - scroll through addresses via buttons
+      // if button is DOWN
       if (~writeSwitch) begin 
-        // show last value on display
+        // show on display
         dowrite <= 1'b0;
         writemode <= 1'b0;
-        // raddr <= 2;
+        raddr <= 2;
         doread <= 1'b1;
-        // scroll through addresses with buttons
-        if(buttonup & ~lastButtonup) begin
-          raddr <= raddr + 1;
-        end
-        else if (buttondown & ~lastButtondown) begin
-          raddr <= raddr - 1;
-        end
       end // if (writeSwitch)
     end
     else begin

@@ -840,12 +840,14 @@ proc restore { { project_dir "" } } {
       "assets/flash_IO/flash_int.v" 
       "assets/flash_IO/flash_manager.v" 
       "assets/flash_IO/test_fsm.v" 
+      "src/audioManager.v" 
       "src/debounce.v" 
       "src/display_16hex.v" 
       "src/divider.v" 
       "src/lab5.v" 
       "src/labkit.ucf" 
       "src/params.v" 
+      "src/usbRxTest.v" 
       "src/vga.v"}
 
   HandleException {
