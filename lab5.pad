@@ -1,7 +1,7 @@
 Release 10.1.03 - par K.39 (lin64)
 Copyright (c) 1995-2008 Xilinx, Inc.  All rights reserved.
 
-Tue Nov 25 18:06:38 2014
+Tue Nov 25 19:36:14 2014
 
 
 # NOTE: This file is designed to be imported into a spreadsheet program
@@ -400,7 +400,7 @@ B10|user3<5>|IOB|IO_L67P_1|INPUT|LVTTL*|1||||NONE||LOCATED||NO|NONE|
 B11|user3<6>|IOB|IO_L67N_1|INPUT|LVTTL*|1||||NONE||LOCATED||NO|NONE|
 B12|user3<7>|IOB|IO_L71P_1|INPUT|LVTTL*|1||||NONE||LOCATED||NO|NONE|
 B13||DIFFS|IO_L71N_1|UNUSED||1||||||||||
-B14|user1<22>|IOB|IO_L91P_1/VREF_1|INPUT|LVTTL*|1||||NONE||LOCATED||NO|NONE|
+B14|user1<22>|IOB|IO_L91P_1/VREF_1|OUTPUT|LVTTL*|1|12|SLOW|NONE**|||LOCATED||NO|NONE|
 B15|user1<23>|IOB|IO_L91N_1|INPUT|LVTTL*|1||||NONE||LOCATED||NO|NONE|
 B16|||VCCAUX||||||||3.3|||||
 B17||DIFFM|IO_L93P_0|UNUSED||0||||||||||

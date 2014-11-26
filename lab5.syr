@@ -5,14 +5,14 @@ Parameter TMPDIR set to /afs/athena.mit.edu/user/j/a/jains/Documents/6.111/final
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.05 secs
+Total CPU time to Xst completion: 0.04 secs
  
 --> 
 Parameter xsthdpdir set to /afs/athena.mit.edu/user/j/a/jains/Documents/6.111/finalProj/6111_Project/xst
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.05 secs
+Total CPU time to Xst completion: 0.04 secs
  
 --> 
 Reading design: lab5.prj
@@ -233,7 +233,6 @@ INFO:Xst:2561 - Always blocking tristate driving signal <ram1_data> in unit <lab
 INFO:Xst:2561 - Always blocking tristate driving signal <daughtercard> in unit <lab5> is removed.
 INFO:Xst:2561 - Always blocking tristate driving signal <systemace_data> in unit <lab5> is removed.
 INFO:Xst:2561 - Always blocking tristate driving signal <tv_in_i2c_data> in unit <lab5> is removed.
-INFO:Xst:2679 - Register <hold> in unit <usbRxTest> has a constant value of 1 during circuit operation. The register is replaced by logic.
 
 Synthesizing Unit <debounce>.
     Related source file is "src/lab5.v".
@@ -373,11 +372,12 @@ Unit <lab5audio> synthesized.
 
 Synthesizing Unit <usbRxTest>.
     Related source file is "src/lab5.v".
+WARNING:Xst:647 - Input <triggerSwitch> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
 WARNING:Xst:646 - Signal <state> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
-WARNING:Xst:646 - Signal <rd> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
     Found 64-bit register for signal <hexdisp>.
+    Found 1-bit register for signal <newout_on>.
     Summary:
-	inferred  64 D-type flip-flop(s).
+	inferred  65 D-type flip-flop(s).
 Unit <usbRxTest> synthesized.
 
 
@@ -610,7 +610,6 @@ WARNING:Xst:647 - Input <keyboard_data> is never used. This port will be preserv
 WARNING:Xst:2565 - Inout <ram1_data<1>> is never assigned.
 WARNING:Xst:2565 - Inout <user1<17>> is never assigned.
 WARNING:Xst:2565 - Inout <user2<6>> is never assigned.
-WARNING:Xst:2565 - Inout <user1<22>> is never assigned.
 WARNING:Xst:2565 - Inout <ram0_data<21>> is never assigned.
 WARNING:Xst:2565 - Inout <ram0_data<16>> is never assigned.
 WARNING:Xst:2565 - Inout <ram1_data<35>> is never assigned.
@@ -679,6 +678,7 @@ WARNING:Xst:2565 - Inout <user3<27>> is never assigned.
 WARNING:Xst:2565 - Inout <user3<3>> is never assigned.
 WARNING:Xst:646 - Signal <writeSwitch> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:653 - Signal <to_ac97_data> is used but never assigned. This sourceless signal will be automatically connected to value 00000000.
+WARNING:Xst:646 - Signal <startSwitch> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:646 - Signal <otherSwitches> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:646 - Signal <filter> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:653 - Signal <busy> is used but never assigned. This sourceless signal will be automatically connected to value 0.
@@ -711,8 +711,8 @@ Macro Statistics
  5-bit updown counter                                  : 1
  8-bit down counter                                    : 1
  8-bit up counter                                      : 1
-# Registers                                            : 45
- 1-bit register                                        : 30
+# Registers                                            : 46
+ 1-bit register                                        : 31
  10-bit register                                       : 1
  20-bit register                                       : 6
  24-bit register                                       : 1
@@ -753,7 +753,6 @@ Optimizing FSM <disp/state/FSM> on signal <state[1:3]> with sequential encoding.
  00000110 | 110
 ----------------------
 Loading device for application Rf_Device from file '2v6000.nph' in environment /afs/csail.mit.edu/proj/redsocs/Xilinx10.1/ISE.
-WARNING:Xst:2404 -  FFs/Latches <out<7:0>> (without init value) have a constant value of 0 in block <usb_input>.
 WARNING:Xst:2404 -  FFs/Latches <hexdisp<63:8>> (without init value) have a constant value of 0 in block <usbRxTest>.
 WARNING:Xst:1426 - The value init of the FF/Latch l_left_v hinder the constant cleaning in the block ac97.
    You should achieve better results by setting this init to 1.
@@ -785,12 +784,12 @@ INFO:Xst:2261 - The FF/Latch <command_0> in Unit <ac97commands> is equivalent to
 INFO:Xst:2261 - The FF/Latch <command_4> in Unit <ac97commands> is equivalent to the following FF/Latch, which will be removed : <command_12> 
 INFO:Xst:2261 - The FF/Latch <command_2> in Unit <ac97commands> is equivalent to the following FF/Latch, which will be removed : <command_10> 
 INFO:Xst:2261 - The FF/Latch <command_1> in Unit <ac97commands> is equivalent to the following FF/Latch, which will be removed : <command_9> 
-WARNING:Xst:1293 - FF/Latch <state_0> has a constant value of 1 in block <usb_input>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <state_1> has a constant value of 0 in block <usb_input>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <state_2> has a constant value of 0 in block <usb_input>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <state_3> has a constant value of 0 in block <usb_input>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <newout> (without init value) has a constant value of 0 in block <usb_input>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <rd> (without init value) has a constant value of 1 in block <usb_input>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1426 - The value init of the FF/Latch newout_on hinder the constant cleaning in the block usbRxTest.
+   You should achieve better results by setting this init to 1.
+WARNING:Xst:1710 - FF/Latch <l_right_data_3> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1710 - FF/Latch <l_right_data_4> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1710 - FF/Latch <l_right_data_5> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1710 - FF/Latch <l_right_data_6> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <l_right_data_7> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <l_right_data_8> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <l_right_data_9> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
@@ -804,14 +803,6 @@ WARNING:Xst:1710 - FF/Latch <l_right_data_16> (without init value) has a constan
 WARNING:Xst:1710 - FF/Latch <l_right_data_17> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <l_right_data_18> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <l_right_data_19> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <hexdisp_0> (without init value) has a constant value of 0 in block <usbInput>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <hexdisp_1> (without init value) has a constant value of 0 in block <usbInput>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <hexdisp_2> (without init value) has a constant value of 0 in block <usbInput>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <hexdisp_3> (without init value) has a constant value of 0 in block <usbInput>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <hexdisp_4> (without init value) has a constant value of 0 in block <usbInput>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <hexdisp_5> (without init value) has a constant value of 0 in block <usbInput>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <hexdisp_6> (without init value) has a constant value of 0 in block <usbInput>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <hexdisp_7> (without init value) has a constant value of 0 in block <usbInput>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <out_data_0> (without init value) has a constant value of 0 in block <a>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <out_data_1> (without init value) has a constant value of 0 in block <a>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <out_data_2> (without init value) has a constant value of 0 in block <a>. This FF/Latch will be trimmed during the optimization process.
@@ -829,10 +820,6 @@ WARNING:Xst:1710 - FF/Latch <l_cmd_data_18> (without init value) has a constant 
 WARNING:Xst:1710 - FF/Latch <l_right_data_0> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <l_right_data_1> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <l_right_data_2> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <l_right_data_3> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <l_right_data_4> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <l_right_data_5> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1710 - FF/Latch <l_right_data_6> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:2677 - Node <right_in_data_0> of sequential type is unconnected in block <ac97>.
 WARNING:Xst:2677 - Node <right_in_data_1> of sequential type is unconnected in block <ac97>.
 WARNING:Xst:2677 - Node <right_in_data_2> of sequential type is unconnected in block <ac97>.
@@ -854,11 +841,9 @@ WARNING:Xst:2677 - Node <right_in_data_17> of sequential type is unconnected in 
 WARNING:Xst:2677 - Node <right_in_data_18> of sequential type is unconnected in block <ac97>.
 WARNING:Xst:2677 - Node <right_in_data_19> of sequential type is unconnected in block <ac97>.
 WARNING:Xst:2677 - Node <clean> of sequential type is unconnected in block <sw7>.
-WARNING:Xst:2677 - Node <clean> of sequential type is unconnected in block <benter>.
+WARNING:Xst:2677 - Node <clean> of sequential type is unconnected in block <sw6>.
 WARNING:Xst:2677 - Node <clean> of sequential type is unconnected in block <sw0>.
 WARNING:Xst:2677 - Node <clean> of sequential type is unconnected in block <bu0>.
-WARNING:Xst:1290 - Hierarchical block <usbtest> is unconnected in block <usbInput>.
-   It will be removed from the design.
 
 =========================================================================
 Advanced HDL Synthesis Report
@@ -878,8 +863,8 @@ Macro Statistics
  5-bit updown counter                                  : 1
  8-bit down counter                                    : 1
  8-bit up counter                                      : 1
-# Registers                                            : 214
- Flip-Flops                                            : 214
+# Registers                                            : 229
+ Flip-Flops                                            : 229
 # Comparators                                          : 19
  8-bit comparator greatequal                           : 5
  8-bit comparator greater                              : 4
@@ -897,18 +882,16 @@ Macro Statistics
 =========================================================================
 *                         Low Level Synthesis                           *
 =========================================================================
-INFO:Xst:2261 - The FF/Latch <usbInput/hexdisp_7> in Unit <lab5> is equivalent to the following 7 FFs/Latches, which will be removed : <usbInput/hexdisp_6> <usbInput/hexdisp_5> <usbInput/hexdisp_4> <usbInput/hexdisp_3> <usbInput/hexdisp_2> <usbInput/hexdisp_1> <usbInput/hexdisp_0> 
 INFO:Xst:2261 - The FF/Latch <a/out_data_7> in Unit <lab5> is equivalent to the following 7 FFs/Latches, which will be removed : <a/out_data_6> <a/out_data_5> <a/out_data_4> <a/out_data_3> <a/out_data_2> <a/out_data_1> <a/out_data_0> 
 INFO:Xst:2261 - The FF/Latch <l_right_data_0> in Unit <ac97> is equivalent to the following 11 FFs/Latches, which will be removed : <l_right_data_1> <l_right_data_2> <l_right_data_3> <l_right_data_4> <l_right_data_5> <l_right_data_6> <l_right_data_7> <l_right_data_8> <l_right_data_9> <l_right_data_10> <l_right_data_11> 
 WARNING:Xst:1710 - FF/Latch <l_right_data_0> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <a/out_data_7> (without init value) has a constant value of 0 in block <lab5>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <usbInput/hexdisp_7> (without init value) has a constant value of 0 in block <lab5>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:2677 - Node <bu0/clean> of sequential type is unconnected in block <lab5>.
 WARNING:Xst:2677 - Node <bu0/new> of sequential type is unconnected in block <lab5>.
 WARNING:Xst:2677 - Node <sw0/clean> of sequential type is unconnected in block <lab5>.
 WARNING:Xst:2677 - Node <sw0/new> of sequential type is unconnected in block <lab5>.
-WARNING:Xst:2677 - Node <benter/clean> of sequential type is unconnected in block <lab5>.
-WARNING:Xst:2677 - Node <benter/new> of sequential type is unconnected in block <lab5>.
+WARNING:Xst:2677 - Node <sw6/clean> of sequential type is unconnected in block <lab5>.
+WARNING:Xst:2677 - Node <sw6/new> of sequential type is unconnected in block <lab5>.
 WARNING:Xst:2677 - Node <sw7/clean> of sequential type is unconnected in block <lab5>.
 WARNING:Xst:2677 - Node <sw7/new> of sequential type is unconnected in block <lab5>.
 
@@ -919,6 +902,8 @@ Optimizing unit <display_16hex> ...
 Optimizing unit <ac97> ...
 
 Optimizing unit <ac97commands> ...
+
+Optimizing unit <usb_input> ...
 WARNING:Xst:1710 - FF/Latch <a/ac97/l_right_data_19> (without init value) has a constant value of 0 in block <lab5>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <a/ac97/l_right_data_18> (without init value) has a constant value of 0 in block <lab5>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <a/ac97/l_right_data_17> (without init value) has a constant value of 0 in block <lab5>. This FF/Latch will be trimmed during the optimization process.
@@ -978,8 +963,8 @@ Unit <lab5> processed.
 Final Register Report
 
 Macro Statistics
-# Registers                                            : 196
- Flip-Flops                                            : 196
+# Registers                                            : 219
+ Flip-Flops                                            : 219
 # Shift Registers                                      : 6
  12-bit shift register                                 : 1
  2-bit shift register                                  : 1
@@ -1012,43 +997,42 @@ Design Statistics
 # IOs                              : 576
 
 Cell Usage :
-# BELS                             : 588
+# BELS                             : 663
 #      GND                         : 1
-#      INV                         : 27
-#      LUT1                        : 76
-#      LUT2                        : 49
-#      LUT2_L                      : 2
-#      LUT3                        : 62
-#      LUT3_D                      : 5
+#      INV                         : 25
+#      LUT1                        : 71
+#      LUT2                        : 54
+#      LUT2_L                      : 1
+#      LUT3                        : 73
+#      LUT3_D                      : 9
 #      LUT3_L                      : 3
-#      LUT4                        : 128
-#      LUT4_D                      : 4
-#      LUT4_L                      : 13
+#      LUT4                        : 179
+#      LUT4_D                      : 7
+#      LUT4_L                      : 15
 #      MUXCY                       : 92
-#      MUXF5                       : 33
-#      MUXF6                       : 7
+#      MUXF5                       : 41
+#      MUXF6                       : 6
 #      MUXF7                       : 2
 #      VCC                         : 1
 #      XORCY                       : 83
-# FlipFlops/Latches                : 212
-#      FD                          : 18
-#      FDE                         : 59
+# FlipFlops/Latches                : 235
+#      FD                          : 19
+#      FDE                         : 76
 #      FDE_1                       : 9
-#      FDR                         : 21
+#      FDR                         : 24
 #      FDRE                        : 77
 #      FDRS                        : 12
-#      FDS                         : 5
+#      FDS                         : 7
 #      FDSE                        : 11
 # Shift Registers                  : 7
 #      SRL16                       : 2
 #      SRL16E                      : 4
 #      SRL16E_1                    : 1
 # Clock Buffers                    : 3
-#      BUFG                        : 2
-#      BUFGP                       : 1
-# IO Buffers                       : 245
-#      IBUF                        : 5
-#      OBUF                        : 240
+#      BUFG                        : 3
+# IO Buffers                       : 256
+#      IBUF                        : 15
+#      OBUF                        : 241
 =========================================================================
 
 Device utilization summary:
@@ -1056,13 +1040,13 @@ Device utilization summary:
 
 Selected Device : 2v6000bf957-4 
 
- Number of Slices:                      202  out of  33792     0%  
- Number of Slice Flip Flops:            212  out of  67584     0%  
- Number of 4 input LUTs:                376  out of  67584     0%  
-    Number used as logic:               369
+ Number of Slices:                      235  out of  33792     0%  
+ Number of Slice Flip Flops:            235  out of  67584     0%  
+ Number of 4 input LUTs:                444  out of  67584     0%  
+    Number used as logic:               437
     Number used as Shift registers:       7
  Number of IOs:                         576
- Number of bonded IOBs:                 246  out of    684    35%  
+ Number of bonded IOBs:                 256  out of    684    37%  
  Number of GCLKs:                         3  out of     16    18%  
 
 ---------------------------
@@ -1086,7 +1070,7 @@ Clock Information:
 -----------------------------------+------------------------+-------+
 Clock Signal                       | Clock buffer(FF name)  | Load  |
 -----------------------------------+------------------------+-------+
-clock_27mhz                        | BUFGP                  | 118   |
+clock_27mhz                        | IBUF+BUFG              | 141   |
 disp/clock1                        | BUFG                   | 43    |
 ac97_bit_clock                     | IBUF+BUFG              | 58    |
 -----------------------------------+------------------------+-------+
@@ -1099,10 +1083,10 @@ Timing Summary:
 ---------------
 Speed Grade: -4
 
-   Minimum period: 10.356ns (Maximum Frequency: 96.562MHz)
-   Minimum input arrival time before clock: 3.540ns
+   Minimum period: 10.333ns (Maximum Frequency: 96.777MHz)
+   Minimum input arrival time before clock: 3.823ns
    Maximum output required time after clock: 7.125ns
-   Maximum combinational path delay: 5.887ns
+   Maximum combinational path delay: 6.003ns
 
 Timing Detail:
 --------------
@@ -1111,101 +1095,105 @@ All values displayed in nanoseconds (ns)
 =========================================================================
 Timing constraint: Default period analysis for Clock 'clock_27mhz'
   Clock period: 5.808ns (frequency: 172.176MHz)
-  Total number of paths / destination ports: 2413 / 295
+  Total number of paths / destination ports: 2513 / 331
 -------------------------------------------------------------------------
 Delay:               5.808ns (Levels of Logic = 7)
-  Source:            sw6/count_7 (FF)
-  Destination:       sw6/count_0 (FF)
+  Source:            benter/count_7 (FF)
+  Destination:       benter/count_0 (FF)
   Source Clock:      clock_27mhz rising
   Destination Clock: clock_27mhz rising
 
-  Data Path: sw6/count_7 to sw6/count_0
+  Data Path: benter/count_7 to benter/count_0
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDRE:C->Q             2   0.568   0.986  sw6/count_7 (sw6/count_7)
-     LUT3:I0->O            1   0.439   0.000  sw6/count_cmp_eq0000_wg_lut<0> (sw6/count_cmp_eq0000_wg_lut<0>)
-     MUXCY:S->O            1   0.298   0.000  sw6/count_cmp_eq0000_wg_cy<0> (sw6/count_cmp_eq0000_wg_cy<0>)
-     MUXCY:CI->O           1   0.053   0.000  sw6/count_cmp_eq0000_wg_cy<1> (sw6/count_cmp_eq0000_wg_cy<1>)
-     MUXCY:CI->O           1   0.053   0.000  sw6/count_cmp_eq0000_wg_cy<2> (sw6/count_cmp_eq0000_wg_cy<2>)
-     MUXCY:CI->O           1   0.053   0.000  sw6/count_cmp_eq0000_wg_cy<3> (sw6/count_cmp_eq0000_wg_cy<3>)
-     MUXCY:CI->O           2   0.942   0.701  sw6/count_cmp_eq0000_wg_cy<4> (sw6/count_cmp_eq0000)
-     INV:I->O             19   0.439   1.035  sw6/count_not00011_INV_0 (sw6/count_not0001)
-     FDRE:CE                   0.240          sw6/count_0
+     FDRE:C->Q             2   0.568   0.986  benter/count_7 (benter/count_7)
+     LUT3:I0->O            1   0.439   0.000  benter/count_cmp_eq0000_wg_lut<0> (benter/count_cmp_eq0000_wg_lut<0>)
+     MUXCY:S->O            1   0.298   0.000  benter/count_cmp_eq0000_wg_cy<0> (benter/count_cmp_eq0000_wg_cy<0>)
+     MUXCY:CI->O           1   0.053   0.000  benter/count_cmp_eq0000_wg_cy<1> (benter/count_cmp_eq0000_wg_cy<1>)
+     MUXCY:CI->O           1   0.053   0.000  benter/count_cmp_eq0000_wg_cy<2> (benter/count_cmp_eq0000_wg_cy<2>)
+     MUXCY:CI->O           1   0.053   0.000  benter/count_cmp_eq0000_wg_cy<3> (benter/count_cmp_eq0000_wg_cy<3>)
+     MUXCY:CI->O           2   0.942   0.701  benter/count_cmp_eq0000_wg_cy<4> (benter/count_cmp_eq0000)
+     INV:I->O             19   0.439   1.035  benter/count_not00011_INV_0 (benter/count_not0001)
+     FDRE:CE                   0.240          benter/count_0
     ----------------------------------------
     Total                      5.808ns (3.085ns logic, 2.723ns route)
                                        (53.1% logic, 46.9% route)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'disp/clock1'
-  Clock period: 7.986ns (frequency: 125.219MHz)
-  Total number of paths / destination ports: 1179 / 72
+  Clock period: 9.274ns (frequency: 107.823MHz)
+  Total number of paths / destination ports: 1678 / 72
 -------------------------------------------------------------------------
-Delay:               7.986ns (Levels of Logic = 6)
-  Source:            disp/dot_index_3 (FF)
-  Destination:       disp/dot_index_8 (FF)
+Delay:               9.274ns (Levels of Logic = 9)
+  Source:            disp/char_index_0 (FF)
+  Destination:       disp/disp_data_out (FF)
   Source Clock:      disp/clock1 rising
   Destination Clock: disp/clock1 rising
 
-  Data Path: disp/dot_index_3 to disp/dot_index_8
+  Data Path: disp/char_index_0 to disp/disp_data_out
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDRS:C->Q            17   0.568   1.297  disp/dot_index_3 (disp/dot_index_3)
-     LUT3:I0->O            1   0.439   0.557  disp/dot_index_mux0000<4>52_SW0 (N82)
-     LUT4:I3->O           21   0.439   1.087  disp/state_cmp_eq0001 (disp/state_cmp_eq0001)
-     LUT4_D:I3->O          4   0.439   0.781  disp/dot_index_mux0000<5>421 (disp/N94)
-     LUT4_L:I2->LO         1   0.439   0.140  disp/dot_index_mux0000<1>28_SW0 (N141)
-     LUT4:I3->O            1   0.439   0.551  disp/dot_index_mux0000<1>28 (disp/dot_index_mux0000<1>28)
-     LUT4:I2->O            1   0.439   0.000  disp/dot_index_mux0000<1>72 (disp/dot_index_mux0000<1>)
-     FDR:D                     0.370          disp/dot_index_8
+     FDE:C->Q             16   0.568   1.034  disp/char_index_0 (disp/char_index_0)
+     LUT3_D:I2->LO         1   0.439   0.140  disp/Mmux_nibble11_SW0 (N257)
+     LUT4:I3->O           18   0.439   1.232  disp/Mmux_nibble11 (disp/nibble<0>)
+     LUT4:I1->O            1   0.439   0.726  disp/Mmux__varindex0000_151_SW0 (N118)
+     LUT2:I1->O            1   0.439   0.000  disp/Mmux__varindex0000_151 (disp/Mmux__varindex0000_151)
+     MUXF5:I1->O           1   0.436   0.000  disp/Mmux__varindex0000_14_f5 (disp/Mmux__varindex0000_14_f5)
+     MUXF6:I0->O           1   0.447   0.557  disp/Mmux__varindex0000_12_f6 (disp/Mmux__varindex0000_12_f6)
+     LUT4:I3->O            1   0.439   0.558  disp/disp_data_out_mux000033 (disp/disp_data_out_mux000033)
+     LUT4_L:I3->LO         1   0.439   0.134  disp/disp_data_out_mux000078 (disp/disp_data_out_mux000078)
+     LUT4:I2->O            1   0.439   0.000  disp/disp_data_out_mux0000168 (disp/disp_data_out_mux0000)
+     FDE:D                     0.370          disp/disp_data_out
     ----------------------------------------
-    Total                      7.986ns (3.572ns logic, 4.414ns route)
-                                       (44.7% logic, 55.3% route)
+    Total                      9.274ns (4.894ns logic, 4.380ns route)
+                                       (52.8% logic, 47.2% route)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'ac97_bit_clock'
-  Clock period: 10.356ns (frequency: 96.562MHz)
-  Total number of paths / destination ports: 1550 / 90
+  Clock period: 10.333ns (frequency: 96.777MHz)
+  Total number of paths / destination ports: 1547 / 90
 -------------------------------------------------------------------------
-Delay:               5.178ns (Levels of Logic = 3)
-  Source:            a/ac97/bit_count_5 (FF)
+Delay:               5.166ns (Levels of Logic = 3)
+  Source:            a/ac97/bit_count_6 (FF)
   Destination:       a/ac97/Mshreg_left_in_data_12 (FF)
   Source Clock:      ac97_bit_clock rising
   Destination Clock: ac97_bit_clock falling
 
-  Data Path: a/ac97/bit_count_5 to a/ac97/Mshreg_left_in_data_12
+  Data Path: a/ac97/bit_count_6 to a/ac97/Mshreg_left_in_data_12
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FD:C->Q              15   0.568   1.197  a/ac97/bit_count_5 (a/ac97/bit_count_5)
+     FD:C->Q              14   0.568   1.186  a/ac97/bit_count_6 (a/ac97/bit_count_6)
      LUT4:I1->O            1   0.439   0.552  a/ac97/left_in_data_and000024 (a/ac97/left_in_data_and000024)
      LUT4_L:I2->LO         1   0.439   0.134  a/ac97/left_in_data_and000026 (a/ac97/left_in_data_and000026)
      LUT4:I2->O           10   0.439   0.885  a/ac97/left_in_data_and000049 (a/ac97/left_in_data_and0000)
      SRL16E_1:CE               0.525          a/ac97/Mshreg_left_in_data_12
     ----------------------------------------
-    Total                      5.178ns (2.410ns logic, 2.768ns route)
-                                       (46.5% logic, 53.5% route)
+    Total                      5.166ns (2.410ns logic, 2.757ns route)
+                                       (46.6% logic, 53.4% route)
 
 =========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 'clock_27mhz'
-  Total number of paths / destination ports: 69 / 69
+  Total number of paths / destination ports: 83 / 81
 -------------------------------------------------------------------------
-Offset:              3.540ns (Levels of Logic = 2)
-  Source:            switch<6> (PAD)
-  Destination:       sw6/count_0 (FF)
+Offset:              3.823ns (Levels of Logic = 3)
+  Source:            user1<23> (PAD)
+  Destination:       usbInput/usbtest/rd (FF)
   Destination Clock: clock_27mhz rising
 
-  Data Path: switch<6> to sw6/count_0
+  Data Path: user1<23> to usbInput/usbtest/rd
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     IBUF:I->O             4   0.825   0.955  switch_6_IBUF (switch_6_IBUF)
-     LUT3:I1->O           20   0.439   1.041  sw6/count_or00001 (sw6/count_or0000)
-     FDRE:R                    0.280          sw6/count_0
+     IBUF:I->O             7   0.825   1.024  user1_23_IBUF (user1_23_IBUF)
+     LUT4:I1->O            1   0.439   0.725  usbInput/usbtest/rd_mux0000_SW1 (N37)
+     LUT4:I1->O            1   0.439   0.000  usbInput/usbtest/rd_mux0000 (usbInput/usbtest/rd_mux0000)
+     FDS:D                     0.370          usbInput/usbtest/rd
     ----------------------------------------
-    Total                      3.540ns (1.544ns logic, 1.996ns route)
-                                       (43.6% logic, 56.4% route)
+    Total                      3.823ns (2.073ns logic, 1.750ns route)
+                                       (54.2% logic, 45.8% route)
 
 =========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 'ac97_bit_clock'
@@ -1225,6 +1213,26 @@ Offset:              1.896ns (Levels of Logic = 1)
     ----------------------------------------
     Total                      1.896ns (1.195ns logic, 0.702ns route)
                                        (63.0% logic, 37.0% route)
+
+=========================================================================
+Timing constraint: Default OFFSET OUT AFTER for Clock 'clock_27mhz'
+  Total number of paths / destination ports: 8 / 7
+-------------------------------------------------------------------------
+Offset:              7.125ns (Levels of Logic = 2)
+  Source:            a/ready_sync_1 (FF)
+  Destination:       analyzer3_clock (PAD)
+  Source Clock:      clock_27mhz rising
+
+  Data Path: a/ready_sync_1 to analyzer3_clock
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FD:C->Q               2   0.568   0.986  a/ready_sync_1 (a/ready_sync_1)
+     LUT2:I0->O            5   0.439   0.771  a/ready1 (analyzer3_clock_OBUF)
+     OBUF:I->O                 4.361          analyzer3_clock_OBUF (analyzer3_clock)
+    ----------------------------------------
+    Total                      7.125ns (5.368ns logic, 1.757ns route)
+                                       (75.3% logic, 24.7% route)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'disp/clock1'
@@ -1265,55 +1273,35 @@ Offset:              5.654ns (Levels of Logic = 1)
                                        (87.2% logic, 12.8% route)
 
 =========================================================================
-Timing constraint: Default OFFSET OUT AFTER for Clock 'clock_27mhz'
-  Total number of paths / destination ports: 6 / 5
--------------------------------------------------------------------------
-Offset:              7.125ns (Levels of Logic = 2)
-  Source:            a/ready_sync_1 (FF)
-  Destination:       analyzer3_clock (PAD)
-  Source Clock:      clock_27mhz rising
-
-  Data Path: a/ready_sync_1 to analyzer3_clock
-                                Gate     Net
-    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
-    ----------------------------------------  ------------
-     FD:C->Q               2   0.568   0.986  a/ready_sync_1 (a/ready_sync_1)
-     LUT2:I0->O            5   0.439   0.771  a/ready1 (analyzer3_clock_OBUF)
-     OBUF:I->O                 4.361          analyzer3_clock_OBUF (analyzer3_clock)
-    ----------------------------------------
-    Total                      7.125ns (5.368ns logic, 1.757ns route)
-                                       (75.3% logic, 24.7% route)
-
-=========================================================================
 Timing constraint: Default path analysis
-  Total number of paths / destination ports: 2 / 2
+  Total number of paths / destination ports: 12 / 12
 -------------------------------------------------------------------------
-Delay:               5.887ns (Levels of Logic = 2)
-  Source:            ac97_bit_clock (PAD)
-  Destination:       analyzer1_clock (PAD)
+Delay:               6.003ns (Levels of Logic = 2)
+  Source:            user1<23> (PAD)
+  Destination:       analyzer4_data<15> (PAD)
 
-  Data Path: ac97_bit_clock to analyzer1_clock
+  Data Path: user1<23> to analyzer4_data<15>
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     IBUF:I->O             2   0.825   0.701  ac97_bit_clock_IBUF (analyzer1_clock_OBUF1)
-     OBUF:I->O                 4.361          analyzer1_clock_OBUF (analyzer1_clock)
+     IBUF:I->O             7   0.825   0.816  user1_23_IBUF (user1_23_IBUF)
+     OBUF:I->O                 4.361          analyzer4_data_15_OBUF (analyzer4_data<15>)
     ----------------------------------------
-    Total                      5.887ns (5.186ns logic, 0.701ns route)
-                                       (88.1% logic, 11.9% route)
+    Total                      6.003ns (5.186ns logic, 0.816ns route)
+                                       (86.4% logic, 13.6% route)
 
 =========================================================================
 
 
 Total REAL time to Xst completion: 11.00 secs
-Total CPU time to Xst completion: 9.63 secs
+Total CPU time to Xst completion: 10.63 secs
  
 --> 
 
 
-Total memory usage is 469388 kilobytes
+Total memory usage is 470756 kilobytes
 
 Number of errors   :    0 (   0 filtered)
-Number of warnings :  447 (   0 filtered)
-Number of infos    :   29 (   0 filtered)
+Number of warnings :  431 (   0 filtered)
+Number of infos    :   27 (   0 filtered)
 

@@ -616,8 +616,8 @@ module lab5   (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
   assign analyzer2_clock = 1'b1;
   //lab5 assign analyzer3_data = 16'h0;
   //lab5 assign analyzer3_clock = 1'b1;
-  assign analyzer4_data = 16'h0;
-  assign analyzer4_clock = 1'b1;
+  // assign analyzer4_data = 16'h0;
+  // assign analyzer4_clock = 1'b1;
           
 //   wire [7:0] from_ac97_data, to_ac97_data;
 //   wire ready;
@@ -698,9 +698,10 @@ module lab5   (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
   debounce bu0(.reset(reset),.clock(clock_27mhz),.noisy(switch[0]),.clean(triggerButton));
 
   wire busy;
+  wire newout;
 
   // led is active low
-  assign led = ~{busy, startSwitch, 6'h00};
+  assign led = ~{busy, newout, 6'h00};
 
   // Data Switches
   wire [3:0] otherSwitches;
@@ -738,15 +739,18 @@ module lab5   (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
   //   .startSwitch(startSwitch),
   //   .otherSwitches(otherSwitches)
   // );
-
+  wire rd;
+  assign user1[22] = rd;
   // USB Test - wire up inputs
   usbRxTest usbInput(
     .clock(clock_27mhz),
     .reset(memReset),
     .data(user1[31:24]), //the data pins from the USB fifo
     .rxf(user1[23]), //the rxf pin from the USB fifo
+    .rd(rd),
     .triggerSwitch(triggerButton),
-    .hexdisp(hexdisp)
+    .hexdisp(hexdisp),
+    .newout_on(newout)
   );
 
   // output useful things to the logic analyzer connectors
@@ -759,6 +763,9 @@ module lab5   (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 
   assign analyzer3_clock = ready;
   assign analyzer3_data = {from_ac97_data, to_ac97_data};
+
+  assign analyzer4_data = {user1[23], rd, 6'b0, user1[31:24]};
+  assign analyzer4_clock = clock_27mhz;
 endmodule
 
 module usbRxTest(
@@ -766,15 +773,19 @@ module usbRxTest(
   input wire reset,
   input wire [7:0] data, //the data pins from the USB fifo
   input wire rxf, //the rxf pin from the USB fifo
+  output wire rd, // the rd pin from the USB fifo (OUTPUT)
   input wire triggerSwitch,
-  output reg [63:0] hexdisp
+  output reg [63:0] hexdisp,
+  output reg newout_on = 0
 );
   
-  wire rd;        // the rd pin from the USB fifo (OUTPUT)
+  //wire rd;        
   wire [7:0] out; // data from FIFO (OUTPUT)
   wire newout;  // newout=1 out contains new data (OUTPUT)
-  reg hold;     //hold=1 the module will not accept new data from the FIFO
+  wire hold;     //hold=1 the module will not accept new data from the FIFO
   wire [3:0] state; //for debugging purposes
+
+  assign hold = 1'b0; //triggerSwitch
 
   usb_input usbtest(
     .clk(clock),
@@ -790,12 +801,13 @@ module usbRxTest(
 
   always @ (posedge clock) begin
     if (newout) begin
+      newout_on <= 1;
       // display most recent byte RX'ed
       hexdisp <= {56'h0, out};
     end
-    if (~triggerSwitch) begin // if triggerSwitch is off, hold
-      hold <= 1'b1;
-    end
+    // if (~triggerSwitch) begin // if triggerSwitch is off, hold
+    //   hold <= 1'b1;
+    // end
   end
 
 endmodule

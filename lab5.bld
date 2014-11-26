@@ -230,49 +230,39 @@ WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<34>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<1>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'user1<17>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'user2<6>' has no legal driver
-WARNING:NgdBuild:470 - bidirect pad net 'user1<22>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<21>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<16>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<35>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<2>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'user1<18>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'user2<7>' has no legal driver
-WARNING:NgdBuild:470 - bidirect pad net 'user1<23>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<22>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<17>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<3>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<10>' has no legal driver
-WARNING:NgdBuild:470 - bidirect pad net 'user1<24>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'user2<8>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'user1<19>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<23>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<18>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<4>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<11>' has no legal driver
-WARNING:NgdBuild:470 - bidirect pad net 'user1<25>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'user2<9>' has no legal driver
-WARNING:NgdBuild:470 - bidirect pad net 'user1<30>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<24>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<19>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<5>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<12>' has no legal driver
-WARNING:NgdBuild:470 - bidirect pad net 'user1<26>' has no legal driver
-WARNING:NgdBuild:470 - bidirect pad net 'user1<31>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<25>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<30>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<6>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<13>' has no legal driver
-WARNING:NgdBuild:470 - bidirect pad net 'user1<27>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<31>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<26>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<7>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<14>' has no legal driver
-WARNING:NgdBuild:470 - bidirect pad net 'user1<28>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<32>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<27>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<8>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<15>' has no legal driver
-WARNING:NgdBuild:470 - bidirect pad net 'user1<29>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<28>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<33>' has no legal driver
 WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<9>' has no legal driver
@@ -313,9 +303,9 @@ Partition Implementation Status
 
 NGDBUILD Design Results Summary:
   Number of errors:     0
-  Number of warnings: 277
+  Number of warnings: 267
 
-Total memory usage is 227852 kilobytes
+Total memory usage is 228132 kilobytes
 
 Writing NGD file "lab5.ngd" ...
 
