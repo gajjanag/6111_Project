@@ -11,15 +11,15 @@ reg[8:0] y1;
 reg[8:0] y2;
 reg[8:0] y3;
 reg[8:0] y4;
-wire signed[35:0] o1;
-wire signed[35:0] o2;
-wire signed[43:0] o3;
-wire signed[34:0] o4;
-wire signed[34:0] o5;
-wire signed[42:0] o6;
-wire signed[23:0] o7;
-wire signed[23:0] o8;
-wire signed[32:0] o9;
+wire signed[67:0] o1;
+wire signed[68:0] o2;
+wire signed[78:0] o3;
+wire signed[67:0] o4;
+wire signed[68:0] o5;
+wire signed[78:0] o6;
+wire signed[58:0] o7;
+wire signed[59:0] o8;
+wire signed[70:0] o9;
 
 initial begin
 x1[9:0] = 10'd382;
@@ -34,8 +34,6 @@ y4[8:0] = 9'd127;
 end
 
 // answers (as per Julia implementation test_quad.jl) should be:
-// -43623150, 13416748, 27740167680, -36762000, 68191980, 27594931200,
-// -63426, 162132, 72618240
 
 reg clock = 0;
 perspective_params perspective_params(clock, x1, y1, x2, y2, x3, y3, x4, y4, o1, o2, o3, o4, o5, o6, o7, o8, o9);
