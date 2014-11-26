@@ -31,14 +31,14 @@ wire[8:0] percent_kept;
 wire[6:0] percent_lost_wire;
 
 // sign extensions
-assign sx1 = {0'b0, x1};
-assign sx2 = {0'b0, x2};
-assign sx3 = {0'b0, x3};
-assign sx4 = {0'b0, x4};
-assign sy1 = {0'b0, y1};
-assign sy2 = {0'b0, y2};
-assign sy3 = {0'b0, y3};
-assign sy4 = {0'b0, y4};
+assign sx1 = {1'b0, x1};
+assign sx2 = {1'b0, x2};
+assign sx3 = {1'b0, x3};
+assign sx4 = {1'b0, x4};
+assign sy1 = {1'b0, y1};
+assign sy2 = {1'b0, y2};
+assign sy3 = {1'b0, y3};
+assign sy4 = {1'b0, y4};
 
 // difference terms
 assign d_x1_x3 = sx1 - sx3;
@@ -55,7 +55,7 @@ assign prod = prod0 - prod1; // this is twice the area
 
 // but first, we need to take its absolute value
 assign abs_prod = (prod < 0) ? -prod : prod;
-assign unsigned_prod = $unsigned(abs_prod);
+assign unsigned_prod = abs_prod;
 
 // to compute the percentage of pixels covered, here is the calculation
 // we want (100*A)/(640*480), or A/(64*48)
