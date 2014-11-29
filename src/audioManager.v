@@ -6,11 +6,12 @@ module audioManager(
 
   // User I/O
   input wire startSwitch,
-  input wire [3:0] otherSwitches,
-  input wire writeSwitch,             // 1 for writeSwitch, 0 for record
+  input wire [3:0] audioSelector, 
+  input wire writeSwitch,             // 1=Write, 0=Read
   output wire [63:0] hexdisp,
   input wire buttonup,
-  input wire buttondown, 
+  input wire buttondown,
+  input wire audioTrigger, // 1=Begin Playback as determined by audioSelector
   
   // AC97 I/O
   input wire ready,                // 1 when AC97 data is available
@@ -104,10 +105,13 @@ module audioManager(
 
   reg lastButtonup;
   reg lastButtondown;
+  reg lastAudioTrigger;
+  reg [2:0] eighth = 0;
 
   always @ (posedge clock) begin
     lastButtonup <= buttonup;
     lastButtondown <= buttondown;
+    lastAudioTrigger <= audioTrigger;
 
     if (startSwitch) begin
       // write USB RX data if switch is up
@@ -123,11 +127,10 @@ module audioManager(
 
       // if button is DOWN - scroll through addresses via buttons
       if (~writeSwitch) begin 
-        // show last value on display
         dowrite <= 1'b0;
         writemode <= 1'b0;
-        // raddr <= 2;
         doread <= 1'b1;
+        
         // scroll through addresses with buttons
         if(buttonup & ~lastButtonup) begin
           raddr <= raddr + 1;
@@ -135,8 +138,30 @@ module audioManager(
         else if (buttondown & ~lastButtondown) begin
           raddr <= raddr - 1;
         end
-      end // if (writeSwitch)
-    end
+
+        if (audioTrigger) begin  
+          eighth <= eighth + 1;
+
+          if (ready & eighth == 7) begin // on every eighth ac97 sample (48/8 = 6kHz file sample)
+            raddr <= raddr + 1;
+            to_ac97_data <= frdata[7:0];
+            eighth <= 0;
+          end
+
+          // if entering this state, assign start address
+          if (audioTrigger & ~lastAudioTrigger) begin
+            // For testing, play 12K addresses (2 sec) for each trigger
+            case(audioSelector)
+              0: raddr <= 1;
+              1: raddr <= 12001;
+              2: raddr <= 24001;
+              3: raddr <= 36001;
+              default: raddr <= 48001;
+            endcase
+          end // if (audioTrigger & ~lastAudioTrigger) begin
+        end // if (audioTrigger)
+      end // if (~writeSwitch)
+    end // if (startSwitch)
     else begin
       // TO ENABLE RESET:
       // writemode <= 1

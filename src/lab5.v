@@ -690,9 +690,8 @@ module lab5   (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
   wire memReset;
   debounce benter(.reset(reset),.clock(clock_27mhz),.noisy(~button_enter),.clean(memReset));
 
-  // switch 0 up for filtering, down for no filtering
-  wire switch0;
-  debounce sw0(.reset(reset),.clock(clock_27mhz),.noisy(~button3),.clean(switch0));
+  wire audioTrigger;
+  debounce b3(.reset(reset),.clock(clock_27mhz),.noisy(switch[5]),.clean(audioTrigger));
 
   wire triggerButton;
   debounce bu0(.reset(reset),.clock(clock_27mhz),.noisy(switch[0]),.clean(triggerButton));
@@ -730,11 +729,12 @@ module lab5   (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 
     // User I/O
     .startSwitch(startSwitch),
-    .otherSwitches(otherSwitches),
+    .audioSelector(otherSwitches),
     .writeSwitch(writeSwitch), 
     .hexdisp(hexdisp),
     .buttonup(buttonup),
     .buttondown(buttondown),
+    .audioTrigger(audioTrigger), 
 
     // AC97 I/O
     .ready(ready),
