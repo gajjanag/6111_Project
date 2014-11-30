@@ -335,6 +335,8 @@ BUFG vclk2(.O(clock_65mhz),.I(clock_65mhz_unbuf));
 	         .A0(1'b1), .A1(1'b1), .A2(1'b1), .A3(1'b1));
   defparam reset_sr.INIT = 16'hFFFF;
 
+
+
 // create debounced buttons
 wire btn_up_clean, btn_down_clean, btn_left_clean, btn_right_clean;
 wire btn_up_sw, btn_down_sw, btn_left_sw, btn_right_sw;
@@ -347,6 +349,7 @@ assign btn_down_sw = ~btn_down_clean;
 assign btn_left_sw = ~btn_left_clean;
 assign btn_right_sw = ~btn_right_clean;
 
+
 // create vga signals
 wire[10:0] hcount;
 wire[10:0] vcount;
@@ -357,14 +360,18 @@ vga vga(.vclock(clock_65mhz),
     .hsync(hsync),
     .vsync(vsync),
     .blank(blank));
-    
+
+
 // create switches
 wire override_sw;
 wire[1:0] quad_corner_sw;
 assign override_sw = switch[7];
 assign quad_corner_sw = switch[1:0];
 
-// create x_i_raw, y_i_raw, x_i, y_i (dummy values for now) and instantiate move_cursor
+
+// instantiate accel_lut and move_cursor
+wire[13:0] accel_val;
+wire[75:0] quad_corners;
 wire[9:0] x1_raw;
 wire[8:0] y1_raw;
 wire[9:0] x2_raw;
@@ -383,15 +390,18 @@ wire[9:0] x4;
 wire[8:0] y4;
 wire[9:0] display_x;
 wire[8:0] display_y;
-assign x1_raw = 10'd0;
-assign y1_raw = 9'd0;
-assign x2_raw = 10'd0;
-assign y2_raw = 9'd479;
-assign x3_raw = 10'd639;
-assign y3_raw = 9'd479;
-assign x4_raw = 10'd639;
-assign y4_raw = 9'd0;
-
+assign accel_val = 14'd0; // for now
+accel_lut accel_lut(.clk(vsync),
+                .accel_val(accel_val),
+                .quad_corners(quad_corners));
+assign y4_raw = quad_corners[8:0];
+assign x4_raw = quad_corners[18:9];
+assign y3_raw = quad_corners[27:19];
+assign x3_raw = quad_corners[37:28];
+assign y2_raw = quad_corners[46:38];
+assign x2_raw = quad_corners[56:47];
+assign y1_raw = quad_corners[65:57];
+assign x1_raw = quad_corners[75:66];
 move_cursor move_cursor(.clk(vsync),
                     .up(btn_up_sw),
                     .down(btn_down_sw),
@@ -418,6 +428,7 @@ move_cursor move_cursor(.clk(vsync),
                     .display_x(display_x),
                     .display_y(display_y));
 
+
 // create pixels_lost module
 wire[6:0] percent_lost;
 pixels_lost pixels_lost(.clk(vsync),
@@ -430,7 +441,8 @@ pixels_lost pixels_lost(.clk(vsync),
                 .x4(x4),
                 .y4(y4),
                 .percent_lost(percent_lost));
-                
+
+
 // instantiate hex display
 wire[63:0] hex_disp_data;
 // lower 32 bits, keep nice separator of 0 between x, y
