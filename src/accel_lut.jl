@@ -68,6 +68,17 @@ function parse_data(path)
     return float(x_accel), float(y_accel), float(x1), float(y1), float(x2), float(y2), float(x3), float(y3), float(x4), float(y4)
 end
 
+function saturate!(vec, low, upp)
+    for i=1:length(A)
+        if (vec[i] < low)
+            vec[i] = low
+        elseif (vec[i] > upp)
+            vec[i] = upp
+        end
+    end
+    return vec
+end
+
 function write_file(path, x_accel, y_accel, x1, y1, x2, y2, x3, y3, x4, y4)
     # compute grid
     x = zeros(2^14)
@@ -103,6 +114,21 @@ function write_file(path, x_accel, y_accel, x1, y1, x2, y2, x3, y3, x4, y4)
     y2_interp = integer(evaluate(spline_y2, x, y))
     y3_interp = integer(evaluate(spline_y3, x, y))
     y4_interp = integer(evaluate(spline_y4, x, y))
+
+    # threshold x, y coords at appropriate values
+    # this is to guarantee we are not putting garbage into the lut
+    low_x = 0
+    low_y = 0
+    upp_x = 639
+    upp_y = 479
+    saturate!(x1_interp, low_x, upp_x)
+    saturate!(x2_interp, low_x, upp_x)
+    saturate!(x3_interp, low_x, upp_x)
+    saturate!(x4_interp, low_x, upp_x)
+    saturate!(y1_interp, low_y, upp_y)
+    saturate!(y2_interp, low_y, upp_y)
+    saturate!(y3_interp, low_y, upp_y)
+    saturate!(y4_interp, low_y, upp_y)
 
     # compute quad_corners
     for i=1:2^14
