@@ -429,7 +429,37 @@ move_cursor move_cursor(.clk(vsync),
                     .display_y(display_y));
 
 
-// create pixels_lost module
+// instantiate perspective_params module
+wire signed[67:0] p1_inv;
+wire signed[68:0] p2_inv;
+wire signed[78:0] p3_inv;
+wire signed[67:0] p4_inv;
+wire signed[68:0] p5_inv;
+wire signed[78:0] p6_inv;
+wire signed[58:0] p7_inv;
+wire signed[59:0] p8_inv;
+wire signed[70:0] p9_inv;
+perspective_params perspective_params(.clk(vsync),
+                                    .x1(x1),
+                                    .y1(y1),
+                                    .x2(x2),
+                                    .y2(y2),
+                                    .x3(x3),
+                                    .y3(y3),
+                                    .x4(x4),
+                                    .y4(y4),
+                                    .p1_inv(p1_inv),
+                                    .p2_inv(p2_inv),
+                                    .p3_inv(p3_inv),
+                                    .p4_inv(p4_inv),
+                                    .p5_inv(p5_inv),
+                                    .p6_inv(p6_inv),
+                                    .p7_inv(p7_inv),
+                                    .p8_inv(p8_inv),
+                                    .p9_inv(p9_inv));
+
+
+// instantiate pixels_lost module
 wire[6:0] percent_lost;
 pixels_lost pixels_lost(.clk(vsync),
                 .x1(x1),
