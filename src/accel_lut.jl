@@ -69,7 +69,7 @@ function parse_data(path)
 end
 
 function saturate!(vec, low, upp)
-    for i=1:length(A)
+    for i=1:length(vec)
         if (vec[i] < low)
             vec[i] = low
         elseif (vec[i] > upp)
@@ -144,7 +144,7 @@ function write_file(path, x_accel, y_accel, x1, y1, x2, y2, x3, y3, x4, y4)
     comment_tail = "////////////////////////////////////////////////////////////////////////////////\n\n"
     code_preamble1 = "module accel_lut(input clk, input[13:0] accel_val, output reg[75:0] quad_corners);\n"
     code_preamble2 = "always @(posedge clk) begin\n"
-    code_preamble3 = "\tcase accel_val\n";
+    code_preamble3 = "\tcase (accel_val)\n";
     fs = open(path, "w")
     write(fs, string(comment_head, comment_body1, comment_body2, comment_body3, comment_tail, code_preamble1, code_preamble2, code_preamble3))
 

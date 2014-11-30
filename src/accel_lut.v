@@ -8,7 +8,7 @@
 
 module accel_lut(input clk, input[13:0] accel_val, output reg[75:0] quad_corners);
 always @(posedge clk) begin
-	case accel_val
+	case (accel_val)
 		14'd0: quad_corners = 76'd131838299143680;
 		14'd1: quad_corners = 76'd131838299143680;
 		14'd2: quad_corners = 76'd131838299143680;
