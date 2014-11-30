@@ -26,12 +26,12 @@ General usage:
 accel_lut(input_path, output_path) at julia prompt
 
 input_path is path to the csv file, and output_path is path to the desired .v file
-NOTE: THIS CODE WILL OVERWRITE THAT FILE!!!
+NOTE: in order to run the command, you first need to include this file, so type:
+include("accel_lut.jl") at the julia prompt prior to running the above
+NOTE: THIS CODE WILL OVERWRITE THE FILE AT OUTPUT_PATH!!!
 
 Suggested usage:
 accel_lut("./accel_lut.txt", "./accel_lut.v")
-
-TODO: add prettifier for the csv file to make it more readable
 =#
 
 using Dierckx # interpolation package
