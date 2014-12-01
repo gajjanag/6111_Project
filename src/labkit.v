@@ -338,9 +338,6 @@ DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(sys_clock_unbuf));
 BUFG vclk2(.O(sys_clock),.I(sys_clock_unbuf));
 
 
-
-
-
 // create debounced buttons
 wire btn_up_clean, btn_down_clean, btn_left_clean, btn_right_clean;
 wire btn_up_sw, btn_down_sw, btn_left_sw, btn_right_sw;
@@ -360,10 +357,10 @@ wire[1:0] quad_corner_sw;
 assign override_sw = switch[7];
 assign quad_corner_sw = switch[1:0];
 
-// vsync wire
-wire vsync;
 
 // instantiate accel_lut and move_cursor
+// essentially, corners of quadrilateral logic
+wire vsync;
 wire[13:0] accel_val;
 wire[75:0] quad_corners;
 wire[9:0] x1_raw;
@@ -384,7 +381,7 @@ wire[9:0] x4;
 wire[8:0] y4;
 wire[9:0] display_x;
 wire[8:0] display_y;
-assign accel_val = 14'd0; // for now
+assign accel_val = 14'd0; // for now, TODO: James
 accel_lut accel_lut(.clk(vsync),
                 .accel_val(accel_val),
                 .quad_corners(quad_corners));
@@ -436,6 +433,8 @@ wire signed[70:0] p9_inv;
 wire signed[78:0] dec_numx_horiz;
 wire signed[78:0] dec_numy_horiz;
 wire signed[70:0] dec_denom_horiz;
+// hack to ensure that module is not optimized out
+// TODO: Remove
 assign user1[31] = p1_inv[67];
 assign user1[30] = p2_inv[68];
 assign user1[29] = p3_inv[78];
@@ -473,13 +472,10 @@ perspective_params perspective_params(.clk(vsync),
 
 
 // create vga signals
-wire[9:0] hcount;
-wire[8:0] vcount;
-wire signed[78:0] num_x;
-wire signed[78:0] num_y;
-wire signed[70:0] denom;
+wire[23:0] rgb;
 wire hsync, blank;
 vga vga(.vclock(clock_65mhz),
+        .sys_clock(sys_clock),
         .p1_inv(p1_inv),
         .p2_inv(p2_inv),
         .p3_inv(p3_inv),
@@ -492,15 +488,10 @@ vga vga(.vclock(clock_65mhz),
         .dec_numx_horiz(dec_numx_horiz),
         .dec_numy_horiz(dec_numy_horiz),
         .dec_denom_horiz(dec_denom_horiz),
-        .hcount(hcount),
-        .vcount(vcount),
-        .num_x(num_x),
-        .num_y(num_y),
-        .denom(denom),
+        .rgb(rgb),
         .vsync(vsync),
         .hsync(hsync),
         .blank(blank));
-
 // VGA Output.  In order to meet the setup and hold times of the
 // AD7125, we send it ~clock_65mhz.
 assign vga_out_red = rgb[23:16];
@@ -511,7 +502,8 @@ assign vga_out_blank_b = ~blank;
 assign vga_out_pixel_clock = ~clock_65mhz;
 assign vga_out_hsync = hsync;
 assign vga_out_vsync = vsync;
-        
+
+
 // instantiate pixels_lost module
 wire[6:0] percent_lost;
 pixels_lost pixels_lost(.clk(vsync),

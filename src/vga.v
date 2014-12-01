@@ -65,15 +65,50 @@ wire next_hblank,next_vblank;
 assign next_hblank = hreset ? 0 : hblankon ? 1 : hblank;
 assign next_vblank = vreset ? 0 : vblankon ? 1 : vblank;
 
+// divider outputs
+reg signed[78:0] inv_x;
+reg signed[78:0] inv_y;
+reg signed[78:0] dummy_remx;
+reg signed[78:0] dummy_remy;
+reg div_start;
+reg div_done_x;
+reg div_done_y;
+
+divider #(.WIDTH(79)) divider_x(.clk(sys_clock),
+                                .sign(1'b1),
+                                .start(div_start),
+                                .dividend(num_x),
+                                .divider(denom),
+                                .quotient(inv_x),
+                                .remainder(dummy_remx),
+                                .ready(div_done_x));
+
+divider #(.WIDTH(79)) divider_y(.clk(sys_clock),
+                                .sign(1'b1),
+                                .start(div_start),
+                                .dividend(num_y),
+                                .divider(denom),
+                                .quotient(inv_y),
+                                .remainder(dummy_remy),
+                                .ready(div_done_y));
+
+// color values
+parameter BLACK = 24'd0;
+
+// checkerboard computation
+// uses three bits from the coordinates to generate the checkerboard
+// (similar to Lab 3)
+assign checkerboard = inv_x[8:6] + inv_y[8:6];
+
 always @(posedge vclock) begin
     hcount <= hreset ? 0 : hcount + 1;
     hblank <= next_hblank;
     hsync <= hsyncon ? 0 : hsyncoff ? 1 : hsync;  // active low
-    vcount <= hreset ? (vreset ? 0 : vcount + 1) : vcount;        
+    vcount <= hreset ? (vreset ? 0 : vcount + 1) : vcount;
     vblank <= next_vblank;
     vsync <= vsyncon ? 0 : vsyncoff ? 1 : vsync;  // active low
     blank <= next_vblank | (next_hblank & ~hreset);
-    
+
     // parameter updates
     if (hreset && vreset) begin
         num_x <= p3_inv;
@@ -90,38 +125,34 @@ always @(posedge vclock) begin
         num_y <= num_y + p4_inv;
         denom <= denom + p7_inv;
     end
+    if ((inv_x < 0) || (inv_x > 639) || (inv_y < 0) || (inv_y > 479)) begin
+        rgb[23:0] <= BLACK;
+    end
+    else begin
+        rgb[23:0] <= {{8{checkerboard[2]}}, {8{checkerboard[1]}}, {8{checkerboard[0]}}};
+    end
 end
 
-module divider #(parameter WIDTH = 8) 
-  (input clk, sign, start,
-   input [WIDTH-1:0] dividend, 
-   input [WIDTH-1:0] divider,
-   output reg [WIDTH-1:0] quotient,
-   output [WIDTH-1:0] remainder,
-   output ready);
+reg vclock_prev;
+parameter WAIT_FOR_DIVIDER_ST = 1'b0;
+parameter WAIT_FOR_VCLOCK_ST = 1'b1;
+reg cur_state = WAIT_FOR_VCLOCK_ST;
 
-wire signed[78:0] inv_x_wire;
-wire signed[78:0] inv_y_wire;
-wire signed[78:0] dummy_remx;
-wire signed[78:0] dummy_remy;
-
-divider #(.WIDTH(79)) divider_x(.clk(sys_clock),
-                                .sign(1'b1),
-                                .start(),
-                                .dividend(num_x),
-                                .divider(denom),
-                                .quotient(inv_x_wire),
-                                .remainder(dummy_remx),
-                                .ready());
-                                
-divider #(.WIDTH(79)) divider_y(.clk(sys_clock),
-                                .sign(1'b1),
-                                .start(),
-                                .dividend(num_y),
-                                .divider(denom),
-                                .quotient(inv_y_wire),
-                                .remainder(dummy_remy),
-                                .ready());                          
 always @(posedge sys_clock) begin
-
+    vclock_prev <= vclock;
+    case (cur_state) begin
+        WAIT_FOR_VCLOCK_ST: begin
+            if ((vclock == 1) && (vclock_prev == 0)) begin
+                cur_state <= WAIT_FOR_DIVIDER_ST;
+                div_start <= 1;
+            end
+        end
+        WAIT_FOR_DIVIDER_ST: begin
+            div_start <= 0;
+            if ((div_done_x == 1) && (div_done_y == 1)) begin
+                cur_state <= WAIT_FOR_VCLOCK_ST;
+            end
+        end
+    endcase
+end
 endmodule
