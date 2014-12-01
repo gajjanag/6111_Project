@@ -198,14 +198,14 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    // ac97_sdata_in is an input
 
    // VGA Output
-   assign vga_out_red = 8'h0;
-   assign vga_out_green = 8'h0;
-   assign vga_out_blue = 8'h0;
-   assign vga_out_sync_b = 1'b1;
-   assign vga_out_blank_b = 1'b1;
-   assign vga_out_pixel_clock = 1'b0;
-   assign vga_out_hsync = 1'b0;
-   assign vga_out_vsync = 1'b0;
+   //assign vga_out_red = 8'h0;
+   //assign vga_out_green = 8'h0;
+   //assign vga_out_blue = 8'h0;
+   //assign vga_out_sync_b = 1'b1;
+   //assign vga_out_blank_b = 1'b1;
+   //assign vga_out_pixel_clock = 1'b0;
+   //assign vga_out_hsync = 1'b0;
+   //assign vga_out_vsync = 1'b0;
 
    // Video Output
    assign tv_out_ycrcb = 10'h0;
@@ -320,20 +320,24 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
   // and the FPGA's internal clocks begin toggling.
   //
   ////////////////////////////////////////////////////////////////////////////
-wire clock_65_mhz_unbuf, clock_65_mhz;
+wire reset;
+SRL16 reset_sr(.D(1'b0), .CLK(clock_27mhz), .Q(reset),
+         .A0(1'b1), .A1(1'b1), .A2(1'b1), .A3(1'b1));
+defparam reset_sr.INIT = 16'hFFFF;
+
+// create clocks
 // use FPGA's digital clock manager to produce a
 // 65MHz clock (actually 64.8MHz)
-DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(clock_65mhz_unbuf));
+// this clock is our system clock
+// vga display will run at a much slower clk
+DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(sys_clock_unbuf));
 // synthesis attribute CLKFX_DIVIDE of vclk1 is 10
 // synthesis attribute CLKFX_MULTIPLY of vclk1 is 24
 // synthesis attribute CLK_FEEDBACK of vclk1 is NONE
 // synthesis attribute CLKIN_PERIOD of vclk1 is 37
-BUFG vclk2(.O(clock_65mhz),.I(clock_65mhz_unbuf));
+BUFG vclk2(.O(sys_clock),.I(sys_clock_unbuf));
 
-  wire reset;
-  SRL16 reset_sr(.D(1'b0), .CLK(clock_27mhz), .Q(reset),
-	         .A0(1'b1), .A1(1'b1), .A2(1'b1), .A3(1'b1));
-  defparam reset_sr.INIT = 16'hFFFF;
+
 
 
 
@@ -497,6 +501,16 @@ vga vga(.vclock(clock_65mhz),
         .hsync(hsync),
         .blank(blank));
 
+// VGA Output.  In order to meet the setup and hold times of the
+// AD7125, we send it ~clock_65mhz.
+assign vga_out_red = rgb[23:16];
+assign vga_out_green = rgb[15:8];
+assign vga_out_blue = rgb[7:0];
+assign vga_out_sync_b = 1'b1;    // not used
+assign vga_out_blank_b = ~blank;
+assign vga_out_pixel_clock = ~clock_65mhz;
+assign vga_out_hsync = hsync;
+assign vga_out_vsync = vsync;
         
 // instantiate pixels_lost module
 wire[6:0] percent_lost;

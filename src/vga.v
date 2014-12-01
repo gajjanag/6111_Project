@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 module vga(input vclock,
+            input sys_clock,
             input signed[67:0] p1_inv,
             input signed[68:0] p2_inv,
             input signed[78:0] p3_inv,
@@ -18,11 +19,7 @@ module vga(input vclock,
             input signed[78:0] dec_numx_horiz,
             input signed[78:0] dec_numy_horiz,
             input signed[70:0] dec_denom_horiz,
-            output reg [9:0] hcount,  // pixel number on current line
-            output reg [8:0] vcount,  // line number
-            output reg signed[78:0] num_x, 
-            output reg signed[78:0] num_y,
-            output reg signed[70:0] denom,
+            output reg[23:0] rgb,
             output reg vsync,hsync,blank);
 
 // VGA (640x480)
@@ -34,6 +31,17 @@ parameter VGA_VBLANKON  =  10'd479;
 parameter VGA_VSYNCON   =  10'd490;
 parameter VGA_VSYNCOFF  =  10'd492;
 parameter VGA_VRESET    =  10'd523;
+
+// pixel info
+reg[9:0] hcount;
+reg[8:0] vcount;
+reg[23:0] rgb;
+
+// internal registers for numerator and denominator computation
+// see perspective_params.v for the equations
+reg signed[78:0] num_x;
+reg signed[78:0] num_y;
+reg signed[78:0] denom;
 
 // horizontal: 800 pixels total
 // display 640 pixels per line
@@ -56,6 +64,7 @@ assign vreset = hreset & (vcount == VGA_VRESET);
 wire next_hblank,next_vblank;
 assign next_hblank = hreset ? 0 : hblankon ? 1 : hblank;
 assign next_vblank = vreset ? 0 : vblankon ? 1 : vblank;
+
 always @(posedge vclock) begin
     hcount <= hreset ? 0 : hcount + 1;
     hblank <= next_hblank;
@@ -82,4 +91,37 @@ always @(posedge vclock) begin
         denom <= denom + p7_inv;
     end
 end
+
+module divider #(parameter WIDTH = 8) 
+  (input clk, sign, start,
+   input [WIDTH-1:0] dividend, 
+   input [WIDTH-1:0] divider,
+   output reg [WIDTH-1:0] quotient,
+   output [WIDTH-1:0] remainder,
+   output ready);
+
+wire signed[78:0] inv_x_wire;
+wire signed[78:0] inv_y_wire;
+wire signed[78:0] dummy_remx;
+wire signed[78:0] dummy_remy;
+
+divider #(.WIDTH(79)) divider_x(.clk(sys_clock),
+                                .sign(1'b1),
+                                .start(),
+                                .dividend(num_x),
+                                .divider(denom),
+                                .quotient(inv_x_wire),
+                                .remainder(dummy_remx),
+                                .ready());
+                                
+divider #(.WIDTH(79)) divider_y(.clk(sys_clock),
+                                .sign(1'b1),
+                                .start(),
+                                .dividend(num_y),
+                                .divider(denom),
+                                .quotient(inv_y_wire),
+                                .remainder(dummy_remy),
+                                .ready());                          
+always @(posedge sys_clock) begin
+
 endmodule
