@@ -285,10 +285,10 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    // button_left, button_down, button_up, and switches are inputs
 
    // User I/Os
-   assign user1 = 32'hZ;
-   assign user2 = 32'hZ;
-   assign user3 = 32'hZ;
-   assign user4 = 32'hZ;
+   //assign user1 = 32'hZ;
+   //assign user2 = 32'hZ;
+   //assign user3 = 32'hZ;
+   //assign user4 = 32'hZ;
 
    // Daughtercard Connectors
    assign daughtercard = 44'hZ;
@@ -350,24 +350,14 @@ assign btn_left_sw = ~btn_left_clean;
 assign btn_right_sw = ~btn_right_clean;
 
 
-// create vga signals
-wire[10:0] hcount;
-wire[10:0] vcount;
-wire hsync, vsync, blank;
-vga vga(.vclock(clock_65mhz),
-    .hcount(hcount),
-    .vcount(vcount),
-    .hsync(hsync),
-    .vsync(vsync),
-    .blank(blank));
-
-
 // create switches
 wire override_sw;
 wire[1:0] quad_corner_sw;
 assign override_sw = switch[7];
 assign quad_corner_sw = switch[1:0];
 
+// vsync wire
+wire vsync;
 
 // instantiate accel_lut and move_cursor
 wire[13:0] accel_val;
@@ -439,6 +429,22 @@ wire signed[78:0] p6_inv;
 wire signed[58:0] p7_inv;
 wire signed[59:0] p8_inv;
 wire signed[70:0] p9_inv;
+wire signed[78:0] dec_numx_horiz;
+wire signed[78:0] dec_numy_horiz;
+wire signed[70:0] dec_denom_horiz;
+assign user1[31] = p1_inv[67];
+assign user1[30] = p2_inv[68];
+assign user1[29] = p3_inv[78];
+assign user1[28] = p4_inv[67];
+assign user1[27] = p5_inv[68];
+assign user1[26] = p6_inv[78];
+assign user1[25] = p7_inv[58];
+assign user1[24] = p8_inv[59];
+assign user1[23] = p9_inv[70];
+assign user1[22:0] = 23'd0;
+assign user2[31:0] = 32'd0;
+assign user3[31:0] = 32'd0;
+assign user4[31:0] = 32'd0;
 perspective_params perspective_params(.clk(vsync),
                                     .x1(x1),
                                     .y1(y1),
@@ -456,9 +462,42 @@ perspective_params perspective_params(.clk(vsync),
                                     .p6_inv(p6_inv),
                                     .p7_inv(p7_inv),
                                     .p8_inv(p8_inv),
-                                    .p9_inv(p9_inv));
+                                    .p9_inv(p9_inv),
+                                    .dec_numx_horiz(dec_numx_horiz),
+                                    .dec_numy_horiz(dec_numy_horiz),
+                                    .dec_denom_horiz(dec_denom_horiz));
 
 
+// create vga signals
+wire[9:0] hcount;
+wire[8:0] vcount;
+wire signed[78:0] num_x;
+wire signed[78:0] num_y;
+wire signed[70:0] denom;
+wire hsync, blank;
+vga vga(.vclock(clock_65mhz),
+        .p1_inv(p1_inv),
+        .p2_inv(p2_inv),
+        .p3_inv(p3_inv),
+        .p4_inv(p4_inv),
+        .p5_inv(p5_inv),
+        .p6_inv(p6_inv),
+        .p7_inv(p7_inv),
+        .p8_inv(p8_inv),
+        .p9_inv(p9_inv),
+        .dec_numx_horiz(dec_numx_horiz),
+        .dec_numy_horiz(dec_numy_horiz),
+        .dec_denom_horiz(dec_denom_horiz),
+        .hcount(hcount),
+        .vcount(vcount),
+        .num_x(num_x),
+        .num_y(num_y),
+        .denom(denom),
+        .vsync(vsync),
+        .hsync(hsync),
+        .blank(blank));
+
+        
 // instantiate pixels_lost module
 wire[6:0] percent_lost;
 pixels_lost pixels_lost(.clk(vsync),

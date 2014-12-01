@@ -33,6 +33,9 @@
 // p7_inv = p5*p7 - p4*p8
 // p8_inv = p1*p8 - p2*p7
 // p9_inv = p2*p4 - p1*p5
+// dec_numx_horiz = p1_inv * 639
+// dec_numy_horiz = p4_inv * 639
+// dec_denom_horiz = p7_inv * 639
 ////////////////////////////////////////////////////////////////////////////////
 
 module perspective_params(input clk,
@@ -57,7 +60,10 @@ module perspective_params(input clk,
                 output reg signed[78:0] p6_inv,
                 output reg signed[58:0] p7_inv,
                 output reg signed[59:0] p8_inv,
-                output reg signed[70:0] p9_inv);
+                output reg signed[70:0] p9_inv,
+                output reg signed[78:0] dec_numx_horiz,
+                output reg signed[78:0] dec_numy_horiz,
+                output reg signed[70:0] dec_denom_horiz);
 
 // sign extensions
 wire signed[10:0] sx1, sx2, sx3, sx4;
@@ -88,10 +94,10 @@ assign d_y4_y2 = sy4 - sy2;
 wire signed[20:0] num0, num1, num2, num3;
 wire signed[21:0] p7_temp, p8_temp;
 wire signed[23:0] p7, p8;
-assign num0 = -d_x4_x1 * d_y2_y3;
+assign num0 = -(d_x4_x1 * d_y2_y3);
 assign num1 = d_y4_y1 * d_x2_x3;
 assign num2 = d_x1_x2 * d_y3_y4;
-assign num3 = -d_x3_x4 * d_y1_y2;
+assign num3 = -(d_x3_x4 * d_y1_y2);
 assign p7_temp = num0 + num1;
 assign p8_temp = num2 + num3;
 assign p7 = (p7_temp <<< 1) + p7_temp;
@@ -177,6 +183,15 @@ assign p7_inv_wire = p5*p7 - p4*p8;
 assign p8_inv_wire = p1*p8 - p2*p7;
 assign p9_inv_wire = p2*p4 - p1*p5;
 
+// computation of dec_numx_horiz, dec_numy_horiz, dec_denom_horiz
+wire signed[78:0] dec_numx_horiz_wire;
+wire signed[78:0] dec_numy_horiz_wire;
+wire signed[70:0] dec_denom_horiz_wire;
+// multiply stuff by 639 = 512 + 128 - 1
+assign dec_numx_horiz_wire = (p1_inv_wire <<< 9) + (p1_inv_wire <<< 7) - p1_inv_wire;
+assign dec_numy_horiz_wire = (p4_inv_wire <<< 9) + (p4_inv_wire <<< 7) - p4_inv_wire;
+assign dec_denom_horiz_wire = (p7_inv_wire <<< 9) + (p7_inv_wire <<< 7) - p7_inv_wire;
+
 always @(posedge clk) begin
     p1_inv <= p1_inv_wire;
     p2_inv <= p2_inv_wire;
@@ -187,6 +202,9 @@ always @(posedge clk) begin
     p7_inv <= p7_inv_wire;
     p8_inv <= p8_inv_wire;
     p9_inv <= p9_inv_wire;
+    dec_numx_horiz <= dec_numx_horiz_wire;
+    dec_numy_horiz <= dec_numy_horiz_wire;
+    dec_denom_horiz <= dec_denom_horiz_wire;
 end
 
 endmodule

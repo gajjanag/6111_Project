@@ -1,15 +1,31 @@
 ////////////////////////////////////////////////////////////////////////////////
-// vga: Generate XVGA display signals (640 x 480 @ 60Hz)
+// vga: Generate XVGA display signals (640 x 480)
+// also generates num_x, num_y, denom signals that are used in pixel_map
 // Credits: module heavily draws from Jose's project (Fall 2011),
 // also staff xvga module
 ////////////////////////////////////////////////////////////////////////////////
 
 module vga(input vclock,
-            output reg [10:0] hcount,  // pixel number on current line
-            output reg [10:0] vcount,  // line number
+            input signed[67:0] p1_inv,
+            input signed[68:0] p2_inv,
+            input signed[78:0] p3_inv,
+            input signed[67:0] p4_inv,
+            input signed[68:0] p5_inv,
+            input signed[78:0] p6_inv,
+            input signed[58:0] p7_inv,
+            input signed[59:0] p8_inv,
+            input signed[70:0] p9_inv,
+            input signed[78:0] dec_numx_horiz,
+            input signed[78:0] dec_numy_horiz,
+            input signed[70:0] dec_denom_horiz,
+            output reg [9:0] hcount,  // pixel number on current line
+            output reg [8:0] vcount,  // line number
+            output reg signed[78:0] num_x, 
+            output reg signed[78:0] num_y,
+            output reg signed[70:0] denom,
             output reg vsync,hsync,blank);
 
-// VGA (640x480) @ 60 Hz
+// VGA (640x480)
 parameter VGA_HBLANKON  =  10'd639;
 parameter VGA_HSYNCON   =  10'd655;
 parameter VGA_HYSNCOFF  =  10'd751;
@@ -44,11 +60,26 @@ always @(posedge vclock) begin
     hcount <= hreset ? 0 : hcount + 1;
     hblank <= next_hblank;
     hsync <= hsyncon ? 0 : hsyncoff ? 1 : hsync;  // active low
-
-    vcount <= hreset ? (vreset ? 0 : vcount + 1) : vcount;
+    vcount <= hreset ? (vreset ? 0 : vcount + 1) : vcount;        
     vblank <= next_vblank;
     vsync <= vsyncon ? 0 : vsyncoff ? 1 : vsync;  // active low
-
     blank <= next_vblank | (next_hblank & ~hreset);
+    
+    // parameter updates
+    if (hreset && vreset) begin
+        num_x <= p3_inv;
+        num_y <= p6_inv;
+        denom <= p9_inv;
+    end
+    else if (hreset && ~vreset) begin
+        num_x <= num_x - dec_numx_horiz + p2_inv;
+        num_y <= num_y - dec_numy_horiz + p5_inv;
+        denom <= denom - dec_denom_horiz + p8_inv;
+    end
+    else if (~hreset && ~vreset) begin
+        num_x <= num_x + p1_inv;
+        num_y <= num_y + p4_inv;
+        denom <= denom + p7_inv;
+    end
 end
 endmodule
