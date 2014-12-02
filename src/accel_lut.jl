@@ -81,12 +81,12 @@ end
 
 function write_file(path, x_accel, y_accel, x1, y1, x2, y2, x3, y3, x4, y4)
     # compute grid
-    x = zeros(2^14)
-    y = zeros(2^14)
-    quad_corners = zeros(Int128, 2^14)
-    for i=0:2^14-1
-        x[i+1] = i >> 7
-        y[i+1] = i & ((1 << 7) - 1)
+    x = zeros(2^12)
+    y = zeros(2^12)
+    quad_corners = zeros(Int128, 2^12)
+    for i=0:2^12-1
+        x[i+1] = i >> 6
+        y[i+1] = i & ((1 << 6) - 1)
     end
 
     # do the spline interpolation
@@ -131,7 +131,7 @@ function write_file(path, x_accel, y_accel, x1, y1, x2, y2, x3, y3, x4, y4)
     saturate!(y4_interp, low_y, upp_y)
 
     # compute quad_corners
-    for i=1:2^14
+    for i=1:2^12
         quad_corners[i] = y4_interp[i] + (x4_interp[i] << 9) + (y3_interp[i] << 19) + (x3_interp[i] << 28)
         quad_corners[i] += (y2_interp[i] << 38) + (x2_interp[i] << 47) + (y1_interp[i] << 57) + (x1_interp[i] << 66)
     end
@@ -149,9 +149,9 @@ function write_file(path, x_accel, y_accel, x1, y1, x2, y2, x3, y3, x4, y4)
     write(fs, string(comment_head, comment_body1, comment_body2, comment_body3, comment_tail, code_preamble1, code_preamble2, code_preamble3))
 
     # write body
-    for i=0:2^14-1
+    for i=0:2^12-1
         val = quad_corners[i+1]
-        line_str = string("\t\t14'd", i, ": quad_corners = 76'd", val, ";\n")
+        line_str = string("\t\t12'd", i, ": quad_corners = 76'd", val, ";\n")
         write(fs, line_str)
     end
 
