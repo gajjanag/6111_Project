@@ -142,7 +142,7 @@ function write_file(path, x_accel, y_accel, x1, y1, x2, y2, x3, y3, x4, y4)
     comment_body2 = "//DO NOT MANUALLY EDIT THIS FILE!!!\n\n"
     comment_body3 = "//This file implements accel_lut rom for lookup of quadrilateral corners\n//based on accelerometer readings\n"
     comment_tail = "////////////////////////////////////////////////////////////////////////////////\n\n"
-    code_preamble1 = "module accel_lut(input clk, input[13:0] accel_val, output reg[75:0] quad_corners);\n"
+    code_preamble1 = "module accel_lut(input clk, input[11:0] accel_val, output reg[75:0] quad_corners);\n"
     code_preamble2 = "always @(posedge clk) begin\n"
     code_preamble3 = "\tcase (accel_val)\n";
     fs = open(path, "w")
