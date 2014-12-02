@@ -11,28 +11,28 @@ Target Device  : xc2v6000
 Target Package : bf957
 Target Speed   : -4
 Mapper Version : virtex2 -- $Revision: 1.46.12.2 $
-Mapped Date    : Tue Nov 25 23:22:47 2014
+Mapped Date    : Tue Dec  2 16:18:58 2014
 
 Design Summary
 --------------
 Number of errors:      0
-Number of warnings:  303
+Number of warnings:  298
 Logic Utilization:
-  Number of Slice Flip Flops:           438 out of  67,584    1%
-  Number of 4 input LUTs:               667 out of  67,584    1%
+  Number of Slice Flip Flops:           489 out of  67,584    1%
+  Number of 4 input LUTs:               717 out of  67,584    1%
 Logic Distribution:
-  Number of occupied Slices:            498 out of  33,792    1%
-    Number of Slices containing only related logic:     498 out of     498 100%
-    Number of Slices containing unrelated logic:          0 out of     498   0%
+  Number of occupied Slices:            552 out of  33,792    1%
+    Number of Slices containing only related logic:     552 out of     552 100%
+    Number of Slices containing unrelated logic:          0 out of     552   0%
       *See NOTES below for an explanation of the effects of unrelated logic.
-  Total Number of 4 input LUTs:         796 out of  67,584    1%
-    Number used as logic:               660
-    Number used as a route-thru:        129
+  Total Number of 4 input LUTs:         864 out of  67,584    1%
+    Number used as logic:               710
+    Number used as a route-thru:        147
     Number used as Shift registers:       7
   Number of bonded IOBs:                576 out of     684   84%
   Number of BUFGMUXs:                     3 out of      16   18%
 
-Peak Memory Usage:  488 MB
+Peak Memory Usage:  490 MB
 Total REAL time to MAP completion:  4 secs 
 Total CPU time to MAP completion:   3 secs 
 
@@ -77,7 +77,7 @@ Section 1 - Errors
 Section 2 - Warnings
 --------------------
 WARNING:LIT:243 - Logical network user3<28>_IBUF has no load.
-WARNING:LIT:395 - The above warning message base_net_load_rule is repeated 300
+WARNING:LIT:395 - The above warning message base_net_load_rule is repeated 295
    more times for the following (max. 5 shown):
    user3<4>_IBUF,
    user3<29>_IBUF,
@@ -267,17 +267,7 @@ WARNING:PhysDesignRules:367 - The signal <button2_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <button3_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
-WARNING:PhysDesignRules:367 - The signal <switch<0>_IBUF> is incomplete. The
-   signal does not drive any load pins in the design.
-WARNING:PhysDesignRules:367 - The signal <switch<1>_IBUF> is incomplete. The
-   signal does not drive any load pins in the design.
-WARNING:PhysDesignRules:367 - The signal <switch<2>_IBUF> is incomplete. The
-   signal does not drive any load pins in the design.
-WARNING:PhysDesignRules:367 - The signal <switch<3>_IBUF> is incomplete. The
-   signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <switch<4>_IBUF> is incomplete. The
-   signal does not drive any load pins in the design.
-WARNING:PhysDesignRules:367 - The signal <switch<5>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <daughtercard<10>_IBUF> is incomplete.
    The signal does not drive any load pins in the design.

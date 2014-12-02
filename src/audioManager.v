@@ -139,27 +139,28 @@ module audioManager(
           raddr <= raddr - 1;
         end
 
-        if (audioTrigger) begin  
+        if (audioTrigger & ready) begin  
           eighth <= eighth + 1;
 
-          if (ready & eighth == 7) begin // on every eighth ac97 sample (48/8 = 6kHz file sample)
+          if (eighth == 7) begin // on every eighth ac97 sample (48/8 = 6kHz file sample)
             raddr <= raddr + 1;
-            to_ac97_data <= frdata[7:0];
-            eighth <= 0;
+            to_ac97_data <= frdata[15:8];
+            // eighth <= 0;
           end
-
-          // if entering this state, assign start address
-          if (audioTrigger & ~lastAudioTrigger) begin
-            // For testing, play 12K addresses (2 sec) for each trigger
-            case(audioSelector)
-              0: raddr <= 1;
-              1: raddr <= 20001;
-              2: raddr <= 24001;
-              3: raddr <= 36001;
-              default: raddr <= 48001;
-            endcase
-          end // if (audioTrigger & ~lastAudioTrigger) begin
         end // if (audioTrigger)
+
+        // if entering this state, assign start address
+        if (audioTrigger & ~lastAudioTrigger) begin
+          // For testing, play 12K addresses (2 sec) for each trigger
+          case(audioSelector)
+            0: raddr <= 1;
+            1: raddr <= 20001;
+            2: raddr <= 24001;
+            3: raddr <= 36001;
+            default: raddr <= 48001;
+          endcase
+        end // if (audioTrigger & ~lastAudioTrigger) 
+
       end // if (~writeSwitch)
     end // if (startSwitch)
     else begin

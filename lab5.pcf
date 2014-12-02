@@ -1,5 +1,5 @@
 //! **************************************************************************
-// Written by: Map K.39 on Tue Nov 25 23:22:50 2014
+// Written by: Map K.39 on Tue Dec 02 16:19:01 2014
 //! **************************************************************************
 
 SCHEMATIC START;
@@ -191,8 +191,8 @@ COMP "button2" LOCATE = SITE "AD11" LEVEL 1;
 COMP "button3" LOCATE = SITE "AB12" LEVEL 1;
 COMP "switch<0>" LOCATE = SITE "AK26" LEVEL 1;
 COMP "switch<1>" LOCATE = SITE "AL26" LEVEL 1;
-COMP "switch<2>" LOCATE = SITE "AK25" LEVEL 1;
 COMP "tv_out_subcar_reset" LOCATE = SITE "K27" LEVEL 1;
+COMP "switch<2>" LOCATE = SITE "AK25" LEVEL 1;
 COMP "analyzer4_clock" LOCATE = SITE "AD9" LEVEL 1;
 COMP "switch<3>" LOCATE = SITE "AC21" LEVEL 1;
 COMP "switch<4>" LOCATE = SITE "AB20" LEVEL 1;

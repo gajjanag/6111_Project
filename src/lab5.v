@@ -2,39 +2,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-// Switch Debounce Module
-//
-///////////////////////////////////////////////////////////////////////////////
-
-module debounce (
-  input wire reset, clock, noisy,
-  output reg clean
-);
-  reg [18:0] count;
-  reg new;
-
-  always @(posedge clock)
-    if (reset) begin
-      count <= 0;
-      new <= noisy;
-      clean <= noisy;
-    end
-    else if (noisy != new) begin
-      // noisy input changed, restart the .01 sec clock
-      new <= noisy;
-      count <= 0;
-    end
-    else if (count == 270000)
-      // noisy input stable for .01 secs, pass it along!
-      clean <= new;
-    else
-      // waiting for .01 sec to pass
-      count <= count+1;
-
-endmodule
-
-///////////////////////////////////////////////////////////////////////////////
-//
 // bi-directional monaural interface to AC97
 //
 ///////////////////////////////////////////////////////////////////////////////
