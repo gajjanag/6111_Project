@@ -325,20 +325,40 @@ SRL16 reset_sr(.D(1'b0), .CLK(clock_27mhz), .Q(reset),
          .A0(1'b1), .A1(1'b1), .A2(1'b1), .A3(1'b1));
 defparam reset_sr.INIT = 16'hFFFF;
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // create clocks
-// use FPGA's digital clock manager to produce a
-// 65MHz clock (actually 64.8MHz)
+// use FPGA's digital clock manager to produce a 50 MHz clock
 // this clock is our system clock
-// vga display will run at a much slower clk
-DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(sys_clock_unbuf));
-// synthesis attribute CLKFX_DIVIDE of vclk1 is 10
-// synthesis attribute CLKFX_MULTIPLY of vclk1 is 24
+// to drive VGA at 640x480 (60 Hz), we need a 25 MHz vga clock
+// credits to Jose for computing the required clock values
+// and use of ramclock module
+///////////////////////////////////////////////////////////////////////////////////////////////////
+wire sys_clk_unbuf, sys_clk_buf, sys_clk, vga_clk;
+wire ram0_clk, ram1_clk, sys_clk_90, sys_clk_270, clock_feedback_out, locked_vga_clk;
+wire slow_clk;
+DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(sys_clk_unbuf));
+// synthesis attribute CLKFX_DIVIDE of vclk1 is 15
+// synthesis attribute CLKFX_MULTIPLY of vclk1 is 28
 // synthesis attribute CLK_FEEDBACK of vclk1 is NONE
 // synthesis attribute CLKIN_PERIOD of vclk1 is 37
-BUFG vclk2(.O(sys_clock),.I(sys_clock_unbuf));
+BUFG vclk2(.O(sys_clk_buf),.I(sys_clk_unbuf));
+ramclock rc(.ref_clock(sys_clk_buf), 
+            .fpga_clock(sys_clk), 
+            .fpga_clock_d2(vga_clk),
+            .fpga_clock_90(sys_clk_90),
+            .fpga_clock_270(sys_clk_270),
+            .ram0_clock(ram0_clk),
+            .ram1_clock(ram1_clk),
+            .clock_feedback_in(clock_feedback_in),
+            .clock_feedback_out(clock_feedback_out),
+            .locked(locked_vga_clk));
+assign vga_clk = locked_vga_clk;
+slow_clk slow_clk(.clk(vga_clk),
+                .slow_clk(slow_clk));
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // create debounced buttons
+///////////////////////////////////////////////////////////////////////////////////////////////////
 wire btn_up_clean, btn_down_clean, btn_left_clean, btn_right_clean;
 wire btn_up_sw, btn_down_sw, btn_left_sw, btn_right_sw;
 debounce btn_up_debounce(.reset(reset), .clock(clock_27mhz), .noisy(button_up), .clean(btn_up_clean));
@@ -350,17 +370,32 @@ assign btn_down_sw = ~btn_down_clean;
 assign btn_left_sw = ~btn_left_clean;
 assign btn_right_sw = ~btn_right_clean;
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // create switches
+///////////////////////////////////////////////////////////////////////////////////////////////////
 wire override_sw;
 wire[1:0] quad_corner_sw;
 assign override_sw = switch[7];
 assign quad_corner_sw = switch[1:0];
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// instantiate vga
+///////////////////////////////////////////////////////////////////////////////////////////////////
+wire[9:0] hcount;
+wire[8:0] vcount;
+wire vsyc, hsync, blank;
+vga vga(.vclock(vga_clk),
+        .hcount(hcount),
+        .vcount(vcount),
+        .vsync(vsync),
+        .hsync(hsync),
+        .blank(blank));
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // instantiate accel_lut and move_cursor
 // essentially, corners of quadrilateral logic
-wire vsync;
+///////////////////////////////////////////////////////////////////////////////////////////////////
 wire[13:0] accel_val;
 wire[75:0] quad_corners;
 wire[9:0] x1_raw;
@@ -382,7 +417,7 @@ wire[8:0] y4;
 wire[9:0] display_x;
 wire[8:0] display_y;
 assign accel_val = 14'd0; // for now, TODO: James
-accel_lut accel_lut(.clk(vsync),
+accel_lut accel_lut(.clk(slow_clk),
                 .accel_val(accel_val),
                 .quad_corners(quad_corners));
 assign y4_raw = quad_corners[8:0];
@@ -420,7 +455,9 @@ move_cursor move_cursor(.clk(vsync),
                     .display_y(display_y));
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // instantiate perspective_params module
+///////////////////////////////////////////////////////////////////////////////////////////////////
 wire signed[67:0] p1_inv;
 wire signed[68:0] p2_inv;
 wire signed[78:0] p3_inv;
@@ -448,7 +485,7 @@ assign user1[22:0] = 23'd0;
 assign user2[31:0] = 32'd0;
 assign user3[31:0] = 32'd0;
 assign user4[31:0] = 32'd0;
-perspective_params perspective_params(.clk(vsync),
+perspective_params perspective_params(.clk(slow_clk),
                                     .x1(x1),
                                     .y1(y1),
                                     .x2(x2),
@@ -471,35 +508,18 @@ perspective_params perspective_params(.clk(vsync),
                                     .dec_denom_horiz(dec_denom_horiz));
 
 
-// create vga signals
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Create VGA output signals
+// In order to meet the setup and hold times of AD7125, we send it ~vga_clk
+///////////////////////////////////////////////////////////////////////////////////////////////////
 wire[23:0] rgb;
-wire hsync, blank;
-vga vga(.vclock(clock_65mhz),
-        .sys_clock(sys_clock),
-        .p1_inv(p1_inv),
-        .p2_inv(p2_inv),
-        .p3_inv(p3_inv),
-        .p4_inv(p4_inv),
-        .p5_inv(p5_inv),
-        .p6_inv(p6_inv),
-        .p7_inv(p7_inv),
-        .p8_inv(p8_inv),
-        .p9_inv(p9_inv),
-        .dec_numx_horiz(dec_numx_horiz),
-        .dec_numy_horiz(dec_numy_horiz),
-        .dec_denom_horiz(dec_denom_horiz),
-        .rgb(rgb),
-        .vsync(vsync),
-        .hsync(hsync),
-        .blank(blank));
-// VGA Output.  In order to meet the setup and hold times of the
-// AD7125, we send it ~clock_65mhz.
+assign rgb = 24'hffffff; // for now
 assign vga_out_red = rgb[23:16];
 assign vga_out_green = rgb[15:8];
 assign vga_out_blue = rgb[7:0];
 assign vga_out_sync_b = 1'b1;    // not used
 assign vga_out_blank_b = ~blank;
-assign vga_out_pixel_clock = ~clock_65mhz;
+assign vga_out_pixel_clock = ~vga_clk;
 assign vga_out_hsync = hsync;
 assign vga_out_vsync = vsync;
 
