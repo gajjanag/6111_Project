@@ -24,7 +24,7 @@ ser = serial.Serial(port='/dev/tty.usbserial-FTDHKA57')
 
 # ser = serial.Serial(port='/dev/tty.usbserial-A900a0YF')
 
-a = open('test.coe','r')
+a = open('audio_convert/Applause6k.coe','r')
 
 for line in a:
     
