@@ -107,11 +107,13 @@ module audioManager(
   reg lastButtondown;
   reg lastAudioTrigger;
   reg [2:0] eighth = 0;
+  reg lastReady;
 
   always @ (posedge clock) begin
     lastButtonup <= buttonup;
     lastButtondown <= buttondown;
     lastAudioTrigger <= audioTrigger;
+    lastReady <= ready;
 
     if (startSwitch) begin
       // write USB RX data if switch is up
@@ -139,7 +141,7 @@ module audioManager(
           raddr <= raddr - 1;
         end
 
-        if (audioTrigger & ready) begin  
+        if (audioTrigger & (ready & ~lastReady)) begin  
           eighth <= eighth + 1;
 
           if (eighth == 7) begin // on every eighth ac97 sample (48/8 = 6kHz file sample)
