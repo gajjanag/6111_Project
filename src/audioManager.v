@@ -153,7 +153,7 @@ module audioManager(
             // For testing, play 12K addresses (2 sec) for each trigger
             case(audioSelector)
               0: raddr <= 1;
-              1: raddr <= 12001;
+              1: raddr <= 20001;
               2: raddr <= 24001;
               3: raddr <= 36001;
               default: raddr <= 48001;
