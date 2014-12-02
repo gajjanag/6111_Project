@@ -5,7 +5,7 @@
     The structure and the elements are likely to change over the next few releases.
     This means code written to parse this file will need to be revisited each subsequent release.-->
 
-  <application stringID="NgdBuild" timeStamp="Tue Dec  2 16:54:13 2014">
+  <application stringID="NgdBuild" timeStamp="Tue Dec  2 17:15:22 2014">
     <task stringID="NGDBUILD_REPORT">
       <section stringID="NGDBUILD_DESIGN_SUMMARY">
         <item dataType="int" stringID="NGDBUILD_NUM_ERRORS" value="0"/>

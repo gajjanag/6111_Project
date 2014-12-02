@@ -146,6 +146,7 @@ module audioManager(
 
           if (eighth == 7) begin // on every eighth ac97 sample (48/8 = 6kHz file sample)
             
+            
             // eighth <= 0;
           end
           // 48K sample rate
