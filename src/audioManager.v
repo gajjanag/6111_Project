@@ -143,10 +143,12 @@ module audioManager(
           eighth <= eighth + 1;
 
           if (eighth == 7) begin // on every eighth ac97 sample (48/8 = 6kHz file sample)
-            raddr <= raddr + 1;
-            to_ac97_data <= frdata[15:8];
+            
             // eighth <= 0;
           end
+          // 48K sample rate
+          raddr <= raddr + 1;
+          to_ac97_data <= frdata[15:8];
         end // if (audioTrigger)
 
         // if entering this state, assign start address
