@@ -1,3 +1,5 @@
+`default_nettype none
+
 ////////////////////////////////////////////////////////////////////////////////
 // vga: Generate XVGA display signals (640 x 480 @ 60Hz)
 // Credits: module heavily draws from Jose's project (Fall 2011),
@@ -5,14 +7,14 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 module vga(input vclock,
-            output reg [10:0] hcount,  // pixel number on current line
-            output reg [10:0] vcount,  // line number
+            output reg [9:0] hcount,  // pixel number on current line
+            output reg [9:0] vcount,  // line number
             output reg vsync,hsync,blank);
 
 // VGA (640x480) @ 60 Hz
 parameter VGA_HBLANKON  =  10'd639;
 parameter VGA_HSYNCON   =  10'd655;
-parameter VGA_HYSNCOFF  =  10'd751;
+parameter VGA_HSYNCOFF  =  10'd751;
 parameter VGA_HRESET    =  10'd799;
 parameter VGA_VBLANKON  =  10'd479;
 parameter VGA_VSYNCON   =  10'd490;
@@ -25,7 +27,7 @@ reg hblank,vblank;
 wire hsyncon,hsyncoff,hreset,hblankon;
 assign hblankon = (hcount == VGA_HBLANKON);
 assign hsyncon = (hcount == VGA_HSYNCON);
-assign hsyncoff = (hcount == VGA_HYSNCOFF);
+assign hsyncoff = (hcount == VGA_HSYNCOFF);
 assign hreset = (hcount == VGA_HRESET);
 
 // vertical: 524 lines total

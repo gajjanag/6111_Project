@@ -1,4 +1,4 @@
-//`default nettype none
+`default_nettype none
 ////////////////////////////////////////////////////////////////////////////////
 //
 // 6.111 FPGA Labkit -- Template Toplevel Module
@@ -131,11 +131,11 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	  tv_out_subcar_reset;
    
    input  [19:0] tv_in_ycrcb;
-   input  tv_in_data_valid, tv_in_line_clock1, tv_in_line_clock2, tv_in_aef,
+   input   tv_in_data_valid, tv_in_line_clock1, tv_in_line_clock2, tv_in_aef,
 	  tv_in_hff, tv_in_aff;
-   output tv_in_i2c_clock, tv_in_fifo_read, tv_in_fifo_clock, tv_in_iso,
+   output  tv_in_i2c_clock, tv_in_fifo_read, tv_in_fifo_clock, tv_in_iso,
 	  tv_in_reset_b, tv_in_clock;
-   inout  tv_in_i2c_data;
+   inout   tv_in_i2c_data;
         
    inout  [35:0] ram0_data;
    output [18:0] ram0_address;
@@ -147,26 +147,26 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    output ram1_adv_ld, ram1_clk, ram1_cen_b, ram1_ce_b, ram1_oe_b, ram1_we_b;
    output [3:0] ram1_bwe_b;
 
-   input  clock_feedback_in;
-   output clock_feedback_out;
+   input   clock_feedback_in;
+   output  clock_feedback_out;
    
    inout  [15:0] flash_data;
    output [23:0] flash_address;
-   output flash_ce_b, flash_oe_b, flash_we_b, flash_reset_b, flash_byte_b;
-   input  flash_sts;
+   output  flash_ce_b, flash_oe_b, flash_we_b, flash_reset_b, flash_byte_b;
+   input   flash_sts;
    
-   output rs232_txd, rs232_rts;
+   output  rs232_txd, rs232_rts;
    input  rs232_rxd, rs232_cts;
 
    input  mouse_clock, mouse_data, keyboard_clock, keyboard_data;
 
    input  clock_27mhz, clock1, clock2;
 
-   output disp_blank, disp_clock, disp_rs, disp_ce_b, disp_reset_b;  
-   input  disp_data_in;
-   output  disp_data_out;
+   output  disp_blank, disp_clock, disp_rs, disp_ce_b, disp_reset_b;  
+   input   disp_data_in;
+   output   disp_data_out;
    
-   input  button0, button1, button2, button3, button_enter, button_right,
+   input button0, button1, button2, button3, button_enter, button_right,
 	  button_left, button_down, button_up;
    input  [7:0] switch;
    output [7:0] led;
@@ -175,7 +175,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    
    inout [43:0] daughtercard;
 
-   inout  [15:0] systemace_data;
+   inout [15:0] systemace_data;
    output [6:0]  systemace_address;
    output systemace_ce_b, systemace_we_b, systemace_oe_b;
    input  systemace_irq, systemace_mpbrdy;
@@ -280,7 +280,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    // disp_data_in is an input
 
    // Buttons, Switches, and Individual LEDs
-   assign led = 8'hFF;
+   //assign led = 8'hFF;
    // button0, button1, button2, button3, button_enter, button_right,
    // button_left, button_down, button_up, and switches are inputs
 
@@ -333,28 +333,25 @@ defparam reset_sr.INIT = 16'hFFFF;
 // credits to Jose for computing the required clock values
 // and use of ramclock module
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-wire sys_clk_unbuf, sys_clk_buf, sys_clk, vga_clk;
-wire ram0_clk, ram1_clk, sys_clk_90, sys_clk_270, clock_feedback_out, locked_vga_clk;
+wire sys_clk_unbuf, sys_clk, vga_clk, vga_clk_unbuf;
 wire slow_clk;
+wire clk_locked;
 DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(sys_clk_unbuf));
 // synthesis attribute CLKFX_DIVIDE of vclk1 is 15
 // synthesis attribute CLKFX_MULTIPLY of vclk1 is 28
 // synthesis attribute CLK_FEEDBACK of vclk1 is NONE
 // synthesis attribute CLKIN_PERIOD of vclk1 is 37
-BUFG vclk2(.O(sys_clk_buf),.I(sys_clk_unbuf));
-ramclock rc(.ref_clock(sys_clk_buf), 
-            .fpga_clock(sys_clk), 
-            .fpga_clock_d2(vga_clk),
-            .fpga_clock_90(sys_clk_90),
-            .fpga_clock_270(sys_clk_270),
-            .ram0_clock(ram0_clk),
-            .ram1_clock(ram1_clk),
-            .clock_feedback_in(clock_feedback_in),
-            .clock_feedback_out(clock_feedback_out),
-            .locked(locked_vga_clk));
-assign vga_clk = locked_vga_clk;
-slow_clk slow_clk(.clk(vga_clk),
-                .slow_clk(slow_clk));
+BUFG vclk2(.O(sys_clk),.I(sys_clk_unbuf));
+DCM int_dcm(.CLKIN(sys_clk), .CLKFX(vga_clk_unbuf), .LOCKED(clk_locked));
+// synthesis attribute CLKFX_DIVIDE of int_dcm is 4
+// synthesis attribute CLKFX_MULTIPLY of int_dcm is 2
+// synthesis attribute CLK_FEEDBACK of int_dcm is NONE
+// synthesis attribute CLKIN_PERIOD of int_dcm is 20
+BUFG int_dcm2(.O(vga_clk), .I(vga_clk_unbuf));
+assign led[7] = ~clk_locked;
+assign led[6:0] = {7{1'b1}};
+slow_clk slow(.clk(vga_clk),
+            .slow_clk(slow_clk));
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // create debounced buttons
@@ -383,8 +380,8 @@ assign quad_corner_sw = switch[1:0];
 // instantiate vga
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 wire[9:0] hcount;
-wire[8:0] vcount;
-wire vsyc, hsync, blank;
+wire[9:0] vcount;
+wire vsync, hsync, blank;
 vga vga(.vclock(vga_clk),
         .hcount(hcount),
         .vcount(vcount),
@@ -396,7 +393,7 @@ vga vga(.vclock(vga_clk),
 // instantiate accel_lut and move_cursor
 // essentially, corners of quadrilateral logic
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-wire[13:0] accel_val;
+wire[11:0] accel_val;
 wire[75:0] quad_corners;
 wire[9:0] x1_raw;
 wire[8:0] y1_raw;
@@ -416,7 +413,7 @@ wire[9:0] x4;
 wire[8:0] y4;
 wire[9:0] display_x;
 wire[8:0] display_y;
-assign accel_val = 14'd0; // for now, TODO: James
+assign accel_val = 12'd0; // for now, TODO: James
 accel_lut accel_lut(.clk(slow_clk),
                 .accel_val(accel_val),
                 .quad_corners(quad_corners));
@@ -472,7 +469,7 @@ wire signed[78:0] dec_numy_horiz;
 wire signed[70:0] dec_denom_horiz;
 // hack to ensure that module is not optimized out
 // TODO: Remove
-assign user1[31] = p1_inv[67];
+/*assign user1[31] = p1_inv[67];
 assign user1[30] = p2_inv[68];
 assign user1[29] = p3_inv[78];
 assign user1[28] = p4_inv[67];
@@ -484,7 +481,7 @@ assign user1[23] = p9_inv[70];
 assign user1[22:0] = 23'd0;
 assign user2[31:0] = 32'd0;
 assign user3[31:0] = 32'd0;
-assign user4[31:0] = 32'd0;
+assign user4[31:0] = 32'd0;*/
 perspective_params perspective_params(.clk(slow_clk),
                                     .x1(x1),
                                     .y1(y1),
