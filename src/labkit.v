@@ -400,7 +400,8 @@ assign a_wr = 1;
 assign b_wr = 0;
 assign a_din = 12'hf00;
 assign b_din = 0;
-wire[16:0] a_addr, b_addr;
+reg[16:0] a_addr = 0;
+wire[16:0] b_addr;
 always @(posedge sys_clk) begin
     a_addr <= (a_addr < 76799) ? (a_addr + 1) : a_addr;
 end
