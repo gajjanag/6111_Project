@@ -353,6 +353,7 @@ assign led[6:0] = {7{1'b1}};
 slow_clk slow(.clk(vga_clk),
             .slow_clk(slow_clk));
 
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // create debounced buttons
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -366,6 +367,7 @@ assign btn_up_sw = ~btn_up_clean;
 assign btn_down_sw = ~btn_down_clean;
 assign btn_left_sw = ~btn_left_clean;
 assign btn_right_sw = ~btn_right_clean;
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // create switches
@@ -388,6 +390,23 @@ vga vga(.vclock(vga_clk),
         .vsync(vsync),
         .hsync(hsync),
         .blank(blank));
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Create VGA output signals
+// In order to meet the setup and hold times of AD7125, we send it ~vga_clk
+///////////////////////////////////////////////////////////////////////////////////////////////////
+wire[23:0] rgb;
+assign rgb = 24'hffffff; // for now
+assign vga_out_red = rgb[23:16];
+assign vga_out_green = rgb[15:8];
+assign vga_out_blue = rgb[7:0];
+assign vga_out_sync_b = 1'b1;    // not used
+assign vga_out_blank_b = ~blank;
+assign vga_out_pixel_clock = ~vga_clk;
+assign vga_out_hsync = hsync;
+assign vga_out_vsync = vsync;
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // instantiate accel_lut and move_cursor
@@ -504,24 +523,9 @@ perspective_params perspective_params(.clk(slow_clk),
                                     .dec_numy_horiz(dec_numy_horiz),
                                     .dec_denom_horiz(dec_denom_horiz));
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// Create VGA output signals
-// In order to meet the setup and hold times of AD7125, we send it ~vga_clk
-///////////////////////////////////////////////////////////////////////////////////////////////////
-wire[23:0] rgb;
-assign rgb = 24'hffffff; // for now
-assign vga_out_red = rgb[23:16];
-assign vga_out_green = rgb[15:8];
-assign vga_out_blue = rgb[7:0];
-assign vga_out_sync_b = 1'b1;    // not used
-assign vga_out_blank_b = ~blank;
-assign vga_out_pixel_clock = ~vga_clk;
-assign vga_out_hsync = hsync;
-assign vga_out_vsync = vsync;
-
-
 // instantiate pixels_lost module
+///////////////////////////////////////////////////////////////////////////////////////////////////
 wire[6:0] percent_lost;
 pixels_lost pixels_lost(.clk(vsync),
                 .x1(x1),
@@ -535,7 +539,9 @@ pixels_lost pixels_lost(.clk(vsync),
                 .percent_lost(percent_lost));
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // instantiate hex display
+///////////////////////////////////////////////////////////////////////////////////////////////////
 wire[63:0] hex_disp_data;
 // lower 32 bits, keep nice separator of 0 between x, y
 assign hex_disp_data[8:0] = display_y;
