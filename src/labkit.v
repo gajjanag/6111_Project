@@ -377,7 +377,6 @@ wire[1:0] quad_corner_sw;
 assign override_sw = switch[7];
 assign quad_corner_sw = switch[1:0];
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // instantiate vga
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -393,14 +392,40 @@ vga vga(.vclock(vga_clk),
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// instantiate bram blocks
+///////////////////////////////////////////////////////////////////////////////////////////////////
+wire a_wr, b_wr;
+wire[11:0] a_din, a_dout, b_din, b_dout;
+assign a_wr = 1;
+assign b_wr = 0;
+assign a_din = 12'hf00;
+assign b_din = 0;
+wire[16:0] a_addr, b_addr;
+always @(posedge sys_clk) begin
+    a_addr <= (a_addr < 76799) ? (a_addr + 1) : a_addr;
+end
+addr_map addr_map(.hcount(hcount),
+                .vcount(vcount),
+                .addr(b_addr));
+bram vga_buf(.a_clk(sys_clk),
+            .a_wr(a_wr),
+            .a_addr(a_addr),
+            .a_din(a_din),
+            .a_dout(a_dout),
+            .b_clk(vga_clk),
+            .b_wr(b_wr),
+            .b_addr(b_addr),
+            .b_din(b_din),
+            .b_dout(b_dout));
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // Create VGA output signals
 // In order to meet the setup and hold times of AD7125, we send it ~vga_clk
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-wire[23:0] rgb;
-assign rgb = 24'hffffff; // for now
-assign vga_out_red = rgb[23:16];
-assign vga_out_green = rgb[15:8];
-assign vga_out_blue = rgb[7:0];
+assign vga_out_red = {b_dout[11:8], 4'b0};
+assign vga_out_green = {b_dout[7:4], 4'b0};
+assign vga_out_blue = {b_dout[3:0], 4'b0};
 assign vga_out_sync_b = 1'b1;    // not used
 assign vga_out_blank_b = ~blank;
 assign vga_out_pixel_clock = ~vga_clk;
