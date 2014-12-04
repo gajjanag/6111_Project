@@ -1,5 +1,5 @@
 NUM_USER_FILES
-13
+15
 s
 user_file_1
 src/display_16hex.v
@@ -15,6 +15,12 @@ src/audioManager.v
 s
 user_file_13
 src/usbRxTest.v
+s
+user_file_14
+src/Square.v
+s
+user_file_15
+src/Divider.v
 s
 user_file_2
 src/lab5.v
