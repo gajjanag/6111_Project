@@ -19,12 +19,12 @@ module divider #(parameter WIDTH = 8)
    reg [WIDTH*2-1:0] dividend_copy, divider_copy, diff;
    reg negative_output;
    
-   wire [WIDTH-1:0] remainder = (!negative_output) ?
+   assign remainder = (!negative_output) ?
              dividend_copy[WIDTH-1:0] : ~dividend_copy[WIDTH-1:0] + 1'b1;
 
    reg [5:0] bit;
    reg del_ready = 1;
-   wire ready = (!bit) & ~del_ready;
+   assign ready = (!bit) & ~del_ready;
 
    wire [WIDTH-2:0] zeros = 0;
    initial bit = 0;

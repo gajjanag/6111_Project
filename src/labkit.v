@@ -511,11 +511,9 @@ perspective_params perspective_params(.clk(slow_clk),
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 // dump a checkerboard into "ntsc" buffer
-reg[9:0] cur_x, cur_y;
-assign cur_x = 0;
-assign cur_y = 0;
-reg[16:0] ntsc_in_addr;
-assign ntsc_in_addr = 0;
+reg[9:0] cur_x = 0;
+reg[9:0] cur_y = 0;
+reg[16:0] ntsc_in_addr = 0;
 wire[2:0] checkerboard;
 assign checkerboard = cur_x[7:5] + cur_y[7:5];
 wire[11:0] ntsc_din;
@@ -554,7 +552,7 @@ pixel_map pixel_map(.clk(sys_clk),
                 .pixel_out(vga_din),
                 .ntsc_out_addr(ntsc_out_addr),
                 .vga_in_wr(vga_in_wr),
-                .vga_in_addr(vga_in_addr);
+                .vga_in_addr(vga_in_addr));
 
 // read from vga buffer for display
 wire[16:0] vga_out_addr;
@@ -585,7 +583,7 @@ bram vga_buf(.a_clk(sys_clk),
             .b_clk(vga_clk),
             .b_wr(0),
             .b_addr(vga_out_addr),
-            .b_din(vga_dummy_din)
+            .b_din(vga_dummy_din),
             .b_dout(vga_dout));
 
 

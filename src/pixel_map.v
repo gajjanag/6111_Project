@@ -31,41 +31,36 @@ module pixel_map(input clk,
                 input signed[78:0] dec_numx_horiz,
                 input signed[78:0] dec_numy_horiz,
                 input signed[70:0] dec_denom_horiz,
-                input reg[11:0] pixel_in;
-                output reg[11:0] pixel_out;
-                output reg[16:0] ntsc_out_addr,
+                input[11:0] pixel_in,
+                output reg[11:0] pixel_out,
+                output[16:0] ntsc_out_addr,
                 output reg vga_in_wr,
-                output reg[16:0] vga_in_addr);
+                output[16:0] vga_in_addr);
 
 // default instantiation of output registers
-assign pixel_out = 0;
-assign ntsc_out_addr = 0;
-assign vga_in_wr = 0;
-assign vga_in_addr = 0;
+// assign pixel_out = 0;
+// assign ntsc_out_addr = 0;
+// assign vga_in_wr = 0;
+// assign vga_in_addr = 0;
 
 // internal registers for numerator and denominator computation
 // see perspective_params.v for the equations
-reg signed[78:0] num_x;
-reg signed[78:0] num_y;
-reg signed[78:0] denom;
-assign num_x = 0;
-assign num_y = 0;
-assign denom = 0;
+reg signed[78:0] num_x = 0;
+reg signed[78:0] num_y = 0;
+reg signed[78:0] denom = 0;
 
 // internal registers for pixel index
-reg[9:0] cur_x;
-reg[9:0] cur_y;
-assign cur_x = 0;
-assign cur_y = 0;
+reg[9:0] cur_x = 0;
+reg[9:0] cur_y = 0;
 
 // divider outputs
-reg signed[78:0] inv_x;
-reg signed[78:0] inv_y;
-reg signed[78:0] dummy_remx;
-reg signed[78:0] dummy_remy;
+wire signed[78:0] inv_x;
+wire signed[78:0] inv_y;
+wire signed[78:0] dummy_remx;
+wire signed[78:0] dummy_remy;
 reg div_start;
-reg div_done_x;
-reg div_done_y;
+wire div_done_x;
+wire div_done_y;
 
 // instantiate dividers
 divider #(.WIDTH(79)) divider_x(.clk(clk),
