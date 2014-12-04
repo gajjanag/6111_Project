@@ -16,7 +16,7 @@ module audioManager(
   // AC97 I/O
   input wire ready,                // 1 when AC97 data is available
   input wire [7:0] from_ac97_data, // 8-bit PCM data from mic
-  output reg [7:0] to_ac97_data,    // 8-bit PCM data to headphone
+  output reg [7:0] to_ac97_data,    // 8-bit PCM data to headphone // PUT BACK: REG
 
   // Flash I/O
   output wire [15:0] flash_data,
@@ -32,7 +32,8 @@ module audioManager(
   // USB I/O
   input wire [7:0] data, //the data pins from the USB fifo
   input wire rxf, //the rxf pin from the USB fifo
-  output wire rd // the rd pin from the USB fifo (OUTPUT)
+  output wire rd, // the rd pin from the USB fifo (OUTPUT)
+  output wire newout
 );
   
   reg writemode = 0;         //1=write mode; 0=read mode
@@ -76,7 +77,7 @@ module audioManager(
 
   //wire rd;        
   wire [7:0] out; // data from FIFO (OUTPUT)
-  wire newout;  // newout=1 out contains new data (OUTPUT)
+  //wire newout;  // newout=1 out contains new data (OUTPUT)
   wire hold;     //hold=1 the module will not accept new data from the FIFO
   wire [3:0] state; //for debugging purposes
 
@@ -100,8 +101,10 @@ module audioManager(
     .state(state)
   );
 
+  reg [15:0] bytesRxed = 0;
+
   // frdata has no guaruntees when not in read mode
-  assign hexdisp = {out, 8'h0, raddr[15:0], 12'h0, 1'h0, fsmstate[11:9], frdata};
+  assign hexdisp = {bytesRxed[15:0], raddr[15:0], 12'h0, 1'h0, fsmstate[11:9], frdata};
 
   reg lastButtonup;
   reg lastButtondown;
@@ -109,11 +112,38 @@ module audioManager(
   reg [2:0] eighth = 0;
   reg lastReady;
 
+  // REMOVE
+  // recorder r(.clock(clock), .reset(reset), .ready(ready),
+  //             .playback(audioSelector[3]), .from_ac97_data(from_ac97_data),
+  //             .to_ac97_data(to_ac97_data));
+  
+  // REMOVE
+  wire slowClock;
+  reg lastSlowClock;
+  wire slowClockPulse;
+  assign slowClockPulse = slowClock & ~lastSlowClock;
+  Square #(.Hz(3000)) freq2 (
+    .clock(clock),
+    .reset(reset),
+    .square(slowClock)
+  );
+
+  // REMOVE 
+  wire [19:0] tone;
+  tone750hz xxx(.clock(clock),.ready(slowClockPulse),.pcm_data(tone));
+  reg [5:0] index;
+  
+  reg [7:0] dataFromFifo;
+  always @ (posedge rd) begin
+    dataFromFifo <= out;
+  end
+
   always @ (posedge clock) begin
     lastButtonup <= buttonup;
     lastButtondown <= buttondown;
     lastAudioTrigger <= audioTrigger;
     lastReady <= ready;
+    lastSlowClock <= slowClock;
 
     if (startSwitch) begin
       // write USB RX data if switch is up
@@ -122,9 +152,20 @@ module audioManager(
         doread <= 1'b0;
         dowrite <= 1'b0; // only write on new data // WATCH OUT!!
         if (newout) begin
-          wdata <= {out, 8'b0};
+          bytesRxed <= bytesRxed + 1;
+          wdata <= {dataFromFifo, 8'b0};//{out, 8'b0};
           dowrite <= 1'b1;
         end
+
+        if (audioSelector[2]) begin // tone750Hz to flash
+          if (slowClockPulse) begin // WAS: READY
+            if (index <= 6'h3F) begin
+              wdata <= {tone[19:12], 8'b0};
+              dowrite <= 1'b1;
+              index <= index + 1;
+            end
+          end
+        end 
       end
 
       // if button is DOWN - scroll through addresses via buttons
@@ -141,17 +182,18 @@ module audioManager(
           raddr <= raddr - 1;
         end
 
-        if (audioTrigger & (ready & ~lastReady)) begin  
+        if (audioTrigger & ready) begin  
           eighth <= eighth + 1;
-
           if (eighth == 7) begin // on every eighth ac97 sample (48/8 = 6kHz file sample)
-            
-            
             // eighth <= 0;
           end
+
           // 48K sample rate
           raddr <= raddr + 1;
-          to_ac97_data <= frdata[15:8];
+          to_ac97_data <= frdata[15:8]; // PUT BACK
+          if(audioSelector[3] & raddr == 63) begin
+            raddr <= 0;
+          end
         end // if (audioTrigger)
 
         // if entering this state, assign start address
@@ -162,7 +204,7 @@ module audioManager(
             1: raddr <= 20001;
             2: raddr <= 24001;
             3: raddr <= 36001;
-            default: raddr <= 48001;
+            default: raddr <= 1;
           endcase
         end // if (audioTrigger & ~lastAudioTrigger) 
 
@@ -180,4 +222,25 @@ module audioManager(
       dowrite <= 1'h0;
     end
   end // always @
+endmodule
+
+// REMOVE
+module recorder(
+  input wire clock,            // 27mhz system clock
+  input wire reset,                // 1 to reset to initial state
+  input wire playback,             // 1 for playback, 0 for record
+  input wire ready,                // 1 when AC97 data is available
+  input wire [7:0] from_ac97_data, // 8-bit PCM data from mic
+  output reg [7:0] to_ac97_data    // 8-bit PCM data to headphone
+);  
+   // test: playback 750hz tone, or loopback using incoming data
+   wire [19:0] tone;
+   tone750hz xxx(.clock(clock),.ready(ready),.pcm_data(tone));
+
+   always @ (posedge clock) begin
+      if (ready) begin
+       // get here when we've just received new data from the AC97
+       //to_ac97_data <= playback ? tone[19:12] : from_ac97_data; // RESTORE FOR 750Hz
+      end
+   end
 endmodule

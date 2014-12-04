@@ -10,6 +10,27 @@
 2. The specified object is spelled correctly in the constraint source file.
 </msg>
 
+<msg type="warning" file="NgdBuild" num="483" delta="unknown" >Attribute &quot;<arg fmt="%s" index="1">INIT</arg>&quot; on &quot;<arg fmt="%s" index="2">management/tone&lt;12&gt;</arg>&quot; is on the wrong type of object.  Please see the Constraints Guide for more information on this attribute.
+</msg>
+
+<msg type="warning" file="NgdBuild" num="483" delta="unknown" >Attribute &quot;<arg fmt="%s" index="1">INIT</arg>&quot; on &quot;<arg fmt="%s" index="2">management/tone&lt;13&gt;</arg>&quot; is on the wrong type of object.  Please see the Constraints Guide for more information on this attribute.
+</msg>
+
+<msg type="warning" file="NgdBuild" num="483" delta="unknown" >Attribute &quot;<arg fmt="%s" index="1">INIT</arg>&quot; on &quot;<arg fmt="%s" index="2">management/tone&lt;14&gt;</arg>&quot; is on the wrong type of object.  Please see the Constraints Guide for more information on this attribute.
+</msg>
+
+<msg type="warning" file="NgdBuild" num="483" delta="unknown" >Attribute &quot;<arg fmt="%s" index="1">INIT</arg>&quot; on &quot;<arg fmt="%s" index="2">management/tone&lt;15&gt;</arg>&quot; is on the wrong type of object.  Please see the Constraints Guide for more information on this attribute.
+</msg>
+
+<msg type="warning" file="NgdBuild" num="483" delta="unknown" >Attribute &quot;<arg fmt="%s" index="1">INIT</arg>&quot; on &quot;<arg fmt="%s" index="2">management/tone&lt;16&gt;</arg>&quot; is on the wrong type of object.  Please see the Constraints Guide for more information on this attribute.
+</msg>
+
+<msg type="warning" file="NgdBuild" num="483" delta="unknown" >Attribute &quot;<arg fmt="%s" index="1">INIT</arg>&quot; on &quot;<arg fmt="%s" index="2">management/tone&lt;17&gt;</arg>&quot; is on the wrong type of object.  Please see the Constraints Guide for more information on this attribute.
+</msg>
+
+<msg type="warning" file="NgdBuild" num="483" delta="unknown" >Attribute &quot;<arg fmt="%s" index="1">INIT</arg>&quot; on &quot;<arg fmt="%s" index="2">management/tone&lt;18&gt;</arg>&quot; is on the wrong type of object.  Please see the Constraints Guide for more information on this attribute.
+</msg>
+
 <msg type="warning" file="NgdBuild" num="470" delta="unknown" ><arg fmt="%s" index="1">bidirect</arg> pad net &apos;<arg fmt="%s" index="2">user3&lt;28&gt;</arg>&apos; has no legal driver
 </msg>
 

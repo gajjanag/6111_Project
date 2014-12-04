@@ -722,7 +722,8 @@ module lab5   (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
     // USB I/O
     .data(user1[31:24]), //the data pins from the USB fifo
     .rxf(user1[23]), //the rxf pin from the USB fifo
-    .rd(user1[22]) //the rd pin TO the USB FIFO (OUTPUT)
+    .rd(user1[22]), //the rd pin TO the USB FIFO (OUTPUT)
+    .newout(newout)
   );
 
   // // USB Test - wire up inputs
@@ -749,6 +750,6 @@ module lab5   (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
   assign analyzer3_data = {from_ac97_data, to_ac97_data};
 
   // rxf, rd, 6'b0, data
-  assign analyzer4_data = {user1[23], user1[22], 6'b0, user1[31:24]};
+  assign analyzer4_data = {user1[23], user1[22], newout, 5'b0, user1[31:24]};
   assign analyzer4_clock = clock_27mhz;
 endmodule
