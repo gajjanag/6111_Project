@@ -197,16 +197,6 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    assign ac97_sdata_out = 1'b0;
    // ac97_sdata_in is an input
 
-   // VGA Output
-   //assign vga_out_red = 8'h0;
-   //assign vga_out_green = 8'h0;
-   //assign vga_out_blue = 8'h0;
-   //assign vga_out_sync_b = 1'b1;
-   //assign vga_out_blank_b = 1'b1;
-   //assign vga_out_pixel_clock = 1'b0;
-   //assign vga_out_hsync = 1'b0;
-   //assign vga_out_vsync = 1'b0;
-
    // Video Output
    assign tv_out_ycrcb = 10'h0;
    assign tv_out_reset_b = 1'b0;
@@ -270,14 +260,6 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    // PS/2 Ports
    // mouse_clock, mouse_data, keyboard_clock, and keyboard_data are inputs
 
-   // LED Displays
-   //assign disp_blank = 1'b1;
-   //assign disp_clock = 1'b0;
-   //assign disp_rs = 1'b0;
-   //assign disp_ce_b = 1'b1;
-   //assign disp_reset_b = 1'b0;
-   //assign disp_data_out = 1'b0;
-   // disp_data_in is an input
 
    // Buttons, Switches, and Individual LEDs
    //assign led = 8'hFF;
@@ -549,31 +531,61 @@ always @(posedge sys_clk) begin
     end
 end
 
+// instantiate the pixel_map module
+wire[11:0] ntsc_dout;
+wire[11:0] vga_din;
+wire[16:0] ntsc_out_addr;
+wire[16:0] vga_in_addr;
+wire vga_in_wr;
+pixel_map pixel_map(.clk(sys_clk),
+                .p1_inv(p1_inv),
+                .p2_inv(p2_inv),
+                .p3_inv(p3_inv),
+                .p4_inv(p4_inv),
+                .p5_inv(p5_inv),
+                .p6_inv(p6_inv),
+                .p7_inv(p7_inv),
+                .p8_inv(p8_inv),
+                .p9_inv(p9_inv),
+                .dec_numx_horiz(dec_numx_horiz),
+                .dec_numy_horiz(dec_numy_horiz),
+                .dec_denom_horiz(dec_denom_horiz),
+                .pixel_in(ntsc_dout),
+                .pixel_out(vga_din),
+                .ntsc_out_addr(ntsc_out_addr),
+                .vga_in_wr(vga_in_wr),
+                .vga_in_addr(vga_in_addr);
+
 // read from vga buffer for display
 wire[16:0] vga_out_addr;
 addr_map addr_map(.hcount(hcount),
                 .vcount(vcount),
                 .addr(vga_out_addr));
-wire[11:0] vga_dout;
 
 // create the brams
-wire[11:0] ntsc_dout;
+// dummy wires
+wire[11:0] ntsc_dummy_dout, ntsc_dummy_din, vga_dummy_dout, vga_dummy_din;
 bram ntsc_buf(.a_clk(sys_clk),
             .a_wr(1),
             .a_addr(ntsc_in_addr),
             .a_din(ntsc_din),
+            .a_dout(ntsc_dummy_dout),
             .b_clk(sys_clk),
             .b_wr(0),
-            .b_addr(TODO),
+            .b_addr(ntsc_out_addr),
+            .b_din(ntsc_dummy_din),
             .b_dout(ntsc_dout));
 
+wire[11:0] vga_dout;
 bram vga_buf(.a_clk(sys_clk),
-            .a_wr(TODO),
-            .a_addr(TODO),
-            .a_din(TODO),
+            .a_wr(vga_in_wr),
+            .a_addr(vga_in_addr),
+            .a_din(vga_din),
+            .a_dout(vga_dummy_dout),
             .b_clk(vga_clk),
             .b_wr(0),
             .b_addr(vga_out_addr),
+            .b_din(vga_dummy_din)
             .b_dout(vga_dout));
 
 
