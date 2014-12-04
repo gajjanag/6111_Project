@@ -392,49 +392,6 @@ vga vga(.vclock(vga_clk),
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// instantiate bram blocks
-///////////////////////////////////////////////////////////////////////////////////////////////////
-wire a_wr, b_wr;
-wire[11:0] a_din, a_dout, b_din, b_dout;
-assign a_wr = 1;
-assign b_wr = 0;
-assign a_din = 12'hf00;
-assign b_din = 0;
-reg[16:0] a_addr = 0;
-wire[16:0] b_addr;
-always @(posedge sys_clk) begin
-    a_addr <= (a_addr < 76799) ? (a_addr + 1) : a_addr;
-end
-addr_map addr_map(.hcount(hcount),
-                .vcount(vcount),
-                .addr(b_addr));
-bram vga_buf(.a_clk(sys_clk),
-            .a_wr(a_wr),
-            .a_addr(a_addr),
-            .a_din(a_din),
-            .a_dout(a_dout),
-            .b_clk(vga_clk),
-            .b_wr(b_wr),
-            .b_addr(b_addr),
-            .b_din(b_din),
-            .b_dout(b_dout));
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// Create VGA output signals
-// In order to meet the setup and hold times of AD7125, we send it ~vga_clk
-///////////////////////////////////////////////////////////////////////////////////////////////////
-assign vga_out_red = {b_dout[11:8], 4'b0};
-assign vga_out_green = {b_dout[7:4], 4'b0};
-assign vga_out_blue = {b_dout[3:0], 4'b0};
-assign vga_out_sync_b = 1'b1;    // not used
-assign vga_out_blank_b = ~blank;
-assign vga_out_pixel_clock = ~vga_clk;
-assign vga_out_hsync = hsync;
-assign vga_out_vsync = vsync;
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
 // instantiate accel_lut and move_cursor
 // essentially, corners of quadrilateral logic
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -498,6 +455,22 @@ move_cursor move_cursor(.clk(vsync),
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// instantiate pixels_lost module
+///////////////////////////////////////////////////////////////////////////////////////////////////
+wire[6:0] percent_lost;
+pixels_lost pixels_lost(.clk(vsync),
+                .x1(x1),
+                .y1(y1),
+                .x2(x2),
+                .y2(y2),
+                .x3(x3),
+                .y3(y3),
+                .x4(x4),
+                .y4(y4),
+                .percent_lost(percent_lost));
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // instantiate perspective_params module
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 wire signed[67:0] p1_inv;
@@ -549,20 +522,73 @@ perspective_params perspective_params(.clk(slow_clk),
                                     .dec_numy_horiz(dec_numy_horiz),
                                     .dec_denom_horiz(dec_denom_horiz));
 
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// instantiate pixels_lost module
+// instantiate bram blocks
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-wire[6:0] percent_lost;
-pixels_lost pixels_lost(.clk(vsync),
-                .x1(x1),
-                .y1(y1),
-                .x2(x2),
-                .y2(y2),
-                .x3(x3),
-                .y3(y3),
-                .x4(x4),
-                .y4(y4),
-                .percent_lost(percent_lost));
+
+// dump a checkerboard into "ntsc" buffer
+reg[9:0] cur_x, cur_y;
+assign cur_x = 0;
+assign cur_y = 0;
+reg[16:0] ntsc_in_addr;
+assign ntsc_in_addr = 0;
+wire[2:0] checkerboard;
+assign checkerboard = cur_x[7:5] + cur_y[7:5];
+wire[11:0] ntsc_din;
+assign ntsc_din = {{4{checkerboard[2]}}, {4{checkerboard[1]}}, {4{checkerboard[0]}}};
+always @(posedge sys_clk) begin
+    ntsc_in_addr <= (ntsc_in_addr < 76799) ? (ntsc_in_addr + 1) : ntsc_in_addr;
+    cur_x <= (cur_x < 319) ? (cur_x + 1) : 0;
+    if ((cur_x == 319) && (cur_y == 239)) begin
+        cur_y <= 0;
+    end
+    else if (cur_x == 319) begin
+        cur_y <= cur_y + 1;
+    end
+end
+
+// read from vga buffer for display
+wire[16:0] vga_out_addr;
+addr_map addr_map(.hcount(hcount),
+                .vcount(vcount),
+                .addr(vga_out_addr));
+wire[11:0] vga_dout;
+
+// create the brams
+wire[11:0] ntsc_dout;
+bram ntsc_buf(.a_clk(sys_clk),
+            .a_wr(1),
+            .a_addr(ntsc_in_addr),
+            .a_din(ntsc_din),
+            .b_clk(sys_clk),
+            .b_wr(0),
+            .b_addr(TODO),
+            .b_dout(ntsc_dout));
+
+bram vga_buf(.a_clk(sys_clk),
+            .a_wr(TODO),
+            .a_addr(TODO),
+            .a_din(TODO),
+            .b_clk(vga_clk),
+            .b_wr(0),
+            .b_addr(vga_out_addr),
+            .b_dout(vga_dout));
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Create VGA output signals
+// In order to meet the setup and hold times of AD7125, we send it ~vga_clk
+///////////////////////////////////////////////////////////////////////////////////////////////////
+assign vga_out_red = {vga_dout[11:8], 4'b0};
+assign vga_out_green = {vga_dout[7:4], 4'b0};
+assign vga_out_blue = {vga_dout[3:0], 4'b0};
+assign vga_out_sync_b = 1'b1;    // not used
+assign vga_out_blank_b = ~blank;
+assign vga_out_pixel_clock = ~vga_clk;
+assign vga_out_hsync = hsync;
+assign vga_out_vsync = vsync;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
