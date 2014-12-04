@@ -1,12 +1,14 @@
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // move_cursor: This module implements a simple UI for manually adjusting the
 // projector correction via pressing the arrow keys, and selecting which
-// corner of the quadrilateral the user is manipulating via switch[1:0] positions
+// corner of the quadrilateral the user is manipulating via switch[1:0] positions.
 // 00 -> point 1, 01 -> point 2, 10 -> point 3, 11 -> point 4
-// all the adjustments can only happen when the override is pressed
-// inputs are xi_raw, yi_raw (obtained from accelerometer lut)
-// outputs are xi, yi and display_x, display_y (for hex display)
-////////////////////////////////////////////////////////////////////////////////
+// All the adjustments can only happen when the override is pressed.
+// Inputs are xi_raw, yi_raw (obtained from accelerometer lut)
+// Outputs are xi, yi and display_x, display_y (for hex display).
+// The intention is to run this on a slow clk, even vsync could be a little
+// too fast
+///////////////////////////////////////////////////////////////////////////////////////////////////
 module move_cursor(input clk,
                 input up,
                 input down,
