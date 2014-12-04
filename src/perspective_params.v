@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // perspective_params: Generate the parameters for the perspective transform from the
 // rectangle to the quadrilateral inside it
 // Note that this is the forward mapping
@@ -36,7 +36,22 @@
 // dec_numx_horiz = p1_inv * 639
 // dec_numy_horiz = p4_inv * 639
 // dec_denom_horiz = p7_inv * 639
-////////////////////////////////////////////////////////////////////////////////
+//
+// Future improvements:
+// 1)
+// This module uses over 120 out of 144 available 18x18
+// multipliers!!!
+// By reducing bitwidths and avoiding needless multiplies, e.g shifting
+// whenever multiplying by constant, resource utilization could be improved
+// Even with those improvements, I estimate the need of at least 80-100 18x18
+// multipliers to avoid precision loss
+//
+// 2)
+// Right now, the intention is to run this module on a slow clock, since we
+// don't want the parameters to change mid-frame anyway.
+// Thus, timing is never an issue right now.
+// However, module is easily pipelined, if one needs to run at fast clock.
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 module perspective_params(input clk,
                 input[9:0] x1,
