@@ -1,7 +1,7 @@
 #=
 This script generates an accel_lut.v file.
 accel_lut.v contains a verilog implementation of a lookup table,
-which takes in an accelerometer reading (7 bit x dir, 7 bit y dir),
+which takes in an accelerometer reading (6 bit x dir, 6 bit y dir),
 and looks up a 76 bit value (4 corners of quadrilateral)
 This script requires a input file accel_lut.txt containing data points.
 It then interpolates the data points using 2D splines,
