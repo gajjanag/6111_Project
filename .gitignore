@@ -15,3 +15,6 @@
 
 # verilog test compilations
 *.vvp
+
+# editor temp files
+*.swp
