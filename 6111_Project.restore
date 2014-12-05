@@ -846,6 +846,7 @@ proc restore { { project_dir "" } } {
       "src/debounce.v" 
       "src/display_16hex.v" 
       "src/divider.v" 
+      "src/fir31.v" 
       "src/lab5.v" 
       "src/labkit.ucf" 
       "src/params.v" 

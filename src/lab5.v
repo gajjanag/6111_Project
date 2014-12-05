@@ -671,13 +671,14 @@ module lab5   (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 
   wire busy;
   wire newout;
+  wire flashError;
 
   // led is active low
-  assign led = ~{busy, newout, 6'h00};
+  assign led = ~{busy, newout, 5'h00, flashError};
 
   // Data Switches
-  wire [3:0] otherSwitches;
-  assign otherSwitches = switch[3:0];
+  wire [4:0] otherSwitches;
+  assign otherSwitches = switch[4:0];
 
   // // Flash ROM -- enable either this or audioManager Module
   // assign flash_data = 16'hZ;
@@ -723,7 +724,8 @@ module lab5   (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
     .data(user1[31:24]), //the data pins from the USB fifo
     .rxf(user1[23]), //the rxf pin from the USB fifo
     .rd(user1[22]), //the rd pin TO the USB FIFO (OUTPUT)
-    .newout(newout)
+    .newout(newout),
+    .flashError(flashError)
   );
 
   // // USB Test - wire up inputs

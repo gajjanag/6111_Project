@@ -1,7 +1,7 @@
 Release 10.1.03 par K.39 (lin64)
 Copyright (c) 1995-2008 Xilinx, Inc.  All rights reserved.
 
-eecs-digital-20::  Wed Dec 03 19:40:33 2014
+eecs-digital-20::  Thu Dec 04 20:50:10 2014
 
 par -w -intstyle ise -ol std -t 1 lab5_map.ncd lab5.ncd lab5.pcf 
 
@@ -34,7 +34,8 @@ Device Utilization Summary:
    Number of External IOBs                 576 out of 684    84%
       Number of LOCed IOBs                 576 out of 576   100%
 
-   Number of SLICEs                        606 out of 33792   1%
+   Number of MULT18X18s                      1 out of 144     1%
+   Number of SLICEs                        669 out of 33792   1%
 
 
 Overall effort level (-ol):   Standard 
@@ -133,7 +134,6 @@ WARNING:Par:288 - The signal button0_IBUF has no load.  PAR will not attempt to 
 WARNING:Par:288 - The signal button1_IBUF has no load.  PAR will not attempt to route this signal.
 WARNING:Par:288 - The signal button2_IBUF has no load.  PAR will not attempt to route this signal.
 WARNING:Par:288 - The signal button3_IBUF has no load.  PAR will not attempt to route this signal.
-WARNING:Par:288 - The signal switch<4>_IBUF has no load.  PAR will not attempt to route this signal.
 WARNING:Par:288 - The signal daughtercard<10>_IBUF has no load.  PAR will not attempt to route this signal.
 WARNING:Par:288 - The signal clock_feedback_in_IBUF has no load.  PAR will not attempt to route this signal.
 WARNING:Par:288 - The signal daughtercard<11>_IBUF has no load.  PAR will not attempt to route this signal.
@@ -342,85 +342,86 @@ WARNING:Par:288 - The signal user4<9>_IBUF has no load.  PAR will not attempt to
 Starting Placer
 
 Phase 1.1
-Phase 1.1 (Checksum:14d0121) REAL time: 3 secs 
+Phase 1.1 (Checksum:14e3141) REAL time: 3 secs 
 
 Phase 2.7
-Phase 2.7 (Checksum:14d0121) REAL time: 3 secs 
+Phase 2.7 (Checksum:14e3141) REAL time: 3 secs 
 
 Phase 3.31
-Phase 3.31 (Checksum:14d0121) REAL time: 3 secs 
+Phase 3.31 (Checksum:14e3141) REAL time: 3 secs 
 
 Phase 4.2
 
 ......
 ................
-Phase 4.2 (Checksum:14ea772) REAL time: 6 secs 
+Phase 4.2 (Checksum:14fd792) REAL time: 6 secs 
 
 Phase 5.30
-Phase 5.30 (Checksum:14ea772) REAL time: 6 secs 
+Phase 5.30 (Checksum:14fd792) REAL time: 6 secs 
 
 Phase 6.3
-Phase 6.3 (Checksum:14ea772) REAL time: 6 secs 
+Phase 6.3 (Checksum:14fd792) REAL time: 6 secs 
 
 Phase 7.5
-Phase 7.5 (Checksum:14ea772) REAL time: 6 secs 
+Phase 7.5 (Checksum:14fd792) REAL time: 6 secs 
 
 Phase 8.8
-..
+..................
+.
+.
 .
 ..
-...
-...
-Phase 8.8 (Checksum:28c5b45) REAL time: 8 secs 
+.
+Phase 8.8 (Checksum:290ae0f) REAL time: 12 secs 
 
 Phase 9.5
-Phase 9.5 (Checksum:28c5b45) REAL time: 8 secs 
+Phase 9.5 (Checksum:290ae0f) REAL time: 13 secs 
 
 Phase 10.18
-Phase 10.18 (Checksum:28d1642) REAL time: 10 secs 
+Phase 10.18 (Checksum:292014e) REAL time: 15 secs 
 
 Phase 11.5
-Phase 11.5 (Checksum:28d1642) REAL time: 10 secs 
+Phase 11.5 (Checksum:292014e) REAL time: 15 secs 
 
 Phase 12.27
-Phase 12.27 (Checksum:28d1642) REAL time: 10 secs 
+Phase 12.27 (Checksum:292014e) REAL time: 15 secs 
 
 Phase 13.24
-Phase 13.24 (Checksum:28d1642) REAL time: 10 secs 
+Phase 13.24 (Checksum:292014e) REAL time: 15 secs 
 
-REAL time consumed by placer: 10 secs 
-CPU  time consumed by placer: 10 secs 
+REAL time consumed by placer: 15 secs 
+CPU  time consumed by placer: 15 secs 
 Writing design to file lab5.ncd
 
 
-Total REAL time to Placer completion: 10 secs 
-Total CPU time to Placer completion: 10 secs 
+Total REAL time to Placer completion: 16 secs 
+Total CPU time to Placer completion: 16 secs 
 
 Starting Router
 
-Phase 1: 4385 unrouted;       REAL time: 19 secs 
+Phase 1: 5046 unrouted;       REAL time: 25 secs 
 
-Phase 2: 3810 unrouted;       REAL time: 22 secs 
+Phase 2: 4427 unrouted;       REAL time: 28 secs 
 
-Phase 3: 858 unrouted;       REAL time: 22 secs 
+Phase 3: 989 unrouted;       REAL time: 29 secs 
 
-Phase 4: 858 unrouted; (62833)      REAL time: 22 secs 
+Phase 4: 989 unrouted; (144528)      REAL time: 29 secs 
 
-Phase 5: 887 unrouted; (0)      REAL time: 22 secs 
+Phase 5: 995 unrouted; (0)      REAL time: 29 secs 
 
-Phase 6: 0 unrouted; (0)      REAL time: 23 secs 
+Phase 6: 0 unrouted; (0)      REAL time: 30 secs 
 
-Phase 7: 0 unrouted; (0)      REAL time: 23 secs 
+Phase 7: 0 unrouted; (0)      REAL time: 30 secs 
 
-Phase 8: 0 unrouted; (0)      REAL time: 23 secs 
+Phase 8: 0 unrouted; (0)      REAL time: 30 secs 
 
-Phase 9: 0 unrouted; (0)      REAL time: 23 secs 
+Phase 9: 0 unrouted; (0)      REAL time: 30 secs 
 
-Phase 10: 0 unrouted; (0)      REAL time: 24 secs 
+Phase 10: 0 unrouted; (0)      REAL time: 31 secs 
 
 
-Total REAL time to Router completion: 24 secs 
-Total CPU time to Router completion: 23 secs 
+Total REAL time to Router completion: 31 secs 
+Total CPU time to Router completion: 31 secs 
 
 Partition Implementation Status
 -------------------------------
@@ -439,18 +440,24 @@ Generating Clock Report
 |        Clock Net    |   Resource   |Locked|Fanout|Net Skew(ns)|Max Delay(ns)|
 +---------------------+--------------+------+------+------------+-------------+
 |analyzer4_clock_OBUF |              |      |      |            |             |
-|                     |     BUFGMUX3P| No   |  272 |  0.251     |  2.341      |
+|                     |     BUFGMUX3P| No   |  315 |  0.400     |  2.500      |
 +---------------------+--------------+------+------+------------+-------------+
 |analyzer1_clock_OBUF |              |      |      |            |             |
-|                     |     BUFGMUX7S| No   |   34 |  0.343     |  2.533      |
+|                     |     BUFGMUX7S| No   |   35 |  0.403     |  2.584      |
 +---------------------+--------------+------+------+------------+-------------+
-|          disp/clock |     BUFGMUX0P| No   |   34 |  0.186     |  2.328      |
+|          disp/clock |     BUFGMUX0P| No   |   31 |  0.099     |  2.244      |
 +---------------------+--------------+------+------+------------+-------------+
 |management/usbtest/r |              |      |      |            |             |
-|                   d |         Local|      |    7 |  0.021     |  2.072      |
+|                   d |         Local|      |    7 |  0.180     |  2.186      |
++---------------------+--------------+------+------+------------+-------------+
+|management/freqUSB/s |              |      |      |            |             |
+|               quare |         Local|      |   10 |  0.277     |  2.727      |
 +---------------------+--------------+------+------+------------+-------------+
 |management/freq2/Sqr |              |      |      |            |             |
-|    /oneHertz_enable |         Local|      |    1 |  0.000     |  0.759      |
+|    /oneHertz_enable |         Local|      |    1 |  0.000     |  0.834      |
++---------------------+--------------+------+------+------------+-------------+
+|management/freqUSB/S |              |      |      |            |             |
+|  qr/oneHertz_enable |         Local|      |    1 |  0.000     |  0.755      |
 +---------------------+--------------+------+------+------------+-------------+
 
 * Net Skew is the difference between the minimum and maximum routing
@@ -469,17 +476,23 @@ Asterisk (*) preceding a constraint indicates it was not met.
   Constraint                                |  Check  | Worst Case |  Best Case | Timing |   Timing   
                                             |         |    Slack   | Achievable | Errors |    Score   
 ------------------------------------------------------------------------------------------------------
-  Autotimespec constraint for clock net ana | SETUP   |         N/A|     7.511ns|     N/A|           0
-  lyzer4_clock_OBUF                         | HOLD    |     1.266ns|            |       0|           0
+  Autotimespec constraint for clock net ana | SETUP   |         N/A|    14.835ns|     N/A|           0
+  lyzer4_clock_OBUF                         | HOLD    |     1.229ns|            |       0|           0
 ------------------------------------------------------------------------------------------------------
-  Autotimespec constraint for clock net ana | SETUP   |         N/A|    17.134ns|     N/A|           0
-  lyzer1_clock_OBUF                         | HOLD    |     1.317ns|            |       0|           0
+  Autotimespec constraint for clock net ana | SETUP   |         N/A|    20.586ns|     N/A|           0
+  lyzer1_clock_OBUF                         | HOLD    |     1.348ns|            |       0|           0
 ------------------------------------------------------------------------------------------------------
-  Autotimespec constraint for clock net dis | SETUP   |         N/A|     9.378ns|     N/A|           0
-  p/clock                                   | HOLD    |     1.333ns|            |       0|           0
+  Autotimespec constraint for clock net dis | SETUP   |         N/A|    11.175ns|     N/A|           0
+  p/clock                                   | HOLD    |     1.419ns|            |       0|           0
 ------------------------------------------------------------------------------------------------------
-  Autotimespec constraint for clock net man | SETUP   |         N/A|     1.507ns|     N/A|           0
-  agement/freq2/Sqr/oneHertz_enable         | HOLD    |     1.262ns|            |       0|           0
+  Autotimespec constraint for clock net man | SETUP   |         N/A|     4.255ns|     N/A|           0
+  agement/freqUSB/square                    | HOLD    |     1.384ns|            |       0|           0
+------------------------------------------------------------------------------------------------------
+  Autotimespec constraint for clock net man | SETUP   |         N/A|     1.490ns|     N/A|           0
+  agement/freq2/Sqr/oneHertz_enable         | HOLD    |     1.245ns|            |       0|           0
+------------------------------------------------------------------------------------------------------
+  Autotimespec constraint for clock net man | SETUP   |         N/A|     1.478ns|     N/A|           0
+  agement/freqUSB/Sqr/oneHertz_enable       | HOLD    |     1.233ns|            |       0|           0
 ------------------------------------------------------------------------------------------------------
 
 
@@ -492,18 +505,18 @@ Generating Pad Report.
 
 All signals are completely routed.
 
-WARNING:Par:283 - There are 296 loadless signals in this design. This design will cause Bitgen to issue DRC warnings.
+WARNING:Par:283 - There are 295 loadless signals in this design. This design will cause Bitgen to issue DRC warnings.
 
-Total REAL time to PAR completion: 32 secs 
-Total CPU time to PAR completion: 29 secs 
+Total REAL time to PAR completion: 40 secs 
+Total CPU time to PAR completion: 37 secs 
 
-Peak Memory Usage:  619 MB
+Peak Memory Usage:  627 MB
 
 Placement: Completed - No errors found.
 Routing: Completed - No errors found.
 
 Number of error messages: 0
-Number of warning messages: 298
+Number of warning messages: 297
 Number of info messages: 2
 
 Writing design to file lab5.ncd

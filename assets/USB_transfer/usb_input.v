@@ -29,6 +29,9 @@ module usb_input(clk,reset,data,rd,rxf,out,newout,hold,state);
 	parameter DATA_LEAVING	=10;
 	parameter DATA_LEAVING_2=11;
 	parameter DATA_LEAVING_3=12;
+	parameter DATA_LEAVING_4=13;
+	parameter DATA_LEAVING_5=14;
+	parameter DATA_LEAVING_6=15;
 	
 	initial
 		state <= WAIT;
@@ -88,17 +91,28 @@ module usb_input(clk,reset,data,rd,rxf,out,newout,hold,state);
 			
 					DATA_LEAVING:			//wait a cycle to clear the data to make sure we latch onto it correctly
 						begin
-							rd <= 1;
+							//rd <= 1; // ORIGINAL
 							state <= DATA_LEAVING_2;
 							newout <= 0;	//let folks know the data's a clock cycle old now
 						end
 					
 					DATA_LEAVING_2:		//wait another cycle to make sure that the RD to RD pre-charge time is met
 						state <= DATA_LEAVING_3;								
-			
+					
 					DATA_LEAVING_3:		//wait another cycle to make sure that the RD to RD pre-charge time is met
-						state <= WAIT;							
-			
+						state <= DATA_LEAVING_4;								
+
+					DATA_LEAVING_4:		//wait another cycle to make sure that the RD to RD pre-charge time is met
+						state <= DATA_LEAVING_5;
+
+					DATA_LEAVING_5:		//wait another cycle to make sure that the RD to RD pre-charge time is met
+						state <= DATA_LEAVING_6;																
+
+					DATA_LEAVING_6:		//wait another cycle to make sure that the RD to RD pre-charge time is met
+						begin
+							state <= WAIT;							
+							rd <= 1;
+						end
 					default:
 						state <= WAIT;
 				endcase		

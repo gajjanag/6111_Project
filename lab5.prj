@@ -1,5 +1,6 @@
 verilog work "src/Square.v"
 verilog work "src/lab5.v"
+verilog work "src/fir31.v"
 verilog work "src/Divider.v"
 verilog work "src/display_16hex.v"
 verilog work "src/debounce.v"

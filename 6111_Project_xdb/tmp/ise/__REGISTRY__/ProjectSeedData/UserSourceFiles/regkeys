@@ -1,5 +1,5 @@
 NUM_USER_FILES
-15
+16
 s
 user_file_1
 src/display_16hex.v
@@ -21,6 +21,9 @@ src/Square.v
 s
 user_file_15
 src/Divider.v
+s
+user_file_16
+src/fir31.v
 s
 user_file_2
 src/lab5.v

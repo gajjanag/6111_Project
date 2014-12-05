@@ -6,7 +6,7 @@ module audioManager(
 
   // User I/O
   input wire startSwitch,
-  input wire [3:0] audioSelector, 
+  input wire [4:0] audioSelector, 
   input wire writeSwitch,             // 1=Write, 0=Read
   output wire [63:0] hexdisp,
   input wire buttonup,
@@ -33,7 +33,8 @@ module audioManager(
   input wire [7:0] data, //the data pins from the USB fifo
   input wire rxf, //the rxf pin from the USB fifo
   output wire rd, // the rd pin from the USB fifo (OUTPUT)
-  output wire newout
+  output wire newout,
+  output reg flashError = 0
 );
   
   reg writemode = 0;         //1=write mode; 0=read mode
@@ -83,8 +84,19 @@ module audioManager(
 
   assign hold = 1'b0; 
 
+  // REMOVE
+  wire slowUSBClock;
+  reg lastslowUSBClock;
+  wire slowUSBClockPulse;
+  assign slowUSBClockPulse = slowUSBClock & ~lastslowUSBClock;
+  Square #(.Hz(3)) freqUSB (
+    .clock(clock),
+    .reset(reset),
+    .square(slowUSBClock)
+  );
+
   usb_input usbtest(
-    .clk(clock),
+    .clk(slowUSBClock),
     .reset(reset),
 
     // USB FTDI I/O
@@ -109,7 +121,7 @@ module audioManager(
   reg lastButtonup;
   reg lastButtondown;
   reg lastAudioTrigger;
-  reg [2:0] eighth = 0;
+  reg [2:0] third = 0;
   reg lastReady;
 
   // REMOVE
@@ -128,6 +140,16 @@ module audioManager(
     .square(slowClock)
   );
 
+  reg [7:0] mem_out_zeroed;
+  wire signed [17:0] reconst_mem_out;
+  fir31 reconst (
+    .clock(clock),
+    .reset(reset),
+    .ready(ready),
+    .x(mem_out_zeroed),
+    .y(reconst_mem_out)
+  );
+
   // REMOVE 
   wire [19:0] tone;
   tone750hz xxx(.clock(clock),.ready(slowClockPulse),.pcm_data(tone));
@@ -135,8 +157,10 @@ module audioManager(
   
   reg [7:0] dataFromFifo;
   always @ (posedge rd) begin
-    dataFromFifo <= out;
+    dataFromFifo <= out; // out & data have same results
   end
+  // reg [7:0] cachedDataFromFifo;
+  reg cached = 0;
 
   always @ (posedge clock) begin
     lastButtonup <= buttonup;
@@ -150,11 +174,19 @@ module audioManager(
       if (writeSwitch) begin
         writemode <= 1'b1;
         doread <= 1'b0;
-        dowrite <= 1'b0; // only write on new data // WATCH OUT!!
-        if (newout) begin
-          bytesRxed <= bytesRxed + 1;
-          wdata <= {dataFromFifo, 8'b0};//{out, 8'b0};
-          dowrite <= 1'b1;
+        //dowrite <= 1'b0; // only write on new data // WATCH OUT!!
+        if (newout || cached) begin
+          // if (~busy) begin
+            bytesRxed <= bytesRxed + 1;
+            wdata <= {dataFromFifo, 8'b0};//{out, 8'b0};
+            dowrite <= 1'b1;
+            // cached <= 0;
+          // end
+          // else begin
+          //   flashError <= 1;
+          //   cached <= 1;
+          //   // cachedDataFromFifo <= 
+          // end
         end
 
         if (audioSelector[2]) begin // tone750Hz to flash
@@ -183,23 +215,39 @@ module audioManager(
         end
 
         if (audioTrigger & ready) begin  
-          eighth <= eighth + 1;
-          if (eighth == 7) begin // on every eighth ac97 sample (48/8 = 6kHz file sample)
-            // eighth <= 0;
-          end
+          
+          // FILTERING ATTEMPT
+          if (audioSelector[4]) begin 
+            // Our audio plays back 50% too fast (approx) so we need 1 zero per 2 real samples
+            third <= third + 1;
+            // if (third == 2) begin // on every third ac97 sample (48/8 = 6kHz file sample)
+            //   // add a zero
+            //   mem_out_zeroed <= 0;
+            //   third <= 0;
+            // end
+            // else begin
+              mem_out_zeroed <= frdata[15:8];
+              raddr <= raddr + 1;
+            // end
+            to_ac97_data <= reconst_mem_out[14:7];
+          end // if (audioSelector[4])
+          // END FILTERING ATTEMPT
 
-          // 48K sample rate
-          raddr <= raddr + 1;
-          to_ac97_data <= frdata[15:8]; // PUT BACK
-          if(audioSelector[3] & raddr == 63) begin
-            raddr <= 0;
+          // Normal 48K Playback
+          else begin 
+            // 48K sample rate
+            raddr <= raddr + 1;
+            to_ac97_data <= frdata[15:8]; // PUT BACK
+            if(audioSelector[3] & raddr == 63) begin
+              raddr <= 0;
+            end
           end
         end // if (audioTrigger)
 
         // if entering this state, assign start address
         if (audioTrigger & ~lastAudioTrigger) begin
           // For testing, play 12K addresses (2 sec) for each trigger
-          case(audioSelector)
+          case(audioSelector[1:0])
             0: raddr <= 1;
             1: raddr <= 20001;
             2: raddr <= 24001;

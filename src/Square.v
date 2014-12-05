@@ -9,7 +9,7 @@ module Square #(parameter Hz = 27000000) (
 	Divider #(.Hz(Hz)) Sqr (
 		.clock(clock),
 		.reset(reset),
-		.fastMode(0'b0),
+		.fastMode(1'b0),
 		.oneHertz_enable(oneHertz_enable)
 	);
 
