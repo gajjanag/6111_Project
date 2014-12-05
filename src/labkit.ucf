@@ -67,6 +67,11 @@ NET "ac97_sdata_in"  LOC="aj24";
 NET "ac97_synch"     LOC="ac17" | IOSTANDARD=LVDCI_33;
 NET "ac97_bit_clock" LOC="ah24";
 
+NET "sys_clk" TNM_NET = sys_clk;
+TIMESPEC TS_sys_clk = PERIOD "sys_clk" 20 ns HIGH 50%;
+
+NET "vga_clk" TNM_NET = vga_clk;
+TIMESPEC TS_vga_clk = PERIOD "vga_clk" 40 ns HIGH 50%;
 #
 # VGA Output
 #

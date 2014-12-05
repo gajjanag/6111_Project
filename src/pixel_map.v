@@ -1,3 +1,4 @@
+`default_nettype none
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // pixel_map: This module performs the core perspective transformation
 // It computes (X, Y) = ((p1*x+p2*y+p3)/(p7*x+p8*y+p9),
@@ -35,7 +36,8 @@ module pixel_map(input clk,
                 output reg[11:0] pixel_out,
                 output[16:0] ntsc_out_addr,
                 output reg vga_in_wr,
-                output[16:0] vga_in_addr);
+                output[16:0] vga_in_addr,
+                output reg[1:0] max_state);
 
 // default instantiation of output registers
 // assign pixel_out = 0;
@@ -95,9 +97,38 @@ parameter NEXT_PIXEL_ST = 2'b00;
 parameter WAIT_FOR_DIV_ST = 2'b01;
 parameter WAIT_FOR_MEM_ST = 2'b10;
 parameter BLACK = 12'd0;
+parameter WHITE = 12'hfff;
 reg[1:0] cur_state = NEXT_PIXEL_ST;
 always @(posedge clk) begin
+    max_state <= (cur_state > max_state) ? cur_state : max_state;
     case (cur_state)
+        /*NEXT_PIXEL_ST: begin
+            vga_in_wr <= 0;
+            pixel_out <= WHITE;
+            cur_state <= NEXT_PIXEL_ST;
+            if ((cur_x == 639) && (cur_y == 479)) begin
+                cur_x <= 0;
+                cur_y <= 0;
+                num_x <= p3_inv;
+                num_y <= p6_inv;
+                denom <= p9_inv;
+            end
+            else if ((cur_x == 639) && (cur_y !=  479)) begin
+                cur_x <= 0;
+                cur_y <= cur_y + 1;
+                num_x <= num_x - dec_numx_horiz + p2_inv;
+                num_y <= num_y - dec_numy_horiz + p5_inv;
+                denom <= denom - dec_denom_horiz + p8_inv;
+            end
+            else if ((cur_x != 639) && (cur_y == 479)) begin
+                cur_x <= cur_x + 1;
+                cur_y <= cur_y;
+                num_x <= num_x + p1_inv;
+                num_y <= num_y + p4_inv;
+                denom <= denom + p7_inv;
+            end
+        end*/
+
         NEXT_PIXEL_ST: begin
             vga_in_wr <= 0;
             div_start <= 1;
@@ -124,17 +155,18 @@ always @(posedge clk) begin
                 denom <= denom + p7_inv;
             end
         end
-
+        
         WAIT_FOR_DIV_ST: begin
+           vga_in_wr <= 0;
            div_start <= 0;
-           if ((div_done_x == 1) && (div_done_y == 1)) begin
+           if (div_done_x == 1) begin
                cur_state <= WAIT_FOR_MEM_ST;
            end
         end
 
         WAIT_FOR_MEM_ST: begin
             if ((inv_x < 0) || (inv_x > 639) || (inv_y < 0) || (inv_y > 479)) begin
-                pixel_out <= BLACK;
+                pixel_out <= WHITE;
                 vga_in_wr <= 1;
                 cur_state <= NEXT_PIXEL_ST;
             end
@@ -144,6 +176,7 @@ always @(posedge clk) begin
                 cur_state <= NEXT_PIXEL_ST;
             end
         end
+        
     endcase
 end
 endmodule

@@ -530,12 +530,12 @@ always @(posedge sys_clk) begin
 end
 
 // instantiate the pixel_map module
-wire[11:0] ntsc_dout;
 wire[11:0] vga_din;
-wire[16:0] ntsc_out_addr;
-wire[16:0] vga_in_addr;
-wire vga_in_wr;
-pixel_map pixel_map(.clk(sys_clk),
+reg[16:0] ntsc_out_addr;
+reg[16:0] vga_in_addr;
+wire[1:0] max_state;
+reg vga_in_wr;
+/*pixel_map pixel_map(.clk(sys_clk),
                 .p1_inv(p1_inv),
                 .p2_inv(p2_inv),
                 .p3_inv(p3_inv),
@@ -552,7 +552,8 @@ pixel_map pixel_map(.clk(sys_clk),
                 .pixel_out(vga_din),
                 .ntsc_out_addr(ntsc_out_addr),
                 .vga_in_wr(vga_in_wr),
-                .vga_in_addr(vga_in_addr));
+                .vga_in_addr(vga_in_addr),
+                .max_state(max_state));*/
 
 // read from vga buffer for display
 wire[16:0] vga_out_addr;
@@ -561,32 +562,32 @@ addr_map addr_map(.hcount(hcount),
                 .addr(vga_out_addr));
 
 // create the brams
-// dummy wires
-wire[11:0] ntsc_dummy_dout, ntsc_dummy_din, vga_dummy_dout, vga_dummy_din;
+wire ntsc_in_wr;
+assign ntsc_in_wr = 1;
+wire[11:0] vga_dout;
+
+always @(posedge sys_clk) begin
+    vga_in_addr <= (vga_in_addr < 76799) ? (vga_in_addr + 1) : 0;
+    ntsc_out_addr <= (ntsc_out_addr < 76799) ? (ntsc_out_addr + 1) : 0;
+    vga_in_wr <= 1;
+end
+
 bram ntsc_buf(.a_clk(sys_clk),
-            .a_wr(1),
+            .a_wr(ntsc_in_wr),
             .a_addr(ntsc_in_addr),
             .a_din(ntsc_din),
-            .a_dout(ntsc_dummy_dout),
             .b_clk(sys_clk),
-            .b_wr(0),
             .b_addr(ntsc_out_addr),
-            .b_din(ntsc_dummy_din),
-            .b_dout(ntsc_dout));
+            .b_dout(vga_din));
 
-wire[11:0] vga_dout;
 bram vga_buf(.a_clk(sys_clk),
-            .a_wr(vga_in_wr),
+            .a_wr(1'b1),
             .a_addr(vga_in_addr),
             .a_din(vga_din),
-            .a_dout(vga_dummy_dout),
             .b_clk(vga_clk),
-            .b_wr(0),
             .b_addr(vga_out_addr),
-            .b_din(vga_dummy_din),
             .b_dout(vga_dout));
-
-
+            
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Create VGA output signals
 // In order to meet the setup and hold times of AD7125, we send it ~vga_clk
@@ -612,7 +613,8 @@ assign hex_disp_data[25:16] = display_x;
 assign hex_disp_data[31:26] = 6'd0;
 // higher bits, put the percent_lost
 assign hex_disp_data[38:32] = percent_lost;
-assign hex_disp_data[63:39] = 25'd0;
+assign hex_disp_data[61:39] = 25'd0;
+assign hex_disp_data[63:62] = max_state;
 display_16hex display_16hex(.reset(reset),
             .clock_27mhz(clock_27mhz),
             .data(hex_disp_data),
