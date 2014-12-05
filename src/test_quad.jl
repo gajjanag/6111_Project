@@ -1,7 +1,6 @@
 using Winston
 
 function test_quad(p::Array{Int64, 2})
-    println(p)
     x = zeros(640*480)
     y = zeros(640*480)
     a = zeros(9)
@@ -12,8 +11,8 @@ function test_quad(p::Array{Int64, 2})
     a[9] = 1920*denom
     a[7] = ((p[1,1] - p[4,1])*(p[2,2] - p[3,2]) + (p[1,2]-p[4,2])*(p[3,1] - p[2,1]))*3
     a[8] = ((p[1,1] - p[2,1])*(p[3,2] - p[4,2]) + (p[1,2]-p[2,2])*(p[4,1] - p[3,1]))*4
-    a[2] = a[8]*p[2,1] + 4*(p[4,1]-p[1,1])*denom
-    a[1] = a[7]*p[4,1] + 3*(p[2,1]-p[1,1])*denom
+    a[1] = a[7]*p[4,1] + 3*(p[4,1]-p[1,1])*denom
+    a[2] = a[8]*p[2,1] + 4*(p[2,1]-p[1,1])*denom
     a[4] = a[7]*p[4,2] + 3*(p[4,2]-p[1,2])*denom
     a[5] = a[8]*p[2,2] + 4*(p[2,2]-p[1,2])*denom
     b[1] = a[6]*a[8] - a[5]*a[9]
@@ -28,19 +27,22 @@ function test_quad(p::Array{Int64, 2})
     count = 1
     for i=1:640
         for j=1:480
-            x[count], y[count] = pixel_map(i, j, a)
+            num_x, num_y, denom, x[count], y[count] = pixel_map(i, j, a)
             count += 1
         end
     end
-    p = plot(x, y)
-    display(p)
-    return a, b
+    pl = plot(x, y)
+    display(pl)
+    return a, b, p
 end
 
 function pixel_map(x,y, a::Array{Float64, 1})
-    x_out = (a[1]*x + a[2]*y + a[3])/(a[7]*x + a[8]*y + a[9])
-    y_out = (a[4]*x + a[5]*y + a[6])/(a[7]*x + a[8]*y + a[9])
-    return x_out, y_out
+    num_x = a[1]*x + a[2]*y + a[3]
+    num_y = a[4]*x + a[5]*y + a[6]
+    denom = a[7]*x + a[8]*y + a[9]
+    x_out = num_x / denom
+    y_out = num_y / denom
+    return num_x, num_y, denom, x_out, y_out
 end
 
 function test_quad()
@@ -48,8 +50,8 @@ function test_quad()
     p2 = rand(1:480, 4, 1)
     p = [p1 p2]
     println(p)
-    a, b = test_quad(p)
-    return a, b
+    a, b, pl = test_quad(p)
+    return a, b, pl
 end
 
 function test_run(n)

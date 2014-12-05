@@ -18,8 +18,8 @@
 // p9 = 1920*denom (2^7 * 15 * denom)
 // p3 = 1920*x1*denom (2^7 * 15 * x1 * denom)
 // p6 = 1920*y1*denom (2^7 * 15 * y1 * denom)
-// p1 = x4*p7 + 3(x2-x1)*denom
-// p2 = x2*p8 + 4(x4-x1)*denom
+// p1 = x4*p7 + 3(x4-x1)*denom
+// p2 = x2*p8 + 4(x2-x1)*denom
 // p4 = y4*p7 + 3(y4-y1)*denom
 // p5 = y2*p8 + 4(y2-y1)*denom
 //
@@ -172,8 +172,8 @@ assign x4_p7 = sx4 * p7;
 assign x2_p8 = sx2 * p8;
 assign y4_p7 = sy4 * p7;
 assign y2_p8 = sy2 * p8;
-assign p1 = x4_p7 - d_x1_x2_denom_scale;
-assign p2 = x2_p8 + d_x4_x1_denom_scale;
+assign p1 = x2_p8 + d_x4_x1_denom_scale;
+assign p2 = x4_p7 - d_x1_x2_denom_scale;
 assign p4 = y4_p7 + d_y4_y1_denom_scale;
 assign p5 = y2_p8 - d_y1_y2_denom_scale;
 
