@@ -36,14 +36,7 @@ module pixel_map(input clk,
                 output reg[11:0] pixel_out,
                 output[16:0] ntsc_out_addr,
                 output reg vga_in_wr,
-                output[16:0] vga_in_addr,
-                output reg[1:0] max_state);
-
-// default instantiation of output registers
-// assign pixel_out = 0;
-// assign ntsc_out_addr = 0;
-// assign vga_in_wr = 0;
-// assign vga_in_addr = 0;
+                output[16:0] vga_in_addr);
 
 // internal registers for numerator and denominator computation
 // see perspective_params.v for the equations
@@ -102,33 +95,6 @@ reg[1:0] cur_state = NEXT_PIXEL_ST;
 always @(posedge clk) begin
     max_state <= (cur_state > max_state) ? cur_state : max_state;
     case (cur_state)
-        /*NEXT_PIXEL_ST: begin
-            vga_in_wr <= 0;
-            pixel_out <= WHITE;
-            cur_state <= NEXT_PIXEL_ST;
-            if ((cur_x == 639) && (cur_y == 479)) begin
-                cur_x <= 0;
-                cur_y <= 0;
-                num_x <= p3_inv;
-                num_y <= p6_inv;
-                denom <= p9_inv;
-            end
-            else if ((cur_x == 639) && (cur_y !=  479)) begin
-                cur_x <= 0;
-                cur_y <= cur_y + 1;
-                num_x <= num_x - dec_numx_horiz + p2_inv;
-                num_y <= num_y - dec_numy_horiz + p5_inv;
-                denom <= denom - dec_denom_horiz + p8_inv;
-            end
-            else if ((cur_x != 639) && (cur_y == 479)) begin
-                cur_x <= cur_x + 1;
-                cur_y <= cur_y;
-                num_x <= num_x + p1_inv;
-                num_y <= num_y + p4_inv;
-                denom <= denom + p7_inv;
-            end
-        end*/
-
         NEXT_PIXEL_ST: begin
             vga_in_wr <= 0;
             div_start <= 1;
@@ -147,7 +113,7 @@ always @(posedge clk) begin
                 num_y <= num_y - dec_numy_horiz + p5_inv;
                 denom <= denom - dec_denom_horiz + p8_inv;
             end
-            else if ((cur_x != 639) && (cur_y == 479)) begin
+            else if (cur_x != 639) begin
                 cur_x <= cur_x + 1;
                 cur_y <= cur_y;
                 num_x <= num_x + p1_inv;
@@ -155,7 +121,7 @@ always @(posedge clk) begin
                 denom <= denom + p7_inv;
             end
         end
-        
+
         WAIT_FOR_DIV_ST: begin
            vga_in_wr <= 0;
            div_start <= 0;
@@ -176,7 +142,7 @@ always @(posedge clk) begin
                 cur_state <= NEXT_PIXEL_ST;
             end
         end
-        
+
     endcase
 end
 endmodule
