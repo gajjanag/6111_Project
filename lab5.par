@@ -1,7 +1,7 @@
 Release 10.1.03 par K.39 (lin64)
 Copyright (c) 1995-2008 Xilinx, Inc.  All rights reserved.
 
-eecs-digital-20::  Thu Dec 04 21:24:33 2014
+eecs-digital-20::  Thu Dec 04 23:37:07 2014
 
 par -w -intstyle ise -ol std -t 1 lab5_map.ncd lab5.ncd lab5.pcf 
 
@@ -399,15 +399,15 @@ Total CPU time to Placer completion: 15 secs
 
 Starting Router
 
-Phase 1: 4943 unrouted;       REAL time: 24 secs 
+Phase 1: 4943 unrouted;       REAL time: 25 secs 
 
 Phase 2: 4327 unrouted;       REAL time: 27 secs 
 
 Phase 3: 886 unrouted;       REAL time: 27 secs 
 
-Phase 4: 886 unrouted; (115219)      REAL time: 27 secs 
+Phase 4: 886 unrouted; (115219)      REAL time: 28 secs 
 
-Phase 5: 875 unrouted; (0)      REAL time: 27 secs 
+Phase 5: 875 unrouted; (0)      REAL time: 28 secs 
 
 Phase 6: 0 unrouted; (0)      REAL time: 28 secs 
 
