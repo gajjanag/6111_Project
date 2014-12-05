@@ -90,10 +90,8 @@ parameter NEXT_PIXEL_ST = 2'b00;
 parameter WAIT_FOR_DIV_ST = 2'b01;
 parameter WAIT_FOR_MEM_ST = 2'b10;
 parameter BLACK = 12'd0;
-parameter WHITE = 12'hfff;
 reg[1:0] cur_state = NEXT_PIXEL_ST;
 always @(posedge clk) begin
-    max_state <= (cur_state > max_state) ? cur_state : max_state;
     case (cur_state)
         NEXT_PIXEL_ST: begin
             vga_in_wr <= 0;
@@ -131,8 +129,8 @@ always @(posedge clk) begin
         end
 
         WAIT_FOR_MEM_ST: begin
-            if ((inv_x < 0) || (inv_x > 639) || (inv_y < 0) || (inv_y > 479)) begin
-                pixel_out <= WHITE;
+            if ((inv_x < $signed(0)) || (inv_x > $signed(639)) || (inv_y < $signed(0)) || (inv_y > $signed(479))) begin
+                pixel_out <= BLACK;
                 vga_in_wr <= 1;
                 cur_state <= NEXT_PIXEL_ST;
             end
@@ -142,7 +140,6 @@ always @(posedge clk) begin
                 cur_state <= NEXT_PIXEL_ST;
             end
         end
-
     endcase
 end
 endmodule

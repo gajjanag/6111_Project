@@ -331,10 +331,10 @@ DCM int_dcm(.CLKIN(sys_clk), .CLKFX(vga_clk_unbuf), .LOCKED(clk_locked));
 // synthesis attribute CLKIN_PERIOD of int_dcm is 20
 BUFG int_dcm2(.O(vga_clk), .I(vga_clk_unbuf));
 assign led[7] = ~clk_locked;
-assign led[6:0] = {7{1'b1}};
+assign led[5:0] = {7{1'b1}};
 slow_clk slow(.clk(vga_clk),
             .slow_clk(slow_clk));
-
+assign led[6] = ~slow_clk;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // create debounced buttons
@@ -512,9 +512,9 @@ perspective_params perspective_params(.clk(slow_clk),
 
 // declarations of necessary stuff
 reg[16:0] ntsc_in_addr = 0;
-wire[16:0] ntsc_out_addr = 0;
-wire[16:0] vga_in_addr = 0;
-wire[16:0] vga_out_addr = 0;
+wire[16:0] ntsc_out_addr;
+wire[16:0] vga_in_addr;
+wire[16:0] vga_out_addr;
 wire[11:0] ntsc_din;
 wire[11:0] ntsc_dout;
 wire[11:0] vga_din;
@@ -528,7 +528,6 @@ reg[9:0] cur_x = 0;
 reg[9:0] cur_y = 0;
 wire[2:0] checkerboard;
 assign checkerboard = cur_x[7:5] + cur_y[7:5];
-wire[11:0] ntsc_din;
 assign ntsc_din = {{4{checkerboard[2]}}, {4{checkerboard[1]}}, {4{checkerboard[0]}}};
 always @(posedge sys_clk) begin
     ntsc_in_addr <= (ntsc_in_addr < 76799) ? (ntsc_in_addr + 1) : ntsc_in_addr;
@@ -614,8 +613,7 @@ assign hex_disp_data[25:16] = display_x;
 assign hex_disp_data[31:26] = 6'd0;
 // higher bits, put the percent_lost
 assign hex_disp_data[38:32] = percent_lost;
-assign hex_disp_data[61:39] = 25'd0;
-assign hex_disp_data[63:62] = max_state;
+assign hex_disp_data[63:39] = 25'd0;
 display_16hex display_16hex(.reset(reset),
             .clock_27mhz(clock_27mhz),
             .data(hex_disp_data),
