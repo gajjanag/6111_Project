@@ -22,7 +22,7 @@ module divider #(parameter WIDTH = 8)
    assign remainder = (!negative_output) ?
              dividend_copy[WIDTH-1:0] : ~dividend_copy[WIDTH-1:0] + 1'b1;
 
-   reg [5:0] bit;
+   reg [6:0] bit;
    reg del_ready = 1;
    assign ready = (!bit) & ~del_ready;
 
