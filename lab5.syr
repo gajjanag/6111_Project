@@ -5,14 +5,14 @@ Parameter TMPDIR set to /afs/athena.mit.edu/user/j/a/jains/Documents/6.111/final
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.06 secs
+Total CPU time to Xst completion: 0.05 secs
  
 --> 
 Parameter xsthdpdir set to /afs/athena.mit.edu/user/j/a/jains/Documents/6.111/finalProj/6111_Project/xst
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.06 secs
+Total CPU time to Xst completion: 0.05 secs
  
 --> 
 Reading design: lab5.prj
@@ -172,9 +172,6 @@ Analyzing hierarchy for module <flash_manager> in library <work> with parameters
 	WRITE_READY = "011"
 	WRITE_WAIT = "100"
 
-Analyzing hierarchy for module <Square> in library <work> with parameters.
-	Hz = "00000000000000000000000000000011"
-
 Analyzing hierarchy for module <usb_input> in library <work> with parameters.
 	DATA_COMING = "00000000000000000000000000000100"
 	DATA_COMING_2 = "00000000000000000000000000000101"
@@ -212,9 +209,6 @@ Analyzing hierarchy for module <test_fsm> in library <work> with parameters.
 	MODE_INIT = "00000000000000000000000000000001"
 	MODE_READ = "00000000000000000000000000000011"
 	MODE_WRITE = "00000000000000000000000000000010"
-
-Analyzing hierarchy for module <Divider> in library <work> with parameters.
-	Hz = "00000000000000000000000000000011"
 
 Analyzing hierarchy for module <Divider> in library <work> with parameters.
 	Hz = "00000000000000000000101110111000"
@@ -306,14 +300,6 @@ Analyzing module <test_fsm> in library <work>.
 	Calling function <nib2char>.
 Module <test_fsm> is correct for synthesis.
  
-Analyzing module <Square.1> in library <work>.
-	Hz = 32'sb00000000000000000000000000000011
-Module <Square.1> is correct for synthesis.
- 
-Analyzing module <Divider.1> in library <work>.
-	Hz = 32'sb00000000000000000000000000000011
-Module <Divider.1> is correct for synthesis.
- 
 Analyzing module <usb_input> in library <work>.
 	DATA_COMING = 32'sb00000000000000000000000000000100
 	DATA_COMING_2 = 32'sb00000000000000000000000000000101
@@ -333,13 +319,13 @@ Analyzing module <usb_input> in library <work>.
 	WAIT3 = 32'sb00000000000000000000000000000011
 Module <usb_input> is correct for synthesis.
  
-Analyzing module <Square.2> in library <work>.
+Analyzing module <Square> in library <work>.
 	Hz = 32'sb00000000000000000000101110111000
-Module <Square.2> is correct for synthesis.
+Module <Square> is correct for synthesis.
  
-Analyzing module <Divider.2> in library <work>.
+Analyzing module <Divider> in library <work>.
 	Hz = 32'sb00000000000000000000101110111000
-Module <Divider.2> is correct for synthesis.
+Module <Divider> is correct for synthesis.
  
 Analyzing module <fir31> in library <work>.
 INFO:Xst:1607 - Contents of array <buffer> may be accessed with an index that does not cover the full array size.
@@ -555,25 +541,14 @@ INFO:Xst:2117 - HDL ADVISOR - Mux Selector <status> of Case statement line 340 w
 Unit <test_fsm> synthesized.
 
 
-Synthesizing Unit <Divider_1>.
-    Related source file is "src/Divider.v".
-WARNING:Xst:647 - Input <fastMode> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
-    Found 1-bit register for signal <oneHertz_enable>.
-    Found 25-bit up counter for signal <counter>.
-    Summary:
-	inferred   1 Counter(s).
-	inferred   1 D-type flip-flop(s).
-Unit <Divider_1> synthesized.
-
-
-Synthesizing Unit <Divider_2>.
+Synthesizing Unit <Divider>.
     Related source file is "src/Divider.v".
     Found 1-bit register for signal <oneHertz_enable>.
     Found 25-bit up counter for signal <counter>.
     Summary:
 	inferred   1 Counter(s).
 	inferred   1 D-type flip-flop(s).
-Unit <Divider_2> synthesized.
+Unit <Divider> synthesized.
 
 
 Synthesizing Unit <coeffs31>.
@@ -624,20 +599,12 @@ INFO:Xst:1799 - State 111 is never reached in FSM <state>.
 Unit <flash_manager> synthesized.
 
 
-Synthesizing Unit <Square_1>.
+Synthesizing Unit <Square>.
     Related source file is "src/Square.v".
     Found 1-bit register for signal <square>.
     Summary:
 	inferred   1 D-type flip-flop(s).
-Unit <Square_1> synthesized.
-
-
-Synthesizing Unit <Square_2>.
-    Related source file is "src/Square.v".
-    Found 1-bit register for signal <square>.
-    Summary:
-	inferred   1 D-type flip-flop(s).
-Unit <Square_2> synthesized.
+Unit <Square> synthesized.
 
 
 Synthesizing Unit <fir31>.
@@ -669,10 +636,8 @@ WARNING:Xst:1305 - Output <flashError> is never assigned. Tied to value 0.
 WARNING:Xst:647 - Input <from_ac97_data> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
 WARNING:Xst:646 - Signal <tone<11:0>> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:646 - Signal <state> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
-WARNING:Xst:646 - Signal <slowUSBClockPulse> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:646 - Signal <reconst_mem_out<17:15>> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:646 - Signal <reconst_mem_out<6:0>> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
-WARNING:Xst:653 - Signal <lastslowUSBClock> is used but never assigned. This sourceless signal will be automatically connected to value 0.
 WARNING:Xst:646 - Signal <lastReady> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:646 - Signal <fsmstate<8:0>> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:653 - Signal <cached> is used but never assigned. This sourceless signal will be automatically connected to value 0.
@@ -1010,11 +975,11 @@ Macro Statistics
  5-bit adder carry out                                 : 1
  7-bit subtractor                                      : 1
  9-bit adder                                           : 3
-# Counters                                             : 21
+# Counters                                             : 20
  10-bit up counter                                     : 1
  16-bit up counter                                     : 1
  19-bit up counter                                     : 9
- 25-bit up counter                                     : 2
+ 25-bit up counter                                     : 1
  4-bit up counter                                      : 1
  5-bit up counter                                      : 3
  5-bit updown counter                                  : 1
@@ -1023,8 +988,8 @@ Macro Statistics
  9-bit up counter                                      : 1
 # Accumulators                                         : 1
  18-bit up accumulator                                 : 1
-# Registers                                            : 84
- 1-bit register                                        : 52
+# Registers                                            : 82
+ 1-bit register                                        : 50
  10-bit register                                       : 2
  13-bit register                                       : 1
  16-bit register                                       : 5
@@ -1319,11 +1284,11 @@ Macro Statistics
  5-bit adder                                           : 4
  5-bit adder carry out                                 : 1
  5-bit subtractor                                      : 1
-# Counters                                             : 21
+# Counters                                             : 20
  10-bit up counter                                     : 1
  16-bit up counter                                     : 1
  19-bit up counter                                     : 9
- 25-bit up counter                                     : 2
+ 25-bit up counter                                     : 1
  4-bit up counter                                      : 1
  5-bit up counter                                      : 3
  5-bit updown counter                                  : 1
@@ -1332,8 +1297,8 @@ Macro Statistics
  9-bit up counter                                      : 1
 # Accumulators                                         : 1
  18-bit up accumulator                                 : 1
-# Registers                                            : 460
- Flip-Flops                                            : 460
+# Registers                                            : 458
+ Flip-Flops                                            : 458
 # Comparators                                          : 20
  5-bit comparator lessequal                            : 1
  8-bit comparator greatequal                           : 5
@@ -1456,8 +1421,8 @@ Unit <lab5> processed.
 Final Register Report
 
 Macro Statistics
-# Registers                                            : 590
- Flip-Flops                                            : 590
+# Registers                                            : 563
+ Flip-Flops                                            : 563
 # Shift Registers                                      : 6
  13-bit shift register                                 : 1
  2-bit shift register                                  : 1
@@ -1490,29 +1455,29 @@ Design Statistics
 # IOs                              : 576
 
 Cell Usage :
-# BELS                             : 1768
+# BELS                             : 1678
 #      GND                         : 1
-#      INV                         : 40
-#      LUT1                        : 215
-#      LUT2                        : 87
+#      INV                         : 38
+#      LUT1                        : 191
+#      LUT2                        : 85
 #      LUT2_D                      : 2
 #      LUT3                        : 231
 #      LUT3_D                      : 4
 #      LUT3_L                      : 6
-#      LUT4                        : 431
+#      LUT4                        : 425
 #      LUT4_D                      : 3
 #      LUT4_L                      : 26
-#      MUXCY                       : 324
+#      MUXCY                       : 293
 #      MUXF5                       : 90
 #      MUXF6                       : 23
 #      MUXF7                       : 6
 #      VCC                         : 1
-#      XORCY                       : 278
-# FlipFlops/Latches                : 606
+#      XORCY                       : 253
+# FlipFlops/Latches                : 579
 #      FD                          : 28
 #      FDE                         : 229
 #      FDE_1                       : 8
-#      FDR                         : 75
+#      FDR                         : 48
 #      FDRE                        : 218
 #      FDRS                        : 22
 #      FDS                         : 9
@@ -1538,10 +1503,10 @@ Device utilization summary:
 
 Selected Device : 2v6000bf957-4 
 
- Number of Slices:                      605  out of  33792     1%  
- Number of Slice Flip Flops:            606  out of  67584     0%  
- Number of 4 input LUTs:               1084  out of  67584     1%  
-    Number used as logic:              1045
+ Number of Slices:                      586  out of  33792     1%  
+ Number of Slice Flip Flops:            579  out of  67584     0%  
+ Number of 4 input LUTs:               1050  out of  67584     1%  
+    Number used as logic:              1011
     Number used as Shift registers:       7
     Number used as RAMs:                 32
  Number of IOs:                         576
@@ -1567,17 +1532,15 @@ NOTE: THESE TIMING NUMBERS ARE ONLY A SYNTHESIS ESTIMATE.
 
 Clock Information:
 ------------------
---------------------------------------+--------------------------------+-------+
-Clock Signal                          | Clock buffer(FF name)          | Load  |
---------------------------------------+--------------------------------+-------+
-clock_27mhz                           | IBUF+BUFG                      | 490   |
-management/usbtest/rd                 | NONE(management/dataFromFifo_7)| 8     |
-disp/clock1                           | BUFG                           | 43    |
-ac97_bit_clock                        | IBUF+BUFG                      | 64    |
-management/freqUSB/square             | NONE(management/usbtest/out_7) | 14    |
-management/freq2/Sqr/oneHertz_enable  | NONE(management/freq2/square)  | 1     |
-management/freqUSB/Sqr/oneHertz_enable| NONE(management/freqUSB/square)| 1     |
---------------------------------------+--------------------------------+-------+
+------------------------------------+--------------------------------+-------+
+Clock Signal                        | Clock buffer(FF name)          | Load  |
+------------------------------------+--------------------------------+-------+
+clock_27mhz                         | IBUF+BUFG                      | 478   |
+management/usbtest/rd               | NONE(management/dataFromFifo_7)| 8     |
+disp/clock1                         | BUFG                           | 43    |
+ac97_bit_clock                      | IBUF+BUFG                      | 64    |
+management/freq2/Sqr/oneHertz_enable| NONE(management/freq2/square)  | 1     |
+------------------------------------+--------------------------------+-------+
 INFO:Xst:2169 - HDL ADVISOR - Some clock signals were not automatically buffered by XST with BUFG/BUFR resources. Please use the buffer_type constraint in order to insert these buffers to the clock signals to help prevent skew problems.
 
 Asynchronous Control Signals Information:
@@ -1600,7 +1563,7 @@ All values displayed in nanoseconds (ns)
 =========================================================================
 Timing constraint: Default period analysis for Clock 'clock_27mhz'
   Clock period: 16.097ns (frequency: 62.125MHz)
-  Total number of paths / destination ports: 51460 / 1244
+  Total number of paths / destination ports: 50561 / 1213
 -------------------------------------------------------------------------
 Delay:               16.097ns (Levels of Logic = 10)
   Source:            management/reconst/index_0 (FF)
@@ -1687,29 +1650,6 @@ Delay:               6.088ns (Levels of Logic = 3)
                                        (43.9% logic, 56.1% route)
 
 =========================================================================
-Timing constraint: Default period analysis for Clock 'management/freqUSB/square'
-  Clock period: 3.624ns (frequency: 275.938MHz)
-  Total number of paths / destination ports: 62 / 16
--------------------------------------------------------------------------
-Delay:               3.624ns (Levels of Logic = 2)
-  Source:            management/usbtest/state_1 (FF)
-  Destination:       management/usbtest/out_7 (FF)
-  Source Clock:      management/freqUSB/square rising
-  Destination Clock: management/freqUSB/square rising
-
-  Data Path: management/usbtest/state_1 to management/usbtest/out_7
-                                Gate     Net
-    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
-    ----------------------------------------  ------------
-     FD:C->Q               7   0.568   1.101  management/usbtest/state_1 (management/usbtest/state_1)
-     LUT4:I0->O            1   0.439   0.000  management/usbtest/out_not00011 (management/usbtest/out_not00011)
-     MUXF5:I1->O           8   0.436   0.839  management/usbtest/out_not0001_f5 (management/usbtest/out_not0001)
-     FDE:CE                    0.240          management/usbtest/out_0
-    ----------------------------------------
-    Total                      3.624ns (1.683ns logic, 1.941ns route)
-                                       (46.4% logic, 53.6% route)
-
-=========================================================================
 Timing constraint: Default period analysis for Clock 'management/freq2/Sqr/oneHertz_enable'
   Clock period: 1.618ns (frequency: 617.856MHz)
   Total number of paths / destination ports: 1 / 1
@@ -1731,29 +1671,8 @@ Delay:               1.618ns (Levels of Logic = 0)
                                        (52.4% logic, 47.6% route)
 
 =========================================================================
-Timing constraint: Default period analysis for Clock 'management/freqUSB/Sqr/oneHertz_enable'
-  Clock period: 1.837ns (frequency: 544.366MHz)
-  Total number of paths / destination ports: 1 / 1
--------------------------------------------------------------------------
-Delay:               1.837ns (Levels of Logic = 0)
-  Source:            management/freqUSB/square (FF)
-  Destination:       management/freqUSB/square (FF)
-  Source Clock:      management/freqUSB/Sqr/oneHertz_enable rising
-  Destination Clock: management/freqUSB/Sqr/oneHertz_enable rising
-
-  Data Path: management/freqUSB/square to management/freqUSB/square
-                                Gate     Net
-    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
-    ----------------------------------------  ------------
-     FDR:C->Q             15   0.568   0.989  management/freqUSB/square (management/freqUSB/square)
-     FDR:R                     0.280          management/freqUSB/square
-    ----------------------------------------
-    Total                      1.837ns (0.848ns logic, 0.989ns route)
-                                       (46.2% logic, 53.8% route)
-
-=========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 'clock_27mhz'
-  Total number of paths / destination ports: 265 / 233
+  Total number of paths / destination ports: 279 / 245
 -------------------------------------------------------------------------
 Offset:              5.197ns (Levels of Logic = 3)
   Source:            switch<4> (PAD)
@@ -1771,27 +1690,6 @@ Offset:              5.197ns (Levels of Logic = 3)
     ----------------------------------------
     Total                      5.197ns (3.045ns logic, 2.152ns route)
                                        (58.6% logic, 41.4% route)
-
-=========================================================================
-Timing constraint: Default OFFSET IN BEFORE for Clock 'management/freqUSB/square'
-  Total number of paths / destination ports: 14 / 12
--------------------------------------------------------------------------
-Offset:              3.649ns (Levels of Logic = 3)
-  Source:            user1<23> (PAD)
-  Destination:       management/usbtest/state_1 (FF)
-  Destination Clock: management/freqUSB/square rising
-
-  Data Path: user1<23> to management/usbtest/state_1
-                                Gate     Net
-    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
-    ----------------------------------------  ------------
-     IBUF:I->O             7   0.825   1.024  user1_23_IBUF (user1_23_IBUF)
-     LUT4:I1->O            1   0.439   0.551  management/usbtest/state_mux0000<2>1_SW0 (N221)
-     LUT4:I2->O            1   0.439   0.000  management/usbtest/state_mux0000<2>1 (management/usbtest/state_mux0000<2>1)
-     FD:D                      0.370          management/usbtest/state_1
-    ----------------------------------------
-    Total                      3.649ns (2.073ns logic, 1.576ns route)
-                                       (56.8% logic, 43.2% route)
 
 =========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 'ac97_bit_clock'
@@ -1813,28 +1711,8 @@ Offset:              2.194ns (Levels of Logic = 1)
                                        (68.0% logic, 32.0% route)
 
 =========================================================================
-Timing constraint: Default OFFSET OUT AFTER for Clock 'management/freqUSB/square'
-  Total number of paths / destination ports: 4 / 4
--------------------------------------------------------------------------
-Offset:              6.656ns (Levels of Logic = 2)
-  Source:            management/usbtest/newout (FF)
-  Destination:       led<6> (PAD)
-  Source Clock:      management/freqUSB/square rising
-
-  Data Path: management/usbtest/newout to led<6>
-                                Gate     Net
-    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
-    ----------------------------------------  ------------
-     FDR:C->Q              5   0.568   0.771  management/usbtest/newout (management/usbtest/newout)
-     INV:I->O              1   0.439   0.517  led<6>1_INV_0 (led_6_OBUF)
-     OBUF:I->O                 4.361          led_6_OBUF (led<6>)
-    ----------------------------------------
-    Total                      6.656ns (5.368ns logic, 1.288ns route)
-                                       (80.6% logic, 19.4% route)
-
-=========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'clock_27mhz'
-  Total number of paths / destination ports: 74 / 56
+  Total number of paths / destination ports: 78 / 60
 -------------------------------------------------------------------------
 Offset:              7.612ns (Levels of Logic = 2)
   Source:            a/ready_sync_1 (FF)
@@ -1911,15 +1789,15 @@ Delay:               6.003ns (Levels of Logic = 2)
 =========================================================================
 
 
-Total REAL time to Xst completion: 21.00 secs
-Total CPU time to Xst completion: 19.68 secs
+Total REAL time to Xst completion: 20.00 secs
+Total CPU time to Xst completion: 19.18 secs
  
 --> 
 
 
-Total memory usage is 504848 kilobytes
+Total memory usage is 503300 kilobytes
 
 Number of errors   :    0 (   0 filtered)
-Number of warnings :  461 (   0 filtered)
+Number of warnings :  458 (   0 filtered)
 Number of infos    :   51 (   0 filtered)
 

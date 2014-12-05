@@ -84,19 +84,8 @@ module audioManager(
 
   assign hold = 1'b0; 
 
-  // REMOVE
-  wire slowUSBClock;
-  reg lastslowUSBClock;
-  wire slowUSBClockPulse;
-  assign slowUSBClockPulse = slowUSBClock & ~lastslowUSBClock;
-  Square #(.Hz(3)) freqUSB (
-    .clock(clock),
-    .reset(reset),
-    .square(slowUSBClock)
-  );
-
   usb_input usbtest(
-    .clk(slowUSBClock),
+    .clk(clock),
     .reset(reset),
 
     // USB FTDI I/O
@@ -124,11 +113,6 @@ module audioManager(
   reg [2:0] third = 0;
   reg lastReady;
 
-  // REMOVE
-  // recorder r(.clock(clock), .reset(reset), .ready(ready),
-  //             .playback(audioSelector[3]), .from_ac97_data(from_ac97_data),
-  //             .to_ac97_data(to_ac97_data));
-  
   // REMOVE
   wire slowClock;
   reg lastSlowClock;
