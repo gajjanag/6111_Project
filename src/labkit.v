@@ -510,10 +510,22 @@ perspective_params perspective_params(.clk(slow_clk),
 // instantiate bram blocks
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+// declarations of necessary stuff
+reg[16:0] ntsc_in_addr = 0;
+wire[16:0] ntsc_out_addr = 0;
+wire[16:0] vga_in_addr = 0;
+wire[16:0] vga_out_addr = 0;
+wire[11:0] ntsc_din;
+wire[11:0] ntsc_dout;
+wire[11:0] vga_din;
+wire[11:0] vga_dout;
+wire ntsc_in_wr;
+wire vga_in_wr;
+assign ntsc_in_wr = 1;
+
 // dump a checkerboard into "ntsc" buffer
 reg[9:0] cur_x = 0;
 reg[9:0] cur_y = 0;
-reg[16:0] ntsc_in_addr = 0;
 wire[2:0] checkerboard;
 assign checkerboard = cur_x[7:5] + cur_y[7:5];
 wire[11:0] ntsc_din;
@@ -530,12 +542,7 @@ always @(posedge sys_clk) begin
 end
 
 // instantiate the pixel_map module
-wire[11:0] vga_din;
-reg[16:0] ntsc_out_addr;
-reg[16:0] vga_in_addr;
-wire[1:0] max_state;
-reg vga_in_wr;
-/*pixel_map pixel_map(.clk(sys_clk),
+pixel_map pixel_map(.clk(sys_clk),
                 .p1_inv(p1_inv),
                 .p2_inv(p2_inv),
                 .p3_inv(p3_inv),
@@ -552,42 +559,36 @@ reg vga_in_wr;
                 .pixel_out(vga_din),
                 .ntsc_out_addr(ntsc_out_addr),
                 .vga_in_wr(vga_in_wr),
-                .vga_in_addr(vga_in_addr),
-                .max_state(max_state));*/
+                .vga_in_addr(vga_in_addr));
 
 // read from vga buffer for display
-wire[16:0] vga_out_addr;
 addr_map addr_map(.hcount(hcount),
                 .vcount(vcount),
                 .addr(vga_out_addr));
 
-// create the brams
-wire ntsc_in_wr;
-assign ntsc_in_wr = 1;
-wire[11:0] vga_dout;
-
-always @(posedge sys_clk) begin
+/*always @(posedge sys_clk) begin
     vga_in_addr <= (vga_in_addr < 76799) ? (vga_in_addr + 1) : 0;
     ntsc_out_addr <= (ntsc_out_addr < 76799) ? (ntsc_out_addr + 1) : 0;
     vga_in_wr <= 1;
-end
+end*/
 
+// create the brams
 bram ntsc_buf(.a_clk(sys_clk),
             .a_wr(ntsc_in_wr),
             .a_addr(ntsc_in_addr),
             .a_din(ntsc_din),
             .b_clk(sys_clk),
             .b_addr(ntsc_out_addr),
-            .b_dout(vga_din));
+            .b_dout(ntsc_dout));
 
 bram vga_buf(.a_clk(sys_clk),
-            .a_wr(1'b1),
+            .a_wr(vga_in_wr),
             .a_addr(vga_in_addr),
             .a_din(vga_din),
             .b_clk(vga_clk),
             .b_addr(vga_out_addr),
             .b_dout(vga_dout));
-            
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Create VGA output signals
 // In order to meet the setup and hold times of AD7125, we send it ~vga_clk
