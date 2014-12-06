@@ -35,6 +35,42 @@ module audioManager(
   output wire rd // the rd pin from the USB fifo (OUTPUT)
 );
   
+  // Playback addresses:
+  // numbers
+  parameter ONE_ADDR = 1'b1;
+  parameter TWO_ADDR = 1'b1;
+  parameter THREE_ADDR = 1'b1;
+  parameter FOUR_ADDR = 1'b1;
+  parameter FIVE_ADDR = 1'b1;
+  parameter SIX_ADDR = 1'b1;
+  parameter SEVEN_ADDR = 1'b1;
+  parameter EIGHT_ADDR = 1'b1;
+  parameter NINE_ADDR = 1'b1;
+  parameter TEN_ADDR = 1'b1;
+  parameter ELEVEN_ADDR = 1'b1;
+  parameter TWELVE_ADDR = 1'b1;
+  parameter THIRTEEN_ADDR = 1'b1;
+  parameter FOURTEEN_ADDR = 1'b1;
+  parameter FIFTEEN_ADDR = 1'b1;
+  parameter TWENTY_ADDR = 1'b1;
+  parameter THIRTY_ADDR = 1'b1;
+  parameter FOURTY_ADDR = 1'b1;
+  parameter FIFTY_ADDR = 1'b1;
+  parameter SIXTY_ADDR = 1'b1;
+  parameter SEVENTY_ADDR = 1'b1;
+  parameter EIGHTY_ADDR = 1'b1;
+  parameter NINETY_ADDR = 1'b1;
+  parameter HUNDRED_ADDR = 1'b1;
+  // other speech
+  parameter TEEN_ADDR = 1'b1;
+  parameter PERCENT_ADDR = 1'b1;
+  parameter USED_ADDR = 1'b1;
+  parameter HELP_AUDIO_ADDR = 1'b1;
+  // Not a used track:
+  parameter UNUSED_ADDR = 23'hFFFFFF; // Signals end of playback
+  parameter SKIP_ADDR = 23'hFFFFFE; // Signals track to be skipped
+  parameter TRACK_LENGTH = 40000; // approx 1 sec
+
   reg writemode = 0;         //1=write mode; 0=read mode
   reg [15:0] wdata = 0;      //writeData
   reg dowrite = 0;           //1=new data, write it
@@ -100,6 +136,17 @@ module audioManager(
     .state(state)
   );
 
+  wire [3:0] hundreds;
+  wire [3:0] tens;
+  wire [3:0] ones;
+
+  BCD inputToBCD(
+    .number({3'b000, audioSelector}}),
+    .hundreds(hundreds),
+    .tens(tens),
+    .ones(ones)
+  );
+
   reg [15:0] bytesRxed = 0;
 
   // frdata has no guaruntees when not in read mode
@@ -126,6 +173,14 @@ module audioManager(
   wire [19:0] tone;
   tone750hz xxx(.clock(clock),.ready(slowClockPulse),.pcm_data(tone));
   reg [5:0] index;
+
+  // Set of 4 addresses that represent a playback sequence
+  // First track in bottom 23 bits[22:0]. Last track in top bits [91:68].
+  // 23'hFFFFFF means track not used.
+  reg [91:0] playbackSeq = 2;
+  reg [22:0] trackEndAddr = 0;
+  reg playing = 0;
+  reg lastPlaying = 0;
   
   reg [7:0] dataFromFifo;
   always @ (posedge rd) begin
@@ -138,6 +193,7 @@ module audioManager(
     lastAudioTrigger <= audioTrigger;
     lastReady <= ready;
     lastSlowClock <= slowClock;
+    lastPlaying <= playing;
 
     if (startSwitch) begin
       // write USB RX data if switch is up
@@ -151,7 +207,7 @@ module audioManager(
           dowrite <= 1'b1;
         end
 
-        if (audioSelector[2]) begin // tone750Hz to flash
+        if (1'h0) begin//audioSelector[2]) begin // tone750Hz to flash
           if (slowClockPulse) begin // WAS: READY
             if (index <= 6'h3F) begin
               wdata <= {tone[19:12], 8'b0};
@@ -176,31 +232,100 @@ module audioManager(
           raddr <= raddr - 1;
         end
 
-        if (audioTrigger & ready) begin  
-          
+        if (playing & audioTrigger & ready) begin // REMOVE audioTrigger
+          if (raddr < trackEndAddr) begin
           // Normal 48K Playback
+          raddr <= raddr + 1;
+          to_ac97_data <= frdata[15:8]; // PUT BACK
+          // Repeat at addr 63 for tone750Hz
+          // if(audioSelector[3] & raddr == 63) begin
+          //   raddr <= 0;
+          // end
+          end
           else begin 
-            // 48K sample rate
-            raddr <= raddr + 1;
-            to_ac97_data <= frdata[15:8]; // PUT BACK
-            if(audioSelector[3] & raddr == 63) begin
-              raddr <= 0;
+            if (playbackSeq[45:23] < UNUSED_ADDR) begin
+              // change raddr to next track
+              raddr <= playbackSeq[45:23];
+              // shift playbackSeq down
+              playbackSeq <= {UNUSED_ADDR, playbackSeq[93:23]};
+              // update trackEndAddr
+              trackEndAddr <= playbackSeq[45:23] + TRACK_LENGTH;
+            end
+            else if (playbackSeq[45:23] == UNUSED_ADDR) begin
+              playing <= 0;
+              raddr <= 0; // reset for safety - lower than UNUSED_ADDR
             end
           end
         end // if (audioTrigger)
 
         // if entering this state, assign start address
         if (audioTrigger & ~lastAudioTrigger) begin
+          playing <= 1;
           // For testing, play 12K addresses (2 sec) for each trigger
-          case(audioSelector[1:0])
-            0: raddr <= 1;
-            1: raddr <= 20001;
-            2: raddr <= 24001;
-            3: raddr <= 36001;
-            default: raddr <= 1;
+          // case(audioSelector[4:0])
+          //   0: begin playbackSeq <= {UNUSED_ADDR, USED_ADDR, PERCENT_ADDR, ONE_ADDR}; raddr <= 1; end
+          //   1: raddr <= 20001;
+          //   2: raddr <= 24001;
+          //   3: raddr <= 36001;
+          //   default: raddr <= 1;
+          // endcase
+          case(ones)
+            0: playbackSeq[91:23] <= {UNUSED_ADDR, USED_ADDR, PERCENT_ADDR};
+            1: playbackSeq[91:23] <= {USED_ADDR, PERCENT_ADDR, ONE_ADDR};
+            2: playbackSeq[91:23] <= {USED_ADDR, PERCENT_ADDR, TWO_ADDR};
+            3: playbackSeq[91:23] <= {USED_ADDR, PERCENT_ADDR, THREE_ADDR};
+            4: playbackSeq[91:23] <= {USED_ADDR, PERCENT_ADDR, FOUR_ADDR};
+            5: playbackSeq[91:23] <= {USED_ADDR, PERCENT_ADDR, FIVE_ADDR};
+            6: playbackSeq[91:23] <= {USED_ADDR, PERCENT_ADDR, SIX_ADDR};
+            7: playbackSeq[91:23] <= {USED_ADDR, PERCENT_ADDR, SEVEN_ADDR};
+            8: playbackSeq[91:23] <= {USED_ADDR, PERCENT_ADDR, EIGHT_ADDR};
+            9: playbackSeq[91:23] <= {USED_ADDR, PERCENT_ADDR, NINE_ADDR};
+            default:  playbackSeq <= {USED_ADDR, PERCENT_ADDR, UNUSED_ADDR}; // error
+          endcase
+          case (tens)
+            0: playbackSeq[22:0] <= SKIP_ADDR;
+            1: playbackSeq[22:0] <= TEN_ADDR;
+            2: playbackSeq[22:0] <= TWENTY_ADDR;
+            3: playbackSeq[22:0] <= THIRTY_ADDR;
+            4: playbackSeq[22:0] <= FOURTY_ADDR;
+            5: playbackSeq[22:0] <= FIFTY_ADDR;
+            6: playbackSeq[22:0] <= SIXTY_ADDR;
+            7: playbackSeq[22:0] <= SEVENTY_ADDR;
+            8: playbackSeq[22:0] <= EIGHTY_ADDR;
+            9: playbackSeq[22:0] <= NINETY_ADDR;
+            default: playbackSeq[22:0] <= UNUSED_ADDR;
+          endcase
+          case (hundreds)
+            0: begin end
+            1: playbackSeq <= {UNUSED_ADDR, PERCENT_ADDR, USED_ADDR, HUNDRED_ADDR}; // error
+          endcase
+          case (audioSelector)
+            11: playbackSeq <= {UNUSED_ADDR, USED_ADDR, PERCENT_ADDR, ELEVEN_ADDR};
+            12: playbackSeq <= {UNUSED_ADDR, USED_ADDR, PERCENT_ADDR, TWELVE_ADDR};
+            13: playbackSeq <= {UNUSED_ADDR, USED_ADDR, PERCENT_ADDR, THIRTEEN_ADDR};
+            14: playbackSeq <= {UNUSED_ADDR, USED_ADDR, PERCENT_ADDR, FOURTEEN_ADDR};
+            15: playbackSeq <= {UNUSED_ADDR, USED_ADDR, PERCENT_ADDR, FIFTEEN_ADDR};
+            16: playbackSeq <= {USED_ADDR, PERCENT_ADDR, TEEN_ADDR, SIX_ADDR};
+            17: playbackSeq <= {USED_ADDR, PERCENT_ADDR, TEEN_ADDR, SEVEN_ADDR};
+            18: playbackSeq <= {USED_ADDR, PERCENT_ADDR, TEEN_ADDR, EIGHT_ADDR};
+            19: playbackSeq <= {USED_ADDR, PERCENT_ADDR, TEEN_ADDR, NINE_ADDR};
+            default: begin end
           endcase
         end // if (audioTrigger & ~lastAudioTrigger) 
 
+        // just started playing - need to set raddr
+        // Assuming this happens once playbackSeq has been properly set
+        if (playing & ~lastPlaying) begin
+          if (playbackSeq[22:0] == SKIP_ADDR) begin
+            playbackSeq <= {UNUSED_ADDR, playbackSeq[91:23]};
+            raddr <= playbackSeq[45:23];
+            trackEndAddr <= playbackSeq[45:23] + TRACK_LENGTH;
+          end
+          else begin
+            raddr <= playbackSeq[22:0];
+            trackEndAddr <= playbackSeq[22:0] + TRACK_LENGTH;
+          end
+        end
       end // if (~writeSwitch)
     end // if (startSwitch)
     else begin
