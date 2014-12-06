@@ -53,17 +53,18 @@ function parse_data(path)
     y3 = zeros(Int64, num_samples)
     x4 = zeros(Int64, num_samples)
     y4 = zeros(Int64, num_samples)
+    base = 10
     for i = 1:num_samples
-        x_accel[i] = parseint(raw_data[i,1])
-        y_accel[i] = parseint(raw_data[i,2])
-        x1[i] = parseint(raw_data[i,3])
-        y1[i] = parseint(raw_data[i,4])
-        x2[i] = parseint(raw_data[i,5])
-        y2[i] = parseint(raw_data[i,6])
-        x3[i] = parseint(raw_data[i,7])
-        y3[i] = parseint(raw_data[i,8])
-        x4[i] = parseint(raw_data[i,9])
-        y4[i] = parseint(raw_data[i,10])
+        x_accel[i] = parseint(raw_data[i,1], base)
+        y_accel[i] = parseint(raw_data[i,2], base)
+        x1[i] = parseint(raw_data[i,3], base)
+        y1[i] = parseint(raw_data[i,4], base)
+        x2[i] = parseint(raw_data[i,5], base)
+        y2[i] = parseint(raw_data[i,6], base)
+        x3[i] = parseint(raw_data[i,7], base)
+        y3[i] = parseint(raw_data[i,8], base)
+        x4[i] = parseint(raw_data[i,9], base)
+        y4[i] = parseint(raw_data[i,10], base)
     end
     return float(x_accel), float(y_accel), float(x1), float(y1), float(x2), float(y2), float(x3), float(y3), float(x4), float(y4)
 end
@@ -156,7 +157,7 @@ function write_file(path, x_accel, y_accel, x1, y1, x2, y2, x3, y3, x4, y4)
     end
 
     # write footer
-    code_end = "\tendcase\nend\nendmodule"
+    code_end = "\tendcase\nend\nendmodule\n"
     write(fs, code_end)
     close(fs)
 end
