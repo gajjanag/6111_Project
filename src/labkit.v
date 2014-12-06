@@ -210,13 +210,13 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    assign tv_out_subcar_reset = 1'b0;
    
    // Video Input
-   assign tv_in_i2c_clock = 1'b0;
+   // assign tv_in_i2c_clock = 1'b0;
    assign tv_in_fifo_read = 1'b0;
    assign tv_in_fifo_clock = 1'b0;
    assign tv_in_iso = 1'b0;
-   assign tv_in_reset_b = 1'b0;
+   // assign tv_in_reset_b = 1'b0;
    assign tv_in_clock = 1'b0;
-   assign tv_in_i2c_data = 1'bZ;
+   // assign tv_in_i2c_data = 1'bZ;
    // tv_in_ycrcb, tv_in_data_valid, tv_in_line_clock1, tv_in_line_clock2, 
    // tv_in_aef, tv_in_hff, and tv_in_aff are inputs
    
@@ -504,26 +504,50 @@ perspective_params perspective_params(.clk(slow_clk),
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 // declarations of necessary stuff
-reg[16:0] ntsc_in_addr = 0;
+reg[16:0] ntsc_cb_in_addr = 0;
 wire[16:0] ntsc_out_addr;
 wire[16:0] vga_in_addr;
 wire[16:0] vga_out_addr;
-wire[11:0] ntsc_din;
+wire[11:0] ntsc_cb_din;
 wire[11:0] ntsc_dout;
 wire[11:0] vga_din;
 wire[11:0] vga_dout;
-wire ntsc_in_wr;
+wire ntsc_cb_in_wr;
 wire vga_in_wr;
-assign ntsc_in_wr = 1;
+assign ntsc_cb_in_wr = 1;
+
+// ntsc
+
+adv7185init adv7185(.reset(reset), .clock_27mhz(clock_27mhz), 
+			 .source(1'b0), .tv_in_reset_b(tv_in_reset_b), 
+			 .tv_in_i2c_clock(tv_in_i2c_clock), 
+			 .tv_in_i2c_data(tv_in_i2c_data));
+			 
+wire [29:0] ycrcb;	// video data (luminance, chrominance)
+wire [2:0] fvh;	// sync for field, vertical, horizontal
+wire       dv;	// data valid
+
+ntsc_decode decode (.clk(tv_in_line_clock1), .reset(reset),
+			 .tv_in_ycrcb(tv_in_ycrcb[19:10]), 
+			 .ycrcb(ycrcb), .f(fvh[2]),
+			 .v(fvh[1]), .h(fvh[0]), .data_valid(dv));
+			 
+// code to write NTSC data to video memory
+
+wire [16:0] ntsc_addr;
+wire [11:0] ntsc_data;
+wire        ntsc_we;
+ntsc_to_bram n2b (tv_in_line_clock1, tv_in_line_clock1, fvh, dv,
+		 ycrcb, ntsc_addr, ntsc_data, ntsc_we, switch[6]);
 
 // dump a checkerboard into "ntsc" buffer
 reg[9:0] cur_x = 0;
 reg[9:0] cur_y = 0;
 wire[2:0] checkerboard;
 assign checkerboard = cur_x[7:5] + cur_y[7:5];
-assign ntsc_din = {{4{checkerboard[2]}}, {4{checkerboard[1]}}, {4{checkerboard[0]}}};
-always @(posedge sys_clk) begin
-    ntsc_in_addr <= (ntsc_in_addr < 76799) ? (ntsc_in_addr + 1) : ntsc_in_addr;
+assign ntsc_cb_din = {{4{checkerboard[2]}}, {4{checkerboard[1]}}, {4{checkerboard[0]}}};
+always @(posedge tv_in_line_clock1) begin
+    ntsc_cb_in_addr <= (ntsc_cb_in_addr < 76799) ? (ntsc_cb_in_addr + 1) : 0;
     cur_x <= (cur_x < 319) ? (cur_x + 1) : 0;
     if ((cur_x == 319) && (cur_y == 239)) begin
         cur_y <= 0;
@@ -565,10 +589,10 @@ addr_map addr_map(.hcount(hcount),
 end*/
 
 // create the brams
-bram ntsc_buf(.a_clk(sys_clk),
-            .a_wr(ntsc_in_wr),
-            .a_addr(ntsc_in_addr),
-            .a_din(ntsc_din),
+bram ntsc_buf(.a_clk(tv_in_line_clock1),
+            .a_wr(switch[5] ? ntsc_cb_in_wr : ntsc_we),
+            .a_addr(switch[5] ? ntsc_cb_in_addr : ntsc_addr),
+            .a_din(switch[5] ? ntsc_cb_din : ntsc_data),
             .b_clk(sys_clk),
             .b_addr(ntsc_out_addr),
             .b_dout(ntsc_dout));
@@ -605,7 +629,7 @@ assign hex_disp_data[15:9] = 7'd0;
 assign hex_disp_data[25:16] = display_x;
 assign hex_disp_data[31:26] = 6'd0;
 // higher bits, put the percent_lost
-assign hex_disp_data[63:32] = {acc_x, acc_y};
+assign hex_disp_data[63:32] = {10'b0, accel_val[11:6], 10'b0, accel_val[5:0]};
 display_16hex display_16hex(.reset(reset),
             .clock_27mhz(clock_27mhz),
             .data(hex_disp_data),
