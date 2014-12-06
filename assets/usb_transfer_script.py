@@ -24,7 +24,7 @@ ser = serial.Serial(port='/dev/tty.usbserial-FTDHKA57')#, baudrate=300)
 
 # ser = serial.Serial(port='/dev/tty.usbserial-A900a0YF')
 
-a = open('audio_convert/lion48k.coe','r')
+a = open('audio_convert/Fa48k8bit.coe','r')
 
 for line in a:
     
