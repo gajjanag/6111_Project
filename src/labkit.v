@@ -210,13 +210,13 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    assign tv_out_subcar_reset = 1'b0;
    
    // Video Input
-   // assign tv_in_i2c_clock = 1'b0;
-   assign tv_in_fifo_read = 1'b0;
+   //assign tv_in_i2c_clock = 1'b0;
+   assign tv_in_fifo_read = 1'b1;
    assign tv_in_fifo_clock = 1'b0;
-   assign tv_in_iso = 1'b0;
-   // assign tv_in_reset_b = 1'b0;
-   assign tv_in_clock = 1'b0;
-   // assign tv_in_i2c_data = 1'bZ;
+   assign tv_in_iso = 1'b1;
+   //assign tv_in_reset_b = 1'b0;
+   assign tv_in_clock = clock_27mhz;//1'b0;
+   //assign tv_in_i2c_data = 1'bZ;
    // tv_in_ycrcb, tv_in_data_valid, tv_in_line_clock1, tv_in_line_clock2, 
    // tv_in_aef, tv_in_hff, and tv_in_aff are inputs
    
