@@ -723,9 +723,7 @@ module lab5   (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
     // USB I/O
     .data(user1[31:24]), //the data pins from the USB fifo
     .rxf(user1[23]), //the rxf pin from the USB fifo
-    .rd(user1[22]), //the rd pin TO the USB FIFO (OUTPUT)
-    .newout(newout),
-    .flashError(flashError)
+    .rd(user1[22]) //the rd pin TO the USB FIFO (OUTPUT)
   );
 
   // // USB Test - wire up inputs
