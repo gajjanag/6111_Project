@@ -267,10 +267,10 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    // button_left, button_down, button_up, and switches are inputs
 
    // User I/Os
-   //assign user1 = 32'hZ;
-   //assign user2 = 32'hZ;
-   //assign user3 = 32'hZ;
-   //assign user4 = 32'hZ;
+   assign user1[31:4] = 28'hZ;
+   assign user2 = 32'hZ;
+   assign user3 = 32'hZ;
+   assign user4 = 32'hZ;
 
    // Daughtercard Connectors
    assign daughtercard = 44'hZ;
@@ -377,6 +377,13 @@ vga vga(.vclock(vga_clk),
 // instantiate accel_lut and move_cursor
 // essentially, corners of quadrilateral logic
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+wire acc_ready;
+wire signed [15:0] acc_x;
+wire signed [15:0] acc_y;
+acc a(.clk(sys_clk), .sdo(user1[0]), .reset(reset),
+.ncs(user1[1]), .sda(user1[2]), .scl(user1[3]),
+.ready(acc_ready), .x(acc_x), .y(acc_y));
+		
 wire[11:0] accel_val;
 wire[75:0] quad_corners;
 wire[9:0] x1_raw;
@@ -397,7 +404,7 @@ wire[9:0] x4;
 wire[8:0] y4;
 wire[9:0] display_x;
 wire[8:0] display_y;
-assign accel_val = 12'd0; // for now, TODO: James
+assign accel_val = {~acc_x[15], acc_x[7:4], 1'b0, ~acc_y[15], acc_y[7:4], 1'b0}; 
 accel_lut accel_lut(.clk(slow_clk),
                 .accel_val(accel_val),
                 .quad_corners(quad_corners));
@@ -467,21 +474,7 @@ wire signed[70:0] p9_inv;
 wire signed[78:0] dec_numx_horiz;
 wire signed[78:0] dec_numy_horiz;
 wire signed[70:0] dec_denom_horiz;
-// hack to ensure that module is not optimized out
-// TODO: Remove
-/*assign user1[31] = p1_inv[67];
-assign user1[30] = p2_inv[68];
-assign user1[29] = p3_inv[78];
-assign user1[28] = p4_inv[67];
-assign user1[27] = p5_inv[68];
-assign user1[26] = p6_inv[78];
-assign user1[25] = p7_inv[58];
-assign user1[24] = p8_inv[59];
-assign user1[23] = p9_inv[70];
-assign user1[22:0] = 23'd0;
-assign user2[31:0] = 32'd0;
-assign user3[31:0] = 32'd0;
-assign user4[31:0] = 32'd0;*/
+
 perspective_params perspective_params(.clk(slow_clk),
                                     .x1(x1),
                                     .y1(y1),
@@ -612,8 +605,7 @@ assign hex_disp_data[15:9] = 7'd0;
 assign hex_disp_data[25:16] = display_x;
 assign hex_disp_data[31:26] = 6'd0;
 // higher bits, put the percent_lost
-assign hex_disp_data[38:32] = percent_lost;
-assign hex_disp_data[63:39] = 25'd0;
+assign hex_disp_data[63:32] = {acc_x, acc_y};
 display_16hex display_16hex(.reset(reset),
             .clock_27mhz(clock_27mhz),
             .data(hex_disp_data),
