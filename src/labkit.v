@@ -372,6 +372,14 @@ vga vga(.vclock(vga_clk),
         .hsync(hsync),
         .blank(blank));
 
+reg old_btn_up, old_btn_down, old_btn_left, old_btn_right;
+always @(posedge vsync) begin
+	old_btn_up <= btn_up_sw;
+	old_btn_down <= btn_down_sw;
+	old_btn_left <= btn_left_sw;
+	old_btn_right <= btn_right_sw;
+end
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // instantiate accel_lut and move_cursor
@@ -417,10 +425,10 @@ assign x2_raw = quad_corners[56:47];
 assign y1_raw = quad_corners[65:57];
 assign x1_raw = quad_corners[75:66];
 move_cursor move_cursor(.clk(vsync),
-                    .up(btn_up_sw),
-                    .down(btn_down_sw),
-                    .left(btn_left_sw),
-                    .right(btn_right_sw),
+                    .up(btn_up_sw & ~old_btn_up),
+                    .down(btn_down_sw & ~old_btn_down),
+                    .left(btn_left_sw & ~old_btn_left),
+                    .right(btn_right_sw & ~old_btn_right),
                     .override(override_sw),
                     .switch(quad_corner_sw),
                     .x1_raw(x1_raw),
