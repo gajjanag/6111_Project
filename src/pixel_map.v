@@ -129,7 +129,7 @@ always @(posedge clk) begin
         end
 
         WAIT_FOR_MEM_ST: begin
-            if ((inv_x < $signed(0)) || (inv_x > $signed(639)) || (inv_y < $signed(0)) || (inv_y > $signed(479))) begin
+            if ((inv_x < 0) || (inv_x > 639) || (inv_y < 0) || (inv_y > 479)) begin
                 pixel_out <= BLACK;
                 vga_in_wr <= 1;
                 cur_state <= NEXT_PIXEL_ST;
