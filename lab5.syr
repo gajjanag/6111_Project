@@ -116,20 +116,18 @@ Module <lab5audio> compiled
 Module <ac97> compiled
 Module <ac97commands> compiled
 Module <tone750hz> compiled
-Compiling verilog file "src/fir31.v" in library work
-Module <lab5> compiled
-Module <fir31> compiled
 Compiling verilog file "src/Divider.v" in library work
-Module <coeffs31> compiled
+Module <lab5> compiled
 Compiling verilog file "src/display_16hex.v" in library work
 Module <Divider> compiled
 Compiling verilog file "src/debounce.v" in library work
 Module <display_16hex> compiled
-Compiling verilog file "src/audioManager.v" in library work
+Compiling verilog file "src/BCD.v" in library work
 Module <debounce> compiled
-Module <audioManager> compiled
+Compiling verilog file "src/audioManager.v" in library work
+Module <BCD> compiled
 Compiling verilog file "assets/USB_transfer/usb_input.v" in library work
-Module <recorder> compiled
+Module <audioManager> compiled
 Compiling verilog file "assets/flash_IO/test_fsm.v" in library work
 Module <usb_input> compiled
 Compiling verilog file "assets/flash_IO/flash_manager.v" in library work
@@ -153,7 +151,38 @@ Analyzing hierarchy for module <display_16hex> in library <work>.
 
 Analyzing hierarchy for module <lab5audio> in library <work>.
 
-Analyzing hierarchy for module <audioManager> in library <work>.
+Analyzing hierarchy for module <audioManager> in library <work> with parameters.
+	EIGHTY_ADDR = "00000000000011110110000110000001"
+	EIGHT_ADDR = "00000000000001010010000010000001"
+	ELEVEN_ADDR = "00000000000001110101001100000001"
+	FIFTEEN_ADDR = "00000000000010100100000100000001"
+	FIFTY_ADDR = "00000000000011010010111100000001"
+	FIVE_ADDR = "00000000000000101110111000000001"
+	FOURTEEN_ADDR = "00000000000010011000010110000001"
+	FOURTY_ADDR = "00000000000011000111001110000001"
+	FOUR_ADDR = "00000000000000100011001010000001"
+	HELP_AUDIO_ADDR = "00000000000100111100011010000001"
+	HUNDRED_ADDR = "00000000000100001101100010000001"
+	NINETY_ADDR = "00000000000100000001110100000001"
+	NINE_ADDR = "00000000000001011101110000000001"
+	ONE_ADDR = "1"
+	PERCENT_ADDR = "00000000000100100100111110000001"
+	SEVENTY_ADDR = "00000000000011101010011000000001"
+	SEVEN_ADDR = "00000000000001000110010100000001"
+	SIXTY_ADDR = "00000000000011011110101010000001"
+	SIX_ADDR = "00000000000000111010100110000001"
+	SKIP_ADDR = "11111111111111111111110"
+	TEEN_ADDR = "00000000000100011001010000000001"
+	TEN_ADDR = "00000000000001101001011110000001"
+	THIRTEEN_ADDR = "00000000000010001100101000000001"
+	THIRTY_ADDR = "00000000000010111011100000000001"
+	THREE_ADDR = "00000000000000010111011100000001"
+	TRACK_LENGTH = "00000000000000001011101110000000"
+	TWELVE_ADDR = "00000000000010000000111010000001"
+	TWENTY_ADDR = "00000000000010101111110010000001"
+	TWO_ADDR = "00000000000000001011101110000001"
+	UNUSED_ADDR = "11111111111111111111111"
+	USED_ADDR = "00000000000100110000101100000001"
 
 Analyzing hierarchy for module <ac97> in library <work>.
 
@@ -190,10 +219,10 @@ Analyzing hierarchy for module <usb_input> in library <work> with parameters.
 	WAIT2 = "00000000000000000000000000000010"
 	WAIT3 = "00000000000000000000000000000011"
 
+Analyzing hierarchy for module <BCD> in library <work>.
+
 Analyzing hierarchy for module <Square> in library <work> with parameters.
 	Hz = "00000000000000000000101110111000"
-
-Analyzing hierarchy for module <fir31> in library <work>.
 
 Analyzing hierarchy for module <tone750hz> in library <work>.
 
@@ -204,7 +233,7 @@ Analyzing hierarchy for module <flash_int> in library <work> with parameters.
 
 Analyzing hierarchy for module <test_fsm> in library <work> with parameters.
 	HOME = "00010010"
-	MAX_ADDRESS = "00010010000000000000000"
+	MAX_ADDRESS = "00101000000000000000000"
 	MODE_IDLE = "00000000000000000000000000000000"
 	MODE_INIT = "00000000000000000000000000000001"
 	MODE_READ = "00000000000000000000000000000011"
@@ -212,8 +241,6 @@ Analyzing hierarchy for module <test_fsm> in library <work> with parameters.
 
 Analyzing hierarchy for module <Divider> in library <work> with parameters.
 	Hz = "00000000000000000000101110111000"
-
-Analyzing hierarchy for module <coeffs31> in library <work>.
 
 
 =========================================================================
@@ -259,6 +286,37 @@ Module <ac97commands> is correct for synthesis.
     Set user-defined property "INIT =  0000" for signal <state>.
     Set user-defined property "INIT =  0" for signal <command>.
 Analyzing module <audioManager> in library <work>.
+	EIGHTY_ADDR = 32'b00000000000011110110000110000001
+	EIGHT_ADDR = 32'b00000000000001010010000010000001
+	ELEVEN_ADDR = 32'b00000000000001110101001100000001
+	FIFTEEN_ADDR = 32'b00000000000010100100000100000001
+	FIFTY_ADDR = 32'b00000000000011010010111100000001
+	FIVE_ADDR = 32'b00000000000000101110111000000001
+	FOURTEEN_ADDR = 32'b00000000000010011000010110000001
+	FOURTY_ADDR = 32'b00000000000011000111001110000001
+	FOUR_ADDR = 32'b00000000000000100011001010000001
+	HELP_AUDIO_ADDR = 32'b00000000000100111100011010000001
+	HUNDRED_ADDR = 32'b00000000000100001101100010000001
+	NINETY_ADDR = 32'b00000000000100000001110100000001
+	NINE_ADDR = 32'b00000000000001011101110000000001
+	ONE_ADDR = 1'b1
+	PERCENT_ADDR = 32'b00000000000100100100111110000001
+	SEVENTY_ADDR = 32'b00000000000011101010011000000001
+	SEVEN_ADDR = 32'b00000000000001000110010100000001
+	SIXTY_ADDR = 32'b00000000000011011110101010000001
+	SIX_ADDR = 32'b00000000000000111010100110000001
+	SKIP_ADDR = 23'b11111111111111111111110
+	TEEN_ADDR = 32'b00000000000100011001010000000001
+	TEN_ADDR = 32'b00000000000001101001011110000001
+	THIRTEEN_ADDR = 32'b00000000000010001100101000000001
+	THIRTY_ADDR = 32'b00000000000010111011100000000001
+	THREE_ADDR = 32'b00000000000000010111011100000001
+	TRACK_LENGTH = 32'sb00000000000000001011101110000000
+	TWELVE_ADDR = 32'b00000000000010000000111010000001
+	TWENTY_ADDR = 32'b00000000000010101111110010000001
+	TWO_ADDR = 32'b00000000000000001011101110000001
+	UNUSED_ADDR = 23'b11111111111111111111111
+	USED_ADDR = 32'b00000000000100110000101100000001
 Module <audioManager> is correct for synthesis.
  
 Analyzing module <flash_manager> in library <work>.
@@ -283,7 +341,7 @@ Module <flash_int> is correct for synthesis.
  
 Analyzing module <test_fsm> in library <work>.
 	HOME = 8'b00010010
-	MAX_ADDRESS = 23'b00010010000000000000000
+	MAX_ADDRESS = 23'b00101000000000000000000
 	MODE_IDLE = 32'sb00000000000000000000000000000000
 	MODE_INIT = 32'sb00000000000000000000000000000001
 	MODE_READ = 32'sb00000000000000000000000000000011
@@ -319,6 +377,9 @@ Analyzing module <usb_input> in library <work>.
 	WAIT3 = 32'sb00000000000000000000000000000011
 Module <usb_input> is correct for synthesis.
  
+Analyzing module <BCD> in library <work>.
+Module <BCD> is correct for synthesis.
+ 
 Analyzing module <Square> in library <work>.
 	Hz = 32'sb00000000000000000000101110111000
 Module <Square> is correct for synthesis.
@@ -326,15 +387,6 @@ Module <Square> is correct for synthesis.
 Analyzing module <Divider> in library <work>.
 	Hz = 32'sb00000000000000000000101110111000
 Module <Divider> is correct for synthesis.
- 
-Analyzing module <fir31> in library <work>.
-INFO:Xst:1607 - Contents of array <buffer> may be accessed with an index that does not cover the full array size.
-INFO:Xst:1432 - Contents of array <buffer> may be accessed with a negative index, causing simulation mismatch.
-INFO:Xst:1433 - Contents of array <buffer> may be accessed with an index that exceeds the array size. This could cause simulation mismatch.
-Module <fir31> is correct for synthesis.
- 
-Analyzing module <coeffs31> in library <work>.
-Module <coeffs31> is correct for synthesis.
  
 Analyzing module <tone750hz> in library <work>.
 Module <tone750hz> is correct for synthesis.
@@ -478,6 +530,29 @@ Synthesizing Unit <usb_input>.
 Unit <usb_input> synthesized.
 
 
+Synthesizing Unit <BCD>.
+    Related source file is "src/BCD.v".
+WARNING:Xst:646 - Signal <shift> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+    Found 4-bit adder for signal <$add0000> created at line 21.
+    Found 4-bit adder for signal <$add0001> created at line 21.
+    Found 4-bit adder for signal <$add0002> created at line 21.
+    Found 4-bit adder for signal <$add0003> created at line 21.
+    Found 4-bit adder for signal <$add0004> created at line 24.
+    Found 4-bit adder for signal <$add0005> created at line 21.
+    Found 4-bit adder for signal <$add0006> created at line 24.
+    Found 4-bit comparator greatequal for signal <shift$cmp_ge0000> created at line 20.
+    Found 4-bit comparator greatequal for signal <shift$cmp_ge0001> created at line 20.
+    Found 4-bit comparator greatequal for signal <shift$cmp_ge0002> created at line 20.
+    Found 4-bit comparator greatequal for signal <shift$cmp_ge0003> created at line 23.
+    Found 4-bit comparator greatequal for signal <shift$cmp_ge0004> created at line 20.
+    Found 4-bit comparator greatequal for signal <shift$cmp_ge0005> created at line 23.
+    Found 4-bit comparator greatequal for signal <shift$cmp_ge0006> created at line 20.
+    Summary:
+	inferred   7 Adder/Subtractor(s).
+	inferred   7 Comparator(s).
+Unit <BCD> synthesized.
+
+
 Synthesizing Unit <tone750hz>.
     Related source file is "src/lab5.v".
     Found 64x20-bit ROM for signal <pcm_data>.
@@ -551,14 +626,6 @@ Synthesizing Unit <Divider>.
 Unit <Divider> synthesized.
 
 
-Synthesizing Unit <coeffs31>.
-    Related source file is "src/fir31.v".
-    Found 31x10-bit ROM for signal <coeff>.
-    Summary:
-	inferred   1 ROM(s).
-Unit <coeffs31> synthesized.
-
-
 Synthesizing Unit <lab5audio>.
     Related source file is "src/lab5.v".
 WARNING:Xst:646 - Signal <right_in_data> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
@@ -607,60 +674,56 @@ Synthesizing Unit <Square>.
 Unit <Square> synthesized.
 
 
-Synthesizing Unit <fir31>.
-    Related source file is "src/fir31.v".
-WARNING:Xst:647 - Input <reset> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
-    Found 32x8-bit dual-port RAM <Mram_buffer> for signal <buffer>.
-    Found 18-bit register for signal <y>.
-    Found 18-bit up accumulator for signal <accum>.
-    Found 5-bit comparator lessequal for signal <accum$cmp_le0000> created at line 39.
-    Found 10x8-bit multiplier for signal <accum$mult0000> created at line 40.
-    Found 7-bit subtractor for signal <accum$sub0000> created at line 40.
-    Found 5-bit adder carry out for signal <add0000$addsub0000> created at line 34.
-    Found 5-bit up counter for signal <index>.
-    Found 5-bit up counter for signal <offset>.
-    Summary:
-	inferred   1 RAM(s).
-	inferred   2 Counter(s).
-	inferred   1 Accumulator(s).
-	inferred  18 D-type flip-flop(s).
-	inferred   2 Adder/Subtractor(s).
-	inferred   1 Multiplier(s).
-	inferred   1 Comparator(s).
-Unit <fir31> synthesized.
-
-
 Synthesizing Unit <audioManager>.
     Related source file is "src/audioManager.v".
-WARNING:Xst:1305 - Output <flashError> is never assigned. Tied to value 0.
 WARNING:Xst:647 - Input <from_ac97_data> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
-WARNING:Xst:646 - Signal <tone<11:0>> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:646 - Signal <tone> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:1780 - Signal <third> is never used or assigned. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:646 - Signal <state> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
-WARNING:Xst:646 - Signal <reconst_mem_out<17:15>> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
-WARNING:Xst:646 - Signal <reconst_mem_out<6:0>> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:646 - Signal <lastReady> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:1780 - Signal <index> is never used or assigned. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:646 - Signal <fsmstate<8:0>> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
-WARNING:Xst:653 - Signal <cached> is used but never assigned. This sourceless signal will be automatically connected to value 0.
+    Register <playbackSeq<77>> equivalent to <playbackSeq<70>> has been removed
+    Register <playbackSeq<79>> equivalent to <playbackSeq<70>> has been removed
+    Register <playbackSeq<82>> equivalent to <playbackSeq<70>> has been removed
+    Register <playbackSeq<83>> equivalent to <playbackSeq<70>> has been removed
+    Register <playbackSeq<85>> equivalent to <playbackSeq<70>> has been removed
+    Register <playbackSeq<86>> equivalent to <playbackSeq<70>> has been removed
+    Register <playbackSeq<78>> equivalent to <playbackSeq<74>> has been removed
+    Register <playbackSeq<84>> equivalent to <playbackSeq<81>> has been removed
+    Register <playbackSeq<89>> equivalent to <playbackSeq<88>> has been removed
+    Register <playbackSeq<90>> equivalent to <playbackSeq<88>> has been removed
+    Register <playbackSeq<91>> equivalent to <playbackSeq<88>> has been removed
     Found 8-bit register for signal <to_ac97_data>.
+    Found 1-bit register for signal <skipAddrOn>.
     Found 16-bit up counter for signal <bytesRxed>.
     Found 8-bit register for signal <dataFromFifo>.
     Found 1-bit register for signal <doread>.
     Found 1-bit register for signal <dowrite>.
-    Found 6-bit up counter for signal <index>.
     Found 1-bit register for signal <lastAudioTrigger>.
     Found 1-bit register for signal <lastButtondown>.
     Found 1-bit register for signal <lastButtonup>.
+    Found 1-bit register for signal <lastPlaying>.
     Found 1-bit register for signal <lastSlowClock>.
-    Found 8-bit register for signal <mem_out_zeroed>.
+    Found 2-bit register for signal <playbackSeq<88:87>>.
+    Found 2-bit register for signal <playbackSeq<81:80>>.
+    Found 77-bit register for signal <playbackSeq<76:0>>.
+    Found 1-bit register for signal <playing>.
     Found 23-bit register for signal <raddr>.
-    Found 23-bit addsub for signal <raddr$addsub0000>.
-    Found 3-bit up counter for signal <third>.
+    Found 23-bit comparator greatequal for signal <raddr$cmp_ge0000> created at line 249.
+    Found 23-bit comparator greatequal for signal <raddr$cmp_ge0001> created at line 239.
+    Found 23-bit comparator less for signal <raddr$cmp_lt0000> created at line 239.
+    Found 23-bit comparator less for signal <raddr$cmp_lt0001> created at line 249.
+    Found 23-bit addsub for signal <raddr$share0000>.
+    Found 23-bit register for signal <trackEndAddr>.
+    Found 23-bit adder for signal <trackEndAddr$mux0000>.
     Found 16-bit register for signal <wdata>.
     Found 1-bit register for signal <writemode>.
     Summary:
-	inferred   3 Counter(s).
-	inferred  70 D-type flip-flop(s).
-	inferred   1 Adder/Subtractor(s).
+	inferred   1 Counter(s).
+	inferred 169 D-type flip-flop(s).
+	inferred   2 Adder/Subtractor(s).
+	inferred   4 Comparator(s).
 Unit <audioManager> synthesized.
 
 
@@ -957,53 +1020,46 @@ INFO:Xst:1767 - HDL ADVISOR - Resource sharing has identified that some arithmet
 HDL Synthesis Report
 
 Macro Statistics
-# RAMs                                                 : 1
- 32x8-bit dual-port RAM                                : 1
-# ROMs                                                 : 13
+# ROMs                                                 : 12
  16x40-bit ROM                                         : 11
- 31x10-bit ROM                                         : 1
  64x20-bit ROM                                         : 1
-# Multipliers                                          : 1
- 10x8-bit multiplier                                   : 1
-# Adders/Subtractors                                   : 11
+# Adders/Subtractors                                   : 17
  10-bit adder                                          : 1
  10-bit addsub                                         : 1
- 23-bit adder                                          : 1
+ 23-bit adder                                          : 2
  23-bit addsub                                         : 1
+ 4-bit adder                                           : 7
  4-bit subtractor                                      : 1
  5-bit adder                                           : 1
- 5-bit adder carry out                                 : 1
- 7-bit subtractor                                      : 1
  9-bit adder                                           : 3
-# Counters                                             : 20
+# Counters                                             : 18
  10-bit up counter                                     : 1
  16-bit up counter                                     : 1
  19-bit up counter                                     : 9
  25-bit up counter                                     : 1
  4-bit up counter                                      : 1
- 5-bit up counter                                      : 3
+ 5-bit up counter                                      : 1
  5-bit updown counter                                  : 1
  8-bit down counter                                    : 1
  8-bit up counter                                      : 1
  9-bit up counter                                      : 1
-# Accumulators                                         : 1
- 18-bit up accumulator                                 : 1
-# Registers                                            : 82
- 1-bit register                                        : 50
+# Registers                                            : 165
+ 1-bit register                                        : 134
  10-bit register                                       : 2
  13-bit register                                       : 1
  16-bit register                                       : 5
- 18-bit register                                       : 1
  2-bit register                                        : 3
  20-bit register                                       : 6
- 23-bit register                                       : 2
+ 23-bit register                                       : 3
  24-bit register                                       : 2
  3-bit register                                        : 1
  32-bit register                                       : 1
  4-bit register                                        : 2
- 8-bit register                                        : 6
-# Comparators                                          : 20
- 5-bit comparator lessequal                            : 1
+ 8-bit register                                        : 5
+# Comparators                                          : 30
+ 23-bit comparator greatequal                          : 2
+ 23-bit comparator less                                : 2
+ 4-bit comparator greatequal                           : 7
  8-bit comparator greatequal                           : 5
  8-bit comparator greater                              : 4
  8-bit comparator less                                 : 4
@@ -1051,26 +1107,6 @@ Optimizing FSM <disp/state/FSM> on signal <state[1:3]> with sequential encoding.
  00000110 | 110
 ----------------------
 Loading device for application Rf_Device from file '2v6000.nph' in environment /afs/csail.mit.edu/proj/redsocs/Xilinx10.1/ISE.
-
-Synthesizing (advanced) Unit <fir31>.
-INFO:Xst - HDL ADVISOR - The RAM <Mram_buffer> will be implemented on LUTs either because you have described an asynchronous read or because of currently unsupported block RAM features. If you have described an asynchronous read, making it synchronous would allow you to take advantage of available block RAM resources, for optimized device usage and improved timings. Please refer to your documentation for coding guidelines.
-    -----------------------------------------------------------------------
-    | ram_type           | Distributed                         |          |
-    -----------------------------------------------------------------------
-    | Port A                                                              |
-    |     aspect ratio   | 32-word x 8-bit                     |          |
-    |     clkA           | connected to signal <clock>         | rise     |
-    |     weA            | connected to signal <ready>         | high     |
-    |     addrA          | connected to internal node          |          |
-    |     diA            | connected to signal <x>             |          |
-    -----------------------------------------------------------------------
-    | Port B                                                              |
-    |     aspect ratio   | 32-word x 8-bit                     |          |
-    |     addrB          | connected to internal node          |          |
-    |     doB            | connected to internal node          |          |
-    -----------------------------------------------------------------------
-INFO:Xst:2385 - HDL ADVISOR - You can improve the performance of the multiplier Mmult_accum_mult0000 by adding 1 register level(s).
-Unit <fir31> synthesized (advanced).
 
 Synthesizing (advanced) Unit <flash_manager>.
 INFO:Xst - The ROM <fsm/Mrom_nib2char_4_nib2char> will be implemented as a read-only BLOCK RAM, absorbing the register: <flash/rdata>.
@@ -1186,6 +1222,10 @@ WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <fsm/state_5> (witho
 WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <fsm/state_6> (without init value) has a constant value of 0 in block <flash_manager>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <fsm/state_7> (without init value) has a constant value of 0 in block <flash_manager>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <flash/flash_address_0> (without init value) has a constant value of 0 in block <flash_manager>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1426 - The value init of the FF/Latch playbackSeq_72 hinder the constant cleaning in the block audioManager.
+   You should achieve better results by setting this init to 1.
+WARNING:Xst:1426 - The value init of the FF/Latch skipAddrOn hinder the constant cleaning in the block audioManager.
+   You should achieve better results by setting this init to 1.
 WARNING:Xst:1293 - FF/Latch <wdata_0> has a constant value of 0 in block <audioManager>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <wdata_1> has a constant value of 0 in block <audioManager>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <wdata_2> has a constant value of 0 in block <audioManager>. This FF/Latch will be trimmed during the optimization process.
@@ -1194,6 +1234,8 @@ WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <wdata_4> has a cons
 WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <wdata_5> has a constant value of 0 in block <audioManager>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <wdata_6> has a constant value of 0 in block <audioManager>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1896 - Due to other FF/Latch trimming, FF/Latch <wdata_7> has a constant value of 0 in block <audioManager>. This FF/Latch will be trimmed during the optimization process.
+INFO:Xst:2261 - The FF/Latch <playbackSeq_61> in Unit <audioManager> is equivalent to the following FF/Latch, which will be removed : <playbackSeq_58> 
+INFO:Xst:2261 - The FF/Latch <playbackSeq_60> in Unit <audioManager> is equivalent to the following 2 FFs/Latches, which will be removed : <playbackSeq_59> <playbackSeq_54> 
 WARNING:Xst:1710 - FF/Latch <fsm/data_to_store_7> (without init value) has a constant value of 0 in block <fm>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <fsm/data_to_store_6> (without init value) has a constant value of 0 in block <fm>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <fsm/data_to_store_5> (without init value) has a constant value of 0 in block <fm>. This FF/Latch will be trimmed during the optimization process.
@@ -1251,56 +1293,41 @@ WARNING:Xst:2677 - Node <fsm/status_8> of sequential type is unconnected in bloc
 WARNING:Xst:2677 - Node <fsm/status_9> of sequential type is unconnected in block <fm>.
 WARNING:Xst:2677 - Node <fsm/status_10> of sequential type is unconnected in block <fm>.
 WARNING:Xst:2677 - Node <fsm/status_11> of sequential type is unconnected in block <fm>.
-WARNING:Xst:2677 - Node <y_0> of sequential type is unconnected in block <reconst>.
-WARNING:Xst:2677 - Node <y_1> of sequential type is unconnected in block <reconst>.
-WARNING:Xst:2677 - Node <y_2> of sequential type is unconnected in block <reconst>.
-WARNING:Xst:2677 - Node <y_3> of sequential type is unconnected in block <reconst>.
-WARNING:Xst:2677 - Node <y_4> of sequential type is unconnected in block <reconst>.
-WARNING:Xst:2677 - Node <y_5> of sequential type is unconnected in block <reconst>.
-WARNING:Xst:2677 - Node <y_6> of sequential type is unconnected in block <reconst>.
-WARNING:Xst:2677 - Node <y_15> of sequential type is unconnected in block <reconst>.
-WARNING:Xst:2677 - Node <y_16> of sequential type is unconnected in block <reconst>.
-WARNING:Xst:2677 - Node <y_17> of sequential type is unconnected in block <reconst>.
 
 =========================================================================
 Advanced HDL Synthesis Report
 
 Macro Statistics
-# RAMs                                                 : 5
+# RAMs                                                 : 4
  16x40-bit single-port block RAM                       : 4
- 32x8-bit dual-port distributed RAM                    : 1
-# ROMs                                                 : 9
+# ROMs                                                 : 8
  16x40-bit ROM                                         : 7
- 31x10-bit ROM                                         : 1
  64x20-bit ROM                                         : 1
-# Multipliers                                          : 1
- 10x8-bit multiplier                                   : 1
-# Adders/Subtractors                                   : 11
+# Adders/Subtractors                                   : 17
  10-bit adder                                          : 1
  10-bit addsub                                         : 1
- 23-bit adder                                          : 1
+ 23-bit adder                                          : 2
  23-bit addsub                                         : 1
+ 4-bit adder                                           : 7
  4-bit subtractor                                      : 1
  5-bit adder                                           : 4
- 5-bit adder carry out                                 : 1
- 5-bit subtractor                                      : 1
-# Counters                                             : 20
+# Counters                                             : 18
  10-bit up counter                                     : 1
  16-bit up counter                                     : 1
  19-bit up counter                                     : 9
  25-bit up counter                                     : 1
  4-bit up counter                                      : 1
- 5-bit up counter                                      : 3
+ 5-bit up counter                                      : 1
  5-bit updown counter                                  : 1
  8-bit down counter                                    : 1
  8-bit up counter                                      : 1
  9-bit up counter                                      : 1
-# Accumulators                                         : 1
- 18-bit up accumulator                                 : 1
-# Registers                                            : 458
- Flip-Flops                                            : 458
-# Comparators                                          : 20
- 5-bit comparator lessequal                            : 1
+# Registers                                            : 536
+ Flip-Flops                                            : 536
+# Comparators                                          : 30
+ 23-bit comparator greatequal                          : 2
+ 23-bit comparator less                                : 2
+ 4-bit comparator greatequal                           : 7
  8-bit comparator greatequal                           : 5
  8-bit comparator greater                              : 4
  8-bit comparator less                                 : 4
@@ -1323,13 +1350,13 @@ INFO:Xst:2261 - The FF/Latch <l_right_data_0> in Unit <ac97> is equivalent to th
 INFO:Xst:2261 - The FF/Latch <fsm/data_to_store_0> in Unit <flash_manager> is equivalent to the following 7 FFs/Latches, which will be removed : <fsm/data_to_store_1> <fsm/data_to_store_2> <fsm/data_to_store_3> <fsm/data_to_store_4> <fsm/data_to_store_5> <fsm/data_to_store_6> <fsm/data_to_store_7> 
 WARNING:Xst:1710 - FF/Latch <l_right_data_0> (without init value) has a constant value of 0 in block <ac97>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <fsm/data_to_store_0> (without init value) has a constant value of 0 in block <flash_manager>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:2677 - Node <lastSlowClock> of sequential type is unconnected in block <audioManager>.
+WARNING:Xst:2677 - Node <freq2/Sqr/oneHertz_enable> of sequential type is unconnected in block <audioManager>.
+WARNING:Xst:2677 - Node <freq2/square> of sequential type is unconnected in block <audioManager>.
 WARNING:Xst:2677 - Node <bu0/clean> of sequential type is unconnected in block <lab5>.
 WARNING:Xst:2677 - Node <bu0/new> of sequential type is unconnected in block <lab5>.
 INFO:Xst:2697 - Unit <flash_manager> : the RAMs <fsm/Mrom_nib2char_4_nib2char>, <fsm/Mrom_nib2char_1_nib2char> are packed into the single block RAM <fsm/Mrom_nib2char_4_nib2char1>
 INFO:Xst:2697 - Unit <flash_manager> : the RAMs <fsm/Mrom_nib2char_3_nib2char>, <fsm/Mrom_nib2char_2_nib2char> are packed into the single block RAM <fsm/Mrom_nib2char_3_nib2char1>
-WARNING:Xst:2677 - Node <xxx/index_6> of sequential type is unconnected in block <audioManager>.
-WARNING:Xst:2677 - Node <xxx/index_7> of sequential type is unconnected in block <audioManager>.
-WARNING:Xst:2677 - Node <xxx/index_8> of sequential type is unconnected in block <audioManager>.
 WARNING:Xst:2677 - Node <management/fm/fsm/status_0> of sequential type is unconnected in block <lab5>.
 WARNING:Xst:2677 - Node <management/fm/fsm/status_1> of sequential type is unconnected in block <lab5>.
 WARNING:Xst:2677 - Node <management/fm/fsm/status_2> of sequential type is unconnected in block <lab5>.
@@ -1357,7 +1384,7 @@ Optimizing unit <ac97commands> ...
 
 Optimizing unit <usb_input> ...
 
-Optimizing unit <fir31> ...
+Optimizing unit <BCD> ...
 WARNING:Xst:1710 - FF/Latch <a/ac97/l_cmd_data_18> (without init value) has a constant value of 0 in block <lab5>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <a/ac97/l_cmd_data_17> (without init value) has a constant value of 0 in block <lab5>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <a/ac97/l_cmd_data_11> (without init value) has a constant value of 0 in block <lab5>. This FF/Latch will be trimmed during the optimization process.
@@ -1384,19 +1411,6 @@ WARNING:Xst:2677 - Node <a/ac97/right_in_data_3> of sequential type is unconnect
 WARNING:Xst:2677 - Node <a/ac97/right_in_data_2> of sequential type is unconnected in block <lab5>.
 WARNING:Xst:2677 - Node <a/ac97/right_in_data_1> of sequential type is unconnected in block <lab5>.
 WARNING:Xst:2677 - Node <a/ac97/right_in_data_0> of sequential type is unconnected in block <lab5>.
-WARNING:Xst:2677 - Node <management/reconst/accum_17> of sequential type is unconnected in block <lab5>.
-WARNING:Xst:2677 - Node <management/reconst/accum_16> of sequential type is unconnected in block <lab5>.
-WARNING:Xst:2677 - Node <management/reconst/accum_15> of sequential type is unconnected in block <lab5>.
-WARNING:Xst:2677 - Node <management/reconst/y_17> of sequential type is unconnected in block <lab5>.
-WARNING:Xst:2677 - Node <management/reconst/y_16> of sequential type is unconnected in block <lab5>.
-WARNING:Xst:2677 - Node <management/reconst/y_15> of sequential type is unconnected in block <lab5>.
-WARNING:Xst:2677 - Node <management/reconst/y_6> of sequential type is unconnected in block <lab5>.
-WARNING:Xst:2677 - Node <management/reconst/y_5> of sequential type is unconnected in block <lab5>.
-WARNING:Xst:2677 - Node <management/reconst/y_4> of sequential type is unconnected in block <lab5>.
-WARNING:Xst:2677 - Node <management/reconst/y_3> of sequential type is unconnected in block <lab5>.
-WARNING:Xst:2677 - Node <management/reconst/y_2> of sequential type is unconnected in block <lab5>.
-WARNING:Xst:2677 - Node <management/reconst/y_1> of sequential type is unconnected in block <lab5>.
-WARNING:Xst:2677 - Node <management/reconst/y_0> of sequential type is unconnected in block <lab5>.
 
 Mapping all equations...
 Building and optimizing final netlist ...
@@ -1405,6 +1419,8 @@ INFO:Xst:2261 - The FF/Latch <a/ac97/l_cmd_data_13> in Unit <lab5> is equivalent
 INFO:Xst:2261 - The FF/Latch <a/ac97/l_cmd_data_14> in Unit <lab5> is equivalent to the following FF/Latch, which will be removed : <a/ac97/l_cmd_data_6> 
 INFO:Xst:2261 - The FF/Latch <a/ac97/l_cmd_data_16> in Unit <lab5> is equivalent to the following FF/Latch, which will be removed : <a/ac97/l_cmd_data_8> 
 Found area constraint ratio of 100 (+ 5) on block lab5, actual ratio is 1.
+FlipFlop disp/char_index_0 has been replicated 1 time(s)
+FlipFlop disp/char_index_1 has been replicated 1 time(s)
 
 Final Macro Processing ...
 
@@ -1421,8 +1437,8 @@ Unit <lab5> processed.
 Final Register Report
 
 Macro Statistics
-# Registers                                            : 563
- Flip-Flops                                            : 563
+# Registers                                            : 594
+ Flip-Flops                                            : 594
 # Shift Registers                                      : 6
  13-bit shift register                                 : 1
  2-bit shift register                                  : 1
@@ -1455,35 +1471,34 @@ Design Statistics
 # IOs                              : 576
 
 Cell Usage :
-# BELS                             : 1678
+# BELS                             : 1731
 #      GND                         : 1
-#      INV                         : 38
-#      LUT1                        : 191
-#      LUT2                        : 85
-#      LUT2_D                      : 2
-#      LUT3                        : 231
-#      LUT3_D                      : 4
-#      LUT3_L                      : 6
-#      LUT4                        : 425
-#      LUT4_D                      : 3
-#      LUT4_L                      : 26
-#      MUXCY                       : 293
-#      MUXF5                       : 90
-#      MUXF6                       : 23
+#      INV                         : 34
+#      LUT1                        : 161
+#      LUT2                        : 94
+#      LUT2_D                      : 3
+#      LUT2_L                      : 2
+#      LUT3                        : 219
+#      LUT3_D                      : 17
+#      LUT3_L                      : 8
+#      LUT4                        : 505
+#      LUT4_D                      : 19
+#      LUT4_L                      : 72
+#      MUXCY                       : 287
+#      MUXF5                       : 69
+#      MUXF6                       : 15
 #      MUXF7                       : 6
 #      VCC                         : 1
-#      XORCY                       : 253
-# FlipFlops/Latches                : 579
+#      XORCY                       : 218
+# FlipFlops/Latches                : 610
 #      FD                          : 28
-#      FDE                         : 229
+#      FDE                         : 307
 #      FDE_1                       : 8
-#      FDR                         : 48
-#      FDRE                        : 218
-#      FDRS                        : 22
+#      FDR                         : 23
+#      FDRE                        : 198
+#      FDRS                        : 20
 #      FDS                         : 9
 #      FDSE                        : 17
-# RAMS                             : 8
-#      RAM32X1D                    : 8
 # Shift Registers                  : 7
 #      SRL16                       : 2
 #      SRL16E                      : 4
@@ -1494,8 +1509,6 @@ Cell Usage :
 #      IBUF                        : 24
 #      IOBUF                       : 16
 #      OBUF                        : 241
-# MULTs                            : 1
-#      MULT18X18                   : 1
 =========================================================================
 
 Device utilization summary:
@@ -1503,15 +1516,13 @@ Device utilization summary:
 
 Selected Device : 2v6000bf957-4 
 
- Number of Slices:                      586  out of  33792     1%  
- Number of Slice Flip Flops:            579  out of  67584     0%  
- Number of 4 input LUTs:               1050  out of  67584     1%  
-    Number used as logic:              1011
+ Number of Slices:                      611  out of  33792     1%  
+ Number of Slice Flip Flops:            610  out of  67584     0%  
+ Number of 4 input LUTs:               1141  out of  67584     1%  
+    Number used as logic:              1134
     Number used as Shift registers:       7
-    Number used as RAMs:                 32
  Number of IOs:                         576
  Number of bonded IOBs:                 281  out of    684    41%  
- Number of MULT18X18s:                    1  out of    144     0%  
  Number of GCLKs:                         3  out of     16    18%  
 
 ---------------------------
@@ -1532,15 +1543,14 @@ NOTE: THESE TIMING NUMBERS ARE ONLY A SYNTHESIS ESTIMATE.
 
 Clock Information:
 ------------------
-------------------------------------+--------------------------------+-------+
-Clock Signal                        | Clock buffer(FF name)          | Load  |
-------------------------------------+--------------------------------+-------+
-clock_27mhz                         | IBUF+BUFG                      | 478   |
-management/usbtest/rd               | NONE(management/dataFromFifo_7)| 8     |
-disp/clock1                         | BUFG                           | 43    |
-ac97_bit_clock                      | IBUF+BUFG                      | 64    |
-management/freq2/Sqr/oneHertz_enable| NONE(management/freq2/square)  | 1     |
-------------------------------------+--------------------------------+-------+
+-----------------------------------+--------------------------------+-------+
+Clock Signal                       | Clock buffer(FF name)          | Load  |
+-----------------------------------+--------------------------------+-------+
+clock_27mhz                        | IBUF+BUFG                      | 500   |
+management/usbtest/rd              | NONE(management/dataFromFifo_7)| 8     |
+disp/clock1                        | BUFG                           | 45    |
+ac97_bit_clock                     | IBUF+BUFG                      | 64    |
+-----------------------------------+--------------------------------+-------+
 INFO:Xst:2169 - HDL ADVISOR - Some clock signals were not automatically buffered by XST with BUFG/BUFR resources. Please use the buffer_type constraint in order to insert these buffers to the clock signals to help prevent skew problems.
 
 Asynchronous Control Signals Information:
@@ -1551,9 +1561,9 @@ Timing Summary:
 ---------------
 Speed Grade: -4
 
-   Minimum period: 16.097ns (Maximum Frequency: 62.125MHz)
-   Minimum input arrival time before clock: 5.197ns
-   Maximum output required time after clock: 7.612ns
+   Minimum period: 10.469ns (Maximum Frequency: 95.520MHz)
+   Minimum input arrival time before clock: 8.716ns
+   Maximum output required time after clock: 7.355ns
    Maximum combinational path delay: 6.003ns
 
 Timing Detail:
@@ -1562,134 +1572,154 @@ All values displayed in nanoseconds (ns)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'clock_27mhz'
-  Clock period: 16.097ns (frequency: 62.125MHz)
-  Total number of paths / destination ports: 50561 / 1213
+  Clock period: 10.379ns (frequency: 96.349MHz)
+  Total number of paths / destination ports: 65756 / 1149
 -------------------------------------------------------------------------
-Delay:               16.097ns (Levels of Logic = 10)
-  Source:            management/reconst/index_0 (FF)
-  Destination:       management/reconst/accum_14 (FF)
+Delay:               10.379ns (Levels of Logic = 49)
+  Source:            management/raddr_0 (FF)
+  Destination:       management/raddr_22 (FF)
   Source Clock:      clock_27mhz rising
   Destination Clock: clock_27mhz rising
 
-  Data Path: management/reconst/index_0 to management/reconst/accum_14
+  Data Path: management/raddr_0 to management/raddr_22
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDRE:C->Q            17   0.568   1.220  management/reconst/index_0 (management/reconst/index_0)
-     LUT2:I1->O            1   0.439   0.000  management/reconst/Msub_accum_sub0000_Madd_lut<0> (management/reconst/Msub_accum_sub0000_Madd_lut<0>)
-     MUXCY:S->O            1   0.298   0.000  management/reconst/Msub_accum_sub0000_Madd_cy<0> (management/reconst/Msub_accum_sub0000_Madd_cy<0>)
-     MUXCY:CI->O           1   0.053   0.000  management/reconst/Msub_accum_sub0000_Madd_cy<1> (management/reconst/Msub_accum_sub0000_Madd_cy<1>)
-     MUXCY:CI->O           1   0.053   0.000  management/reconst/Msub_accum_sub0000_Madd_cy<2> (management/reconst/Msub_accum_sub0000_Madd_cy<2>)
-     XORCY:CI->O          16   1.274   1.000  management/reconst/Msub_accum_sub0000_Madd_xor<3> (management/reconst/accum_sub0000<3>)
-     RAM32X1D:DPRA3->DPO   11   1.374   0.908  management/reconst/Mram_buffer8 (management/reconst/_varindex0000<7>)
-     MULT18X18:B7->P13     1   5.802   0.726  management/reconst/Mmult_accum_mult0000 (management/reconst/accum_mult0000<13>)
-     LUT2:I1->O            1   0.439   0.000  management/reconst/Maccum_accum_lut<13> (management/reconst/Maccum_accum_lut<13>)
-     MUXCY:S->O            0   0.298   0.000  management/reconst/Maccum_accum_cy<13> (management/reconst/Maccum_accum_cy<13>)
-     XORCY:CI->O           1   1.274   0.000  management/reconst/Maccum_accum_xor<14> (management/reconst/Result<14>)
-     FDRE:D                    0.370          management/reconst/accum_14
+     FDRE:C->Q             4   0.568   0.955  management/raddr_0 (management/raddr_0)
+     LUT2:I1->O            1   0.439   0.000  management/Mcompar_raddr_cmp_lt0000_lut<0> (management/Mcompar_raddr_cmp_lt0000_lut<0>)
+     MUXCY:S->O            1   0.298   0.000  management/Mcompar_raddr_cmp_lt0000_cy<0> (management/Mcompar_raddr_cmp_lt0000_cy<0>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<1> (management/Mcompar_raddr_cmp_lt0000_cy<1>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<2> (management/Mcompar_raddr_cmp_lt0000_cy<2>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<3> (management/Mcompar_raddr_cmp_lt0000_cy<3>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<4> (management/Mcompar_raddr_cmp_lt0000_cy<4>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<5> (management/Mcompar_raddr_cmp_lt0000_cy<5>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<6> (management/Mcompar_raddr_cmp_lt0000_cy<6>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<7> (management/Mcompar_raddr_cmp_lt0000_cy<7>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<8> (management/Mcompar_raddr_cmp_lt0000_cy<8>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<9> (management/Mcompar_raddr_cmp_lt0000_cy<9>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<10> (management/Mcompar_raddr_cmp_lt0000_cy<10>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<11> (management/Mcompar_raddr_cmp_lt0000_cy<11>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<12> (management/Mcompar_raddr_cmp_lt0000_cy<12>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<13> (management/Mcompar_raddr_cmp_lt0000_cy<13>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<14> (management/Mcompar_raddr_cmp_lt0000_cy<14>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<15> (management/Mcompar_raddr_cmp_lt0000_cy<15>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<16> (management/Mcompar_raddr_cmp_lt0000_cy<16>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<17> (management/Mcompar_raddr_cmp_lt0000_cy<17>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<18> (management/Mcompar_raddr_cmp_lt0000_cy<18>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<19> (management/Mcompar_raddr_cmp_lt0000_cy<19>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<20> (management/Mcompar_raddr_cmp_lt0000_cy<20>)
+     MUXCY:CI->O           1   0.053   0.000  management/Mcompar_raddr_cmp_lt0000_cy<21> (management/Mcompar_raddr_cmp_lt0000_cy<21>)
+     MUXCY:CI->O          30   0.942   1.122  management/Mcompar_raddr_cmp_lt0000_cy<22> (management/Mcompar_raddr_cmp_lt0000_cy<22>)
+     LUT4:I3->O            2   0.439   0.701  management/raddr_mux00012 (management/raddr_mux0001)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<0> (management/Maddsub_raddr_share0000_cy<0>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<1> (management/Maddsub_raddr_share0000_cy<1>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<2> (management/Maddsub_raddr_share0000_cy<2>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<3> (management/Maddsub_raddr_share0000_cy<3>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<4> (management/Maddsub_raddr_share0000_cy<4>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<5> (management/Maddsub_raddr_share0000_cy<5>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<6> (management/Maddsub_raddr_share0000_cy<6>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<7> (management/Maddsub_raddr_share0000_cy<7>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<8> (management/Maddsub_raddr_share0000_cy<8>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<9> (management/Maddsub_raddr_share0000_cy<9>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<10> (management/Maddsub_raddr_share0000_cy<10>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<11> (management/Maddsub_raddr_share0000_cy<11>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<12> (management/Maddsub_raddr_share0000_cy<12>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<13> (management/Maddsub_raddr_share0000_cy<13>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<14> (management/Maddsub_raddr_share0000_cy<14>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<15> (management/Maddsub_raddr_share0000_cy<15>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<16> (management/Maddsub_raddr_share0000_cy<16>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<17> (management/Maddsub_raddr_share0000_cy<17>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<18> (management/Maddsub_raddr_share0000_cy<18>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<19> (management/Maddsub_raddr_share0000_cy<19>)
+     MUXCY:CI->O           1   0.053   0.000  management/Maddsub_raddr_share0000_cy<20> (management/Maddsub_raddr_share0000_cy<20>)
+     MUXCY:CI->O           0   0.053   0.000  management/Maddsub_raddr_share0000_cy<21> (management/Maddsub_raddr_share0000_cy<21>)
+     XORCY:CI->O           1   1.274   0.551  management/Maddsub_raddr_share0000_xor<22> (management/raddr_share0000<22>)
+     LUT3:I2->O            1   0.439   0.000  management/raddr_mux0000<45> (management/raddr_mux0000<45>)
+     FDRE:D                    0.370          management/raddr_22
     ----------------------------------------
-    Total                     16.097ns (12.242ns logic, 3.854ns route)
-                                       (76.1% logic, 23.9% route)
+    Total                     10.379ns (7.048ns logic, 3.331ns route)
+                                       (67.9% logic, 32.1% route)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'disp/clock1'
-  Clock period: 12.104ns (frequency: 82.617MHz)
-  Total number of paths / destination ports: 2966 / 75
+  Clock period: 10.247ns (frequency: 97.586MHz)
+  Total number of paths / destination ports: 3011 / 75
 -------------------------------------------------------------------------
-Delay:               12.104ns (Levels of Logic = 13)
-  Source:            disp/char_index_0 (FF)
+Delay:               10.247ns (Levels of Logic = 11)
+  Source:            disp/char_index_0_1 (FF)
   Destination:       disp/disp_data_out (FF)
   Source Clock:      disp/clock1 rising
   Destination Clock: disp/clock1 rising
 
-  Data Path: disp/char_index_0 to disp/disp_data_out
+  Data Path: disp/char_index_0_1 to disp/disp_data_out
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDE:C->Q             33   0.568   1.375  disp/char_index_0 (disp/char_index_0)
-     LUT3:I0->O            1   0.439   0.000  disp/Mmux_nibble_51 (disp/Mmux_nibble_51)
+     FDE:C->Q             31   0.568   1.119  disp/char_index_0_1 (disp/char_index_0_1)
+     LUT3:I2->O            1   0.439   0.000  disp/Mmux_nibble_51 (disp/Mmux_nibble_51)
      MUXF5:I1->O           1   0.436   0.000  disp/Mmux_nibble_4_f5_0 (disp/Mmux_nibble_4_f51)
      MUXF6:I1->O           1   0.447   0.000  disp/Mmux_nibble_3_f6_0 (disp/Mmux_nibble_3_f61)
      MUXF7:I1->O          29   0.447   1.365  disp/Mmux_nibble_2_f7_0 (disp/nibble<1>)
      LUT4:I0->O            2   0.439   0.735  disp/Mrom_dots1311 (disp/Mrom_dots12)
      LUT3:I2->O            1   0.439   0.000  disp/Mmux__varindex0000_16 (disp/Mmux__varindex0000_16)
      MUXF5:I0->O           1   0.436   0.000  disp/Mmux__varindex0000_14_f5 (disp/Mmux__varindex0000_14_f5)
-     MUXF6:I0->O           1   0.447   0.726  disp/Mmux__varindex0000_12_f6 (disp/Mmux__varindex0000_12_f6)
-     LUT3_L:I1->LO         1   0.439   0.140  disp/disp_data_out_mux000032 (disp/disp_data_out_mux000032)
-     LUT4:I3->O            1   0.439   0.551  disp/disp_data_out_mux000078 (disp/disp_data_out_mux000078)
-     LUT3:I2->O            1   0.439   0.000  disp/disp_data_out_mux0000131_G (N295)
-     MUXF5:I1->O           1   0.436   0.551  disp/disp_data_out_mux0000131 (disp/disp_data_out_mux0000131)
-     LUT3:I2->O            1   0.439   0.000  disp/disp_data_out_mux0000169 (disp/disp_data_out_mux0000)
+     MUXF6:I0->O           1   0.447   0.551  disp/Mmux__varindex0000_12_f6 (disp/Mmux__varindex0000_12_f6)
+     LUT3:I2->O            1   0.439   0.558  disp/disp_data_out_mux000032 (disp/disp_data_out_mux000032)
+     LUT4_L:I3->LO         1   0.439   0.134  disp/disp_data_out_mux000078 (disp/disp_data_out_mux000078)
+     LUT4:I2->O            1   0.439   0.000  disp/disp_data_out_mux0000169 (disp/disp_data_out_mux0000)
      FDE:D                     0.370          disp/disp_data_out
     ----------------------------------------
-    Total                     12.104ns (6.660ns logic, 5.444ns route)
-                                       (55.0% logic, 45.0% route)
+    Total                     10.247ns (5.785ns logic, 4.462ns route)
+                                       (56.5% logic, 43.5% route)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'ac97_bit_clock'
-  Clock period: 12.177ns (frequency: 82.122MHz)
-  Total number of paths / destination ports: 1641 / 95
+  Clock period: 10.469ns (frequency: 95.520MHz)
+  Total number of paths / destination ports: 1638 / 95
 -------------------------------------------------------------------------
-Delay:               6.088ns (Levels of Logic = 3)
-  Source:            a/ac97/bit_count_6 (FF)
+Delay:               5.234ns (Levels of Logic = 3)
+  Source:            a/ac97/bit_count_1 (FF)
   Destination:       a/ac97/Mshreg_left_in_data_12 (FF)
   Source Clock:      ac97_bit_clock rising
   Destination Clock: ac97_bit_clock falling
 
-  Data Path: a/ac97/bit_count_6 to a/ac97/Mshreg_left_in_data_12
+  Data Path: a/ac97/bit_count_1 to a/ac97/Mshreg_left_in_data_12
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FD:C->Q              15   0.568   1.274  a/ac97/bit_count_6 (a/ac97/bit_count_6)
-     LUT3:I0->O            3   0.439   0.724  a/ac97/l_left_data_not0001131 (a/ac97/N18)
-     MUXF5:S->O            1   0.699   0.557  a/ac97/left_in_data_and000013_f5 (a/ac97/left_in_data_and000013)
-     LUT4:I3->O            9   0.439   0.862  a/ac97/left_in_data_and000048 (a/ac97/left_in_data_and0000)
+     FD:C->Q              13   0.568   1.239  a/ac97/bit_count_1 (a/ac97/bit_count_1)
+     LUT4:I0->O            1   0.439   0.726  a/ac97/left_in_data_and000027_SW0 (N348)
+     LUT4:I1->O            1   0.439   0.000  a/ac97/left_in_data_and000049_G (N505)
+     MUXF5:I1->O           9   0.436   0.862  a/ac97/left_in_data_and000049 (a/ac97/left_in_data_and0000)
      SRL16E_1:CE               0.525          a/ac97/Mshreg_left_in_data_12
     ----------------------------------------
-    Total                      6.088ns (2.670ns logic, 3.418ns route)
-                                       (43.9% logic, 56.1% route)
-
-=========================================================================
-Timing constraint: Default period analysis for Clock 'management/freq2/Sqr/oneHertz_enable'
-  Clock period: 1.618ns (frequency: 617.856MHz)
-  Total number of paths / destination ports: 1 / 1
--------------------------------------------------------------------------
-Delay:               1.618ns (Levels of Logic = 0)
-  Source:            management/freq2/square (FF)
-  Destination:       management/freq2/square (FF)
-  Source Clock:      management/freq2/Sqr/oneHertz_enable rising
-  Destination Clock: management/freq2/Sqr/oneHertz_enable rising
-
-  Data Path: management/freq2/square to management/freq2/square
-                                Gate     Net
-    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
-    ----------------------------------------  ------------
-     FDR:C->Q              5   0.568   0.771  management/freq2/square (management/freq2/square)
-     FDR:R                     0.280          management/freq2/square
-    ----------------------------------------
-    Total                      1.618ns (0.848ns logic, 0.771ns route)
-                                       (52.4% logic, 47.6% route)
+    Total                      5.234ns (2.407ns logic, 2.827ns route)
+                                       (46.0% logic, 54.0% route)
 
 =========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 'clock_27mhz'
-  Total number of paths / destination ports: 279 / 245
+  Total number of paths / destination ports: 994 / 241
 -------------------------------------------------------------------------
-Offset:              5.197ns (Levels of Logic = 3)
-  Source:            switch<4> (PAD)
-  Destination:       management/raddr_22 (FF)
+Offset:              8.716ns (Levels of Logic = 7)
+  Source:            switch<0> (PAD)
+  Destination:       management/playbackSeq_14 (FF)
   Destination Clock: clock_27mhz rising
 
-  Data Path: switch<4> to management/raddr_22
+  Data Path: switch<0> to management/playbackSeq_14
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     IBUF:I->O            10   0.825   1.094  switch_4_IBUF (switch_4_IBUF)
-     LUT4:I1->O            1   0.439   0.000  management/raddr_and0000_wg_lut<6> (management/raddr_and0000_wg_lut<6>)
-     MUXCY:S->O           23   1.501   1.058  management/raddr_and0000_wg_cy<6> (management/raddr_and0000)
-     FDRE:R                    0.280          management/raddr_0
+     IBUF:I->O            29   0.825   1.365  switch_0_IBUF (switch_0_IBUF)
+     LUT2:I0->O            8   0.439   0.879  management/playbackSeq_88_or000411 (N65)
+     LUT4:I3->O           28   0.439   1.285  management/playbackSeq_88_or00041 (management/playbackSeq_88_or0004)
+     LUT4:I1->O            1   0.439   0.803  management/playbackSeq_14_mux000019 (management/playbackSeq_14_mux000019)
+     LUT4:I0->O            1   0.439   0.000  management/playbackSeq_14_mux000040_SW01 (management/playbackSeq_14_mux000040_SW0)
+     MUXF5:I0->O           1   0.436   0.558  management/playbackSeq_14_mux000040_SW0_f5 (N473)
+     LUT4:I3->O            1   0.439   0.000  management/playbackSeq_14_mux000040 (management/playbackSeq_14_mux0000)
+     FDE:D                     0.370          management/playbackSeq_14
     ----------------------------------------
-    Total                      5.197ns (3.045ns logic, 2.152ns route)
-                                       (58.6% logic, 41.4% route)
+    Total                      8.716ns (3.826ns logic, 4.890ns route)
+                                       (43.9% logic, 56.1% route)
 
 =========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 'ac97_bit_clock'
@@ -1712,9 +1742,9 @@ Offset:              2.194ns (Levels of Logic = 1)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'clock_27mhz'
-  Total number of paths / destination ports: 78 / 60
+  Total number of paths / destination ports: 77 / 59
 -------------------------------------------------------------------------
-Offset:              7.612ns (Levels of Logic = 2)
+Offset:              7.355ns (Levels of Logic = 2)
   Source:            a/ready_sync_1 (FF)
   Destination:       analyzer3_clock (PAD)
   Source Clock:      clock_27mhz rising
@@ -1723,12 +1753,12 @@ Offset:              7.612ns (Levels of Logic = 2)
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FD:C->Q               5   0.568   1.056  a/ready_sync_1 (a/ready_sync_1)
-     LUT2:I0->O           71   0.439   1.189  a/ready1 (analyzer3_clock_OBUF)
+     FD:C->Q               3   0.568   1.010  a/ready_sync_1 (a/ready_sync_1)
+     LUT2:I0->O           14   0.439   0.977  a/ready1 (analyzer3_clock_OBUF)
      OBUF:I->O                 4.361          analyzer3_clock_OBUF (analyzer3_clock)
     ----------------------------------------
-    Total                      7.612ns (5.368ns logic, 2.244ns route)
-                                       (70.5% logic, 29.5% route)
+    Total                      7.355ns (5.368ns logic, 1.987ns route)
+                                       (73.0% logic, 27.0% route)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'disp/clock1'
@@ -1789,15 +1819,15 @@ Delay:               6.003ns (Levels of Logic = 2)
 =========================================================================
 
 
-Total REAL time to Xst completion: 20.00 secs
-Total CPU time to Xst completion: 19.18 secs
+Total REAL time to Xst completion: 26.00 secs
+Total CPU time to Xst completion: 24.20 secs
  
 --> 
 
 
-Total memory usage is 503340 kilobytes
+Total memory usage is 516212 kilobytes
 
 Number of errors   :    0 (   0 filtered)
-Number of warnings :  458 (   0 filtered)
-Number of infos    :   51 (   0 filtered)
+Number of warnings :  435 (   0 filtered)
+Number of infos    :   48 (   0 filtered)
 

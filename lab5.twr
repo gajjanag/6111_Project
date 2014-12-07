@@ -37,7 +37,7 @@ Setup/Hold to clock ac97_bit_clock
              |  Setup to  |  Hold to   |                    | Clock  |
 Source       | clk (edge) | clk (edge) |Internal Clock(s)   | Phase  |
 -------------+------------+------------+--------------------+--------+
-ac97_sdata_in|   -0.329(F)|    0.878(F)|analyzer1_clock_OBUF|   0.000|
+ac97_sdata_in|   -0.990(F)|    1.539(F)|analyzer1_clock_OBUF|   0.000|
 -------------+------------+------------+--------------------+--------+
 
 Setup/Hold to clock clock_27mhz
@@ -45,43 +45,43 @@ Setup/Hold to clock clock_27mhz
               |  Setup to  |  Hold to   |                    | Clock  |
 Source        | clk (edge) | clk (edge) |Internal Clock(s)   | Phase  |
 --------------+------------+------------+--------------------+--------+
-button_down   |    1.952(R)|   -0.515(R)|analyzer4_clock_OBUF|   0.000|
-button_enter  |    3.390(R)|   -0.609(R)|analyzer4_clock_OBUF|   0.000|
-button_up     |    4.958(R)|   -2.285(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<0> |   -0.375(R)|    0.647(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<1> |    0.459(R)|   -0.187(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<2> |   -1.587(R)|    1.859(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<3> |   -1.600(R)|    1.872(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<4> |    0.306(R)|   -0.034(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<5> |   -0.280(R)|    0.552(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<6> |   -0.312(R)|    0.584(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<7> |    0.137(R)|    0.135(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<8> |   -0.274(R)|    0.546(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<9> |    1.496(R)|   -1.224(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<10>|    0.983(R)|   -0.711(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<11>|    0.329(R)|   -0.057(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<12>|    0.238(R)|    0.034(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<13>|    0.932(R)|   -0.660(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<14>|    0.757(R)|   -0.485(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<15>|    2.083(R)|   -1.811(R)|analyzer4_clock_OBUF|   0.000|
-flash_sts     |    2.686(R)|   -0.585(R)|analyzer4_clock_OBUF|   0.000|
-switch<0>     |    1.462(R)|   -0.093(R)|analyzer4_clock_OBUF|   0.000|
-switch<1>     |    1.203(R)|   -0.035(R)|analyzer4_clock_OBUF|   0.000|
-switch<2>     |    6.457(R)|   -3.546(R)|analyzer4_clock_OBUF|   0.000|
-switch<3>     |    2.402(R)|   -1.259(R)|analyzer4_clock_OBUF|   0.000|
-switch<4>     |    5.270(R)|   -1.398(R)|analyzer4_clock_OBUF|   0.000|
-switch<5>     |    1.922(R)|   -0.170(R)|analyzer4_clock_OBUF|   0.000|
-switch<6>     |    1.862(R)|   -0.122(R)|analyzer4_clock_OBUF|   0.000|
-switch<7>     |    1.671(R)|    0.429(R)|analyzer4_clock_OBUF|   0.000|
-user1<23>     |    3.505(R)|   -1.691(R)|analyzer4_clock_OBUF|   0.000|
-user1<24>     |    2.678(R)|   -2.406(R)|analyzer4_clock_OBUF|   0.000|
-user1<25>     |    3.998(R)|   -3.726(R)|analyzer4_clock_OBUF|   0.000|
-user1<26>     |    3.857(R)|   -3.585(R)|analyzer4_clock_OBUF|   0.000|
-user1<27>     |    1.589(R)|   -1.317(R)|analyzer4_clock_OBUF|   0.000|
-user1<28>     |    2.026(R)|   -1.754(R)|analyzer4_clock_OBUF|   0.000|
-user1<29>     |    0.924(R)|   -0.652(R)|analyzer4_clock_OBUF|   0.000|
-user1<30>     |    1.841(R)|   -1.569(R)|analyzer4_clock_OBUF|   0.000|
-user1<31>     |    1.491(R)|   -1.219(R)|analyzer4_clock_OBUF|   0.000|
+button_down   |    4.373(R)|   -1.141(R)|analyzer4_clock_OBUF|   0.000|
+button_enter  |    3.563(R)|   -1.267(R)|analyzer4_clock_OBUF|   0.000|
+button_up     |    4.788(R)|   -2.300(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<0> |    0.129(R)|    0.143(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<1> |    0.276(R)|   -0.004(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<2> |   -0.838(R)|    1.110(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<3> |   -0.760(R)|    1.032(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<4> |   -0.204(R)|    0.476(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<5> |    0.360(R)|   -0.088(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<6> |    0.166(R)|    0.106(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<7> |    0.112(R)|    0.160(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<8> |   -0.054(R)|    0.326(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<9> |    0.622(R)|   -0.350(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<10>|   -0.335(R)|    0.607(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<11>|   -0.701(R)|    0.973(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<12>|   -0.382(R)|    0.654(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<13>|   -0.278(R)|    0.550(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<14>|    0.011(R)|    0.261(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<15>|    0.695(R)|   -0.423(R)|analyzer4_clock_OBUF|   0.000|
+flash_sts     |    2.413(R)|   -0.694(R)|analyzer4_clock_OBUF|   0.000|
+switch<0>     |    5.484(R)|   -0.276(R)|analyzer4_clock_OBUF|   0.000|
+switch<1>     |    5.704(R)|   -1.205(R)|analyzer4_clock_OBUF|   0.000|
+switch<2>     |    4.792(R)|   -0.341(R)|analyzer4_clock_OBUF|   0.000|
+switch<3>     |    4.895(R)|   -0.259(R)|analyzer4_clock_OBUF|   0.000|
+switch<4>     |    4.648(R)|    0.519(R)|analyzer4_clock_OBUF|   0.000|
+switch<5>     |    2.220(R)|   -0.086(R)|analyzer4_clock_OBUF|   0.000|
+switch<6>     |    2.083(R)|   -0.339(R)|analyzer4_clock_OBUF|   0.000|
+switch<7>     |    2.707(R)|   -0.600(R)|analyzer4_clock_OBUF|   0.000|
+user1<23>     |    4.529(R)|   -2.519(R)|analyzer4_clock_OBUF|   0.000|
+user1<24>     |    3.864(R)|   -3.592(R)|analyzer4_clock_OBUF|   0.000|
+user1<25>     |    3.870(R)|   -3.598(R)|analyzer4_clock_OBUF|   0.000|
+user1<26>     |    4.792(R)|   -4.520(R)|analyzer4_clock_OBUF|   0.000|
+user1<27>     |    3.136(R)|   -2.864(R)|analyzer4_clock_OBUF|   0.000|
+user1<28>     |    2.834(R)|   -2.562(R)|analyzer4_clock_OBUF|   0.000|
+user1<29>     |    2.493(R)|   -2.221(R)|analyzer4_clock_OBUF|   0.000|
+user1<30>     |    2.210(R)|   -1.938(R)|analyzer4_clock_OBUF|   0.000|
+user1<31>     |    1.580(R)|   -1.308(R)|analyzer4_clock_OBUF|   0.000|
 --------------+------------+------------+--------------------+--------+
 
 Clock ac97_bit_clock to Pad
@@ -89,18 +89,18 @@ Clock ac97_bit_clock to Pad
                   | clk (edge) |                    | Clock  |
 Destination       |   to PAD   |Internal Clock(s)   | Phase  |
 ------------------+------------+--------------------+--------+
-ac97_sdata_out    |   13.225(R)|analyzer1_clock_OBUF|   0.000|
-ac97_synch        |   13.504(R)|analyzer1_clock_OBUF|   0.000|
-analyzer1_data<1> |   18.771(R)|analyzer1_clock_OBUF|   0.000|
-analyzer1_data<3> |   18.630(R)|analyzer1_clock_OBUF|   0.000|
-analyzer3_data<8> |   15.646(F)|analyzer1_clock_OBUF|   0.000|
-analyzer3_data<9> |   15.343(F)|analyzer1_clock_OBUF|   0.000|
-analyzer3_data<10>|   13.814(F)|analyzer1_clock_OBUF|   0.000|
-analyzer3_data<11>|   13.743(F)|analyzer1_clock_OBUF|   0.000|
-analyzer3_data<12>|   14.067(F)|analyzer1_clock_OBUF|   0.000|
-analyzer3_data<13>|   15.749(F)|analyzer1_clock_OBUF|   0.000|
-analyzer3_data<14>|   13.768(F)|analyzer1_clock_OBUF|   0.000|
-analyzer3_data<15>|   13.813(F)|analyzer1_clock_OBUF|   0.000|
+ac97_sdata_out    |   13.216(R)|analyzer1_clock_OBUF|   0.000|
+ac97_synch        |   13.019(R)|analyzer1_clock_OBUF|   0.000|
+analyzer1_data<1> |   18.764(R)|analyzer1_clock_OBUF|   0.000|
+analyzer1_data<3> |   18.892(R)|analyzer1_clock_OBUF|   0.000|
+analyzer3_data<8> |   15.922(F)|analyzer1_clock_OBUF|   0.000|
+analyzer3_data<9> |   15.595(F)|analyzer1_clock_OBUF|   0.000|
+analyzer3_data<10>|   15.194(F)|analyzer1_clock_OBUF|   0.000|
+analyzer3_data<11>|   14.634(F)|analyzer1_clock_OBUF|   0.000|
+analyzer3_data<12>|   14.933(F)|analyzer1_clock_OBUF|   0.000|
+analyzer3_data<13>|   16.322(F)|analyzer1_clock_OBUF|   0.000|
+analyzer3_data<14>|   15.406(F)|analyzer1_clock_OBUF|   0.000|
+analyzer3_data<15>|   15.474(F)|analyzer1_clock_OBUF|   0.000|
 ------------------+------------+--------------------+--------+
 
 Clock clock_27mhz to Pad
@@ -108,66 +108,65 @@ Clock clock_27mhz to Pad
                   | clk (edge) |                    | Clock  |
 Destination       |   to PAD   |Internal Clock(s)   | Phase  |
 ------------------+------------+--------------------+--------+
-analyzer1_data<0> |   14.119(R)|analyzer4_clock_OBUF|   0.000|
-analyzer3_clock   |   20.348(R)|analyzer4_clock_OBUF|   0.000|
-analyzer3_data<0> |   11.913(R)|analyzer4_clock_OBUF|   0.000|
-analyzer3_data<1> |   11.459(R)|analyzer4_clock_OBUF|   0.000|
-analyzer3_data<2> |   12.839(R)|analyzer4_clock_OBUF|   0.000|
-analyzer3_data<3> |   12.591(R)|analyzer4_clock_OBUF|   0.000|
-analyzer3_data<4> |   13.167(R)|analyzer4_clock_OBUF|   0.000|
-analyzer3_data<5> |   12.197(R)|analyzer4_clock_OBUF|   0.000|
-analyzer3_data<6> |   12.562(R)|analyzer4_clock_OBUF|   0.000|
-analyzer3_data<7> |   12.391(R)|analyzer4_clock_OBUF|   0.000|
-analyzer4_data<13>|   15.945(R)|analyzer4_clock_OBUF|   0.000|
-analyzer4_data<14>|   13.293(R)|analyzer4_clock_OBUF|   0.000|
-audio_reset_b     |   12.686(R)|analyzer4_clock_OBUF|   0.000|
-disp_clock        |    9.909(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<1>  |   10.781(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<2>  |    9.968(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<3>  |    9.471(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<4>  |    9.465(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<5>  |    9.503(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<6>  |    9.774(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<7>  |    9.505(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<8>  |   10.115(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<9>  |    9.460(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<10> |    9.439(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<11> |   10.255(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<12> |    9.488(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<13> |    9.478(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<14> |    9.798(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<15> |    9.529(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<16> |    9.819(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<17> |    9.531(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<18> |   10.123(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<19> |   10.247(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<20> |   10.596(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<21> |   10.251(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<22> |   10.691(R)|analyzer4_clock_OBUF|   0.000|
-flash_address<23> |    9.659(R)|analyzer4_clock_OBUF|   0.000|
-flash_ce_b        |   10.937(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<0>     |   10.061(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<1>     |   10.638(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<2>     |   10.964(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<3>     |   10.968(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<4>     |   10.106(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<5>     |   10.033(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<6>     |   10.671(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<7>     |   10.672(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<8>     |   10.009(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<9>     |   11.558(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<10>    |   10.324(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<11>    |   10.330(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<12>    |   10.361(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<13>    |   11.118(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<14>    |   10.809(R)|analyzer4_clock_OBUF|   0.000|
-flash_data<15>    |   11.584(R)|analyzer4_clock_OBUF|   0.000|
-flash_oe_b        |    8.794(R)|analyzer4_clock_OBUF|   0.000|
-flash_reset_b     |    9.290(R)|analyzer4_clock_OBUF|   0.000|
-flash_we_b        |    9.525(R)|analyzer4_clock_OBUF|   0.000|
-led<6>            |   13.836(R)|analyzer4_clock_OBUF|   0.000|
-led<7>            |   10.702(R)|analyzer4_clock_OBUF|   0.000|
-user1<22>         |   12.590(R)|analyzer4_clock_OBUF|   0.000|
+analyzer1_data<0> |   14.147(R)|analyzer4_clock_OBUF|   0.000|
+analyzer3_clock   |   17.254(R)|analyzer4_clock_OBUF|   0.000|
+analyzer3_data<0> |   13.449(R)|analyzer4_clock_OBUF|   0.000|
+analyzer3_data<1> |   13.909(R)|analyzer4_clock_OBUF|   0.000|
+analyzer3_data<2> |   13.734(R)|analyzer4_clock_OBUF|   0.000|
+analyzer3_data<3> |   13.694(R)|analyzer4_clock_OBUF|   0.000|
+analyzer3_data<4> |   15.285(R)|analyzer4_clock_OBUF|   0.000|
+analyzer3_data<5> |   14.423(R)|analyzer4_clock_OBUF|   0.000|
+analyzer3_data<6> |   15.356(R)|analyzer4_clock_OBUF|   0.000|
+analyzer3_data<7> |   14.225(R)|analyzer4_clock_OBUF|   0.000|
+analyzer4_data<14>|   13.647(R)|analyzer4_clock_OBUF|   0.000|
+audio_reset_b     |   12.254(R)|analyzer4_clock_OBUF|   0.000|
+disp_clock        |    9.385(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<1>  |   10.883(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<2>  |    9.394(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<3>  |    9.436(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<4>  |    9.760(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<5>  |   10.070(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<6>  |   10.403(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<7>  |   10.141(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<8>  |   10.162(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<9>  |   10.195(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<10> |    9.442(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<11> |   10.518(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<12> |    9.844(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<13> |    9.479(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<14> |    9.793(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<15> |   10.442(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<16> |   10.179(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<17> |   10.162(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<18> |   10.513(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<19> |   10.600(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<20> |   11.353(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<21> |   10.906(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<22> |   11.120(R)|analyzer4_clock_OBUF|   0.000|
+flash_address<23> |    9.364(R)|analyzer4_clock_OBUF|   0.000|
+flash_ce_b        |   11.541(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<0>     |   10.496(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<1>     |   11.453(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<2>     |   11.173(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<3>     |   11.177(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<4>     |   10.837(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<5>     |   10.836(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<6>     |   11.474(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<7>     |   11.475(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<8>     |   10.812(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<9>     |   12.504(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<10>    |   10.533(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<11>    |   10.539(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<12>    |   10.508(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<13>    |   11.147(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<14>    |   11.149(R)|analyzer4_clock_OBUF|   0.000|
+flash_data<15>    |   12.229(R)|analyzer4_clock_OBUF|   0.000|
+flash_oe_b        |    9.750(R)|analyzer4_clock_OBUF|   0.000|
+flash_reset_b     |    9.531(R)|analyzer4_clock_OBUF|   0.000|
+flash_we_b        |    9.470(R)|analyzer4_clock_OBUF|   0.000|
+led<0>            |   11.039(R)|analyzer4_clock_OBUF|   0.000|
+led<7>            |   10.463(R)|analyzer4_clock_OBUF|   0.000|
+user1<22>         |   13.644(R)|analyzer4_clock_OBUF|   0.000|
 ------------------+------------+--------------------+--------+
 
 Clock to Setup on destination clock ac97_bit_clock
@@ -175,8 +174,8 @@ Clock to Setup on destination clock ac97_bit_clock
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-ac97_bit_clock |    8.317|         |   10.789|    3.696|
-clock_27mhz    |    2.844|         |         |         |
+ac97_bit_clock |    8.448|         |   10.264|    3.283|
+clock_27mhz    |    2.610|         |         |         |
 ---------------+---------+---------+---------+---------+
 
 Clock to Setup on destination clock clock_27mhz
@@ -184,8 +183,8 @@ Clock to Setup on destination clock clock_27mhz
                | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
 Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
 ---------------+---------+---------+---------+---------+
-ac97_bit_clock |    3.337|         |         |         |
-clock_27mhz    |   14.504|         |         |         |
+ac97_bit_clock |    3.057|         |         |         |
+clock_27mhz    |   11.751|         |         |         |
 ---------------+---------+---------+---------+---------+
 
 Pad to Pad
@@ -195,19 +194,19 @@ Source Pad     |Destination Pad   |  Delay  |
 ac97_bit_clock |analyzer1_clock   |   17.015|
 ac97_sdata_in  |analyzer1_data<2> |   14.662|
 clock_27mhz    |analyzer4_clock   |   16.071|
-user1<23>      |analyzer4_data<15>|   15.047|
-user1<24>      |analyzer4_data<0> |   10.034|
-user1<25>      |analyzer4_data<1> |   11.290|
+user1<23>      |analyzer4_data<15>|   15.105|
+user1<24>      |analyzer4_data<0> |   10.168|
+user1<25>      |analyzer4_data<1> |   10.826|
 user1<26>      |analyzer4_data<2> |   10.270|
-user1<27>      |analyzer4_data<3> |   12.753|
-user1<28>      |analyzer4_data<4> |   12.735|
+user1<27>      |analyzer4_data<3> |   12.746|
+user1<28>      |analyzer4_data<4> |   12.745|
 user1<29>      |analyzer4_data<5> |   16.337|
-user1<30>      |analyzer4_data<6> |   16.242|
-user1<31>      |analyzer4_data<7> |   15.981|
+user1<30>      |analyzer4_data<6> |   16.235|
+user1<31>      |analyzer4_data<7> |   15.974|
 ---------------+------------------+---------+
 
 
-Analysis completed Thu Dec  4 23:37:49 2014 
+Analysis completed Sun Dec  7 16:03:11 2014 
 --------------------------------------------------------------------------------
 
 Trace Settings:

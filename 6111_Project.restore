@@ -840,6 +840,7 @@ proc restore { { project_dir "" } } {
       "assets/flash_IO/flash_int.v" 
       "assets/flash_IO/flash_manager.v" 
       "assets/flash_IO/test_fsm.v" 
+      "src/BCD.v" 
       "src/Divider.v" 
       "src/Square.v" 
       "src/audioManager.v" 

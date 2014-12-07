@@ -26,15 +26,6 @@
 <msg type="info" file="Xst" num="1433" delta="unknown" >Contents of array &lt;<arg fmt="%s" index="1">l_right_data</arg>&gt; may be accessed with an index that exceeds the array size. This could cause simulation mismatch.
 </msg>
 
-<msg type="info" file="Xst" num="1607" delta="unknown" >Contents of array &lt;<arg fmt="%s" index="1">buffer</arg>&gt; may be accessed with an index that does not cover the full array size.
-</msg>
-
-<msg type="info" file="Xst" num="1432" delta="unknown" >Contents of array &lt;<arg fmt="%s" index="1">buffer</arg>&gt; may be accessed with a negative index, causing simulation mismatch.
-</msg>
-
-<msg type="info" file="Xst" num="1433" delta="unknown" >Contents of array &lt;<arg fmt="%s" index="1">buffer</arg>&gt; may be accessed with an index that exceeds the array size. This could cause simulation mismatch.
-</msg>
-
 <msg type="info" file="Xst" num="2561" delta="unknown" >Always blocking tristate driving signal &lt;<arg fmt="%s" index="1">ram0_data</arg>&gt; in unit &lt;<arg fmt="%s" index="2">lab5</arg>&gt; is removed.
 </msg>
 
@@ -59,6 +50,9 @@
 <msg type="info" file="Xst" num="2561" delta="unknown" >Always blocking tristate driving signal &lt;<arg fmt="%s" index="1">tv_in_i2c_data</arg>&gt; in unit &lt;<arg fmt="%s" index="2">lab5</arg>&gt; is removed.
 </msg>
 
+<msg type="warning" file="Xst" num="646" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">shift</arg>&gt; is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+</msg>
+
 <msg type="info" file="Xst" num="2117" delta="unknown" >HDL ADVISOR - Mux Selector &lt;<arg fmt="%s" index="1">status</arg>&gt; of Case statement line <arg fmt="%s" index="2">340</arg> was re-encoded using one-hot encoding. The case statement will be optimized (default statement optimization), but this optimization may lead to design initialization problems. To ensure the design works safely, you can:
 	- add an &apos;<arg fmt="%s" index="3">INIT</arg>&apos; attribute on signal &lt;<arg fmt="%s" index="4">status</arg>&gt; (optimization is then done without any risk)
 	- use the attribute &apos;<arg fmt="%s" index="5">signal_encoding</arg> <arg fmt="%s" index="6">user</arg>&apos; to avoid onehot optimization
@@ -80,34 +74,25 @@
 <msg type="info" file="Xst" num="1799" delta="unknown" >State <arg fmt="%s" index="1">111</arg> is never reached in FSM &lt;<arg fmt="%s" index="2">state</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="647" delta="unknown" >Input &lt;<arg fmt="%s" index="1">reset</arg>&gt; is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
-</msg>
-
-<msg type="warning" file="Xst" num="1305" delta="unknown" >Output &lt;<arg fmt="%s" index="1">flashError</arg>&gt; is never assigned. Tied to value <arg fmt="%s" index="2">0</arg>.
-</msg>
-
 <msg type="warning" file="Xst" num="647" delta="unknown" >Input &lt;<arg fmt="%s" index="1">from_ac97_data</arg>&gt; is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
 </msg>
 
-<msg type="warning" file="Xst" num="646" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">tone&lt;11:0&gt;</arg>&gt; is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+<msg type="warning" file="Xst" num="646" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">tone</arg>&gt; is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+</msg>
+
+<msg type="warning" file="Xst" num="1780" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">third</arg>&gt; is never used or assigned. This unconnected signal will be trimmed during the optimization process.
 </msg>
 
 <msg type="warning" file="Xst" num="646" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">state</arg>&gt; is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 </msg>
 
-<msg type="warning" file="Xst" num="646" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">reconst_mem_out&lt;17:15&gt;</arg>&gt; is assigned but never used. This unconnected signal will be trimmed during the optimization process.
-</msg>
-
-<msg type="warning" file="Xst" num="646" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">reconst_mem_out&lt;6:0&gt;</arg>&gt; is assigned but never used. This unconnected signal will be trimmed during the optimization process.
-</msg>
-
 <msg type="warning" file="Xst" num="646" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">lastReady</arg>&gt; is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 </msg>
 
-<msg type="warning" file="Xst" num="646" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">fsmstate&lt;8:0&gt;</arg>&gt; is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+<msg type="warning" file="Xst" num="1780" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">index</arg>&gt; is never used or assigned. This unconnected signal will be trimmed during the optimization process.
 </msg>
 
-<msg type="warning" file="Xst" num="653" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">cached</arg>&gt; is used but never assigned. This sourceless signal will be automatically connected to value <arg fmt="%s" index="2">0</arg>.
+<msg type="warning" file="Xst" num="646" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">fsmstate&lt;8:0&gt;</arg>&gt; is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 </msg>
 
 <msg type="warning" file="Xst" num="2565" delta="unknown" >Inout &lt;<arg fmt="%s" index="1">user3&lt;28&gt;</arg>&gt; is never assigned.
@@ -944,12 +929,6 @@
 <msg type="info" file="Xst" num="1767" delta="unknown" >HDL ADVISOR - Resource sharing has identified that some arithmetic operations in this design can share the same physical resources for reduced device utilization. For improved clock frequency you may try to disable resource sharing.
 </msg>
 
-<msg type="info" file="Xst" num="0" delta="unknown" >HDL ADVISOR - The RAM &lt;<arg fmt="%s" index="1">Mram_buffer</arg>&gt; will be implemented on LUTs either because you have described an asynchronous read or because of currently unsupported block RAM features. If you have described an asynchronous read, making it synchronous would allow you to take advantage of available block RAM resources, for optimized device usage and improved timings. Please refer to your documentation for coding guidelines.
-</msg>
-
-<msg type="info" file="Xst" num="2385" delta="unknown" >HDL ADVISOR - You can improve the performance of the multiplier <arg fmt="%s" index="1">Mmult_accum_mult0000</arg> by adding <arg fmt="%d" index="2">1</arg> register level(s).
-</msg>
-
 <msg type="info" file="Xst" num="0" delta="unknown" >The ROM &lt;<arg fmt="%s" index="1">fsm/Mrom_nib2char_4_nib2char</arg>&gt; will be implemented as a read-only BLOCK RAM, absorbing the register: &lt;<arg fmt="%s" index="2">flash/rdata</arg>&gt;.
 </msg>
 
@@ -1093,6 +1072,14 @@ You should achieve better results by setting this init to <arg fmt="%i" index="3
 <msg type="warning" file="Xst" num="1895" delta="unknown" >Due to other FF/Latch trimming, FF/Latch &lt;<arg fmt="%s" index="1">flash/flash_address_0</arg>&gt; (without init value) has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">flash_manager</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
 </msg>
 
+<msg type="warning" file="Xst" num="1426" delta="unknown" >The value init of the FF/Latch <arg fmt="%s" index="1">playbackSeq_72</arg> hinder the constant cleaning in the block <arg fmt="%s" index="2">audioManager</arg>.
+You should achieve better results by setting this init to <arg fmt="%i" index="3">1</arg>.
+</msg>
+
+<msg type="warning" file="Xst" num="1426" delta="unknown" >The value init of the FF/Latch <arg fmt="%s" index="1">skipAddrOn</arg> hinder the constant cleaning in the block <arg fmt="%s" index="2">audioManager</arg>.
+You should achieve better results by setting this init to <arg fmt="%i" index="3">1</arg>.
+</msg>
+
 <msg type="warning" file="Xst" num="1293" delta="unknown" >FF/Latch &lt;<arg fmt="%s" index="1">wdata_0</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">audioManager</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
 </msg>
 
@@ -1115,6 +1102,12 @@ You should achieve better results by setting this init to <arg fmt="%i" index="3
 </msg>
 
 <msg type="warning" file="Xst" num="1896" delta="unknown" >Due to other FF/Latch trimming, FF/Latch &lt;<arg fmt="%s" index="1">wdata_7</arg>&gt; has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">audioManager</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
+</msg>
+
+<msg type="info" file="Xst" num="2261" delta="unknown" >The FF/Latch &lt;<arg fmt="%s" index="1">playbackSeq_61</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">audioManager</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">FF/Latch</arg>, which will be removed : <arg fmt="%s" index="4">&lt;playbackSeq_58&gt; </arg>
+</msg>
+
+<msg type="info" file="Xst" num="2261" delta="unknown" >The FF/Latch &lt;<arg fmt="%s" index="1">playbackSeq_60</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">audioManager</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">2 FFs/Latches</arg>, which will be removed : <arg fmt="%s" index="4">&lt;playbackSeq_59&gt; &lt;playbackSeq_54&gt; </arg>
 </msg>
 
 <msg type="warning" file="Xst" num="1710" delta="unknown" >FF/Latch &lt;<arg fmt="%s" index="1">fsm/data_to_store_7</arg>&gt; (without init value) has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">fm</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
@@ -1288,36 +1281,6 @@ You should achieve better results by setting this init to <arg fmt="%i" index="3
 <msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">fsm/status_11</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">fm</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">y_0</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">reconst</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">y_1</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">reconst</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">y_2</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">reconst</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">y_3</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">reconst</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">y_4</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">reconst</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">y_5</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">reconst</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">y_6</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">reconst</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">y_15</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">reconst</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">y_16</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">reconst</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">y_17</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">reconst</arg>&gt;.
-</msg>
-
 <msg type="warning" file="Xst" num="1989" delta="unknown" >Unit &lt;<arg fmt="%s" index="1">lab5</arg>&gt;: instances &lt;<arg fmt="%s" index="2">bup</arg>&gt;, &lt;<arg fmt="%s" index="3">buup</arg>&gt; of unit &lt;<arg fmt="%s" index="4">debounce</arg>&gt; are equivalent, second instance is removed
 </msg>
 
@@ -1336,6 +1299,15 @@ You should achieve better results by setting this init to <arg fmt="%i" index="3
 <msg type="warning" file="Xst" num="1710" delta="unknown" >FF/Latch &lt;<arg fmt="%s" index="1">fsm/data_to_store_0</arg>&gt; (without init value) has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">flash_manager</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
 </msg>
 
+<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">lastSlowClock</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">audioManager</arg>&gt;.
+</msg>
+
+<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">freq2/Sqr/oneHertz_enable</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">audioManager</arg>&gt;.
+</msg>
+
+<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">freq2/square</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">audioManager</arg>&gt;.
+</msg>
+
 <msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">bu0/clean</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">lab5</arg>&gt;.
 </msg>
 
@@ -1346,15 +1318,6 @@ You should achieve better results by setting this init to <arg fmt="%i" index="3
 </msg>
 
 <msg type="info" file="Xst" num="2697" delta="unknown" >Unit &lt;<arg fmt="%s" index="1">flash_manager</arg>&gt; : the RAMs &lt;<arg fmt="%s" index="2">fsm/Mrom_nib2char_3_nib2char</arg>&gt;, &lt;<arg fmt="%s" index="3">fsm/Mrom_nib2char_2_nib2char</arg>&gt; are packed into the single block RAM &lt;<arg fmt="%s" index="4">fsm/Mrom_nib2char_3_nib2char1</arg>&gt;
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">xxx/index_6</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">audioManager</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">xxx/index_7</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">audioManager</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">xxx/index_8</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">audioManager</arg>&gt;.
 </msg>
 
 <msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">management/fm/fsm/status_0</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">lab5</arg>&gt;.
@@ -1481,45 +1444,6 @@ You should achieve better results by setting this init to <arg fmt="%i" index="3
 </msg>
 
 <msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">a/ac97/right_in_data_0</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">lab5</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">management/reconst/accum_17</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">lab5</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">management/reconst/accum_16</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">lab5</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">management/reconst/accum_15</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">lab5</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">management/reconst/y_17</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">lab5</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">management/reconst/y_16</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">lab5</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">management/reconst/y_15</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">lab5</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">management/reconst/y_6</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">lab5</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">management/reconst/y_5</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">lab5</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">management/reconst/y_4</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">lab5</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">management/reconst/y_3</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">lab5</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">management/reconst/y_2</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">lab5</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">management/reconst/y_1</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">lab5</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">management/reconst/y_0</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">lab5</arg>&gt;.
 </msg>
 
 <msg type="info" file="Xst" num="2261" delta="unknown" >The FF/Latch &lt;<arg fmt="%s" index="1">a/ac97/l_cmd_data_12</arg>&gt; in Unit &lt;<arg fmt="%s" index="2">lab5</arg>&gt; is equivalent to the following <arg fmt="%s" index="3">FF/Latch</arg>, which will be removed : <arg fmt="%s" index="4">&lt;a/ac97/l_cmd_data_4&gt; </arg>
