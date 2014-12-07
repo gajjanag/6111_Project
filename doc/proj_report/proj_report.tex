@@ -1,0 +1,227 @@
+\title{\textbf{Automatic Projector Tilt Compensation System}}
+\author{Ganesh Ajjanagadde \quad James Thomas \quad Shantanu Jain}
+\date{\today}
+\documentclass{article}
+
+\usepackage{graphicx} % for including images
+\usepackage{float} % for floating figures, i.e can place/modify images in fancy ways
+\usepackage{verbatim} % for block comments in the source file
+\usepackage{hyperref} % for useful hyperlinks over the document
+\usepackage{natbib} % for bibliography
+\usepackage{minted} % for source code listing
+% NOTE: MINTED HAS SOME INSTALLATION/USAGE INSTRUCTIONS, SINCE IT ``SHELLS-OUT'' TO PYTHON
+% SEE DOC AT https://github.com/gpoore/minted
+\usepackage[margin=1in]{geometry} % for adjusting margins
+
+%Please place images in img/ subdir of proj_report for clean directory structure
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We designed a system that corrects the input to a projector if it is tilted so that its output appears unskewed.
+We read input from a NTSC (National Television System Committee) video camera and store it in an internal block memory.
+We then process the frame stored in memory using a perspective transformation to pre-warp the image that is sent to the projector via a VGA (Video Graphics Array) signal.
+The parameters of the perspective transformation are obtained from an accelerometer, which senses two axes of tilt.
+This allows automatic keystone correction in the two directions sensed by the accelerometer provided the output screen is vertical.
+Our method also includes options for manual keystone correction to any degree desired, for any projector and screen orientations.
+For ease of manual correction, we provide the option of using a test pattern (a checkerboard).
+We also play some useful audio for the percentage of pixels lost by the transformation and for general help regarding the system.
+\end{abstract}
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Introduction}
+Due to the advances in semiconductor technology,
+today's display projectors can incorporate fairly sophisticated digital processing algorithms for various enhancements to the visual appearance.
+Moreover, there is an increasing prevalence of portable projectors that benefit from fast, automated setup.
+One desired functionality is keystone/tilt correction.
+In other words, even when the projector is tilted, the projector should be able to ``pre-warp'' the image so that its output appears unskewed.
+In this project, we project the output of a camera, connect the camera's output to the FPGA (Field Programmable Gate Array) board,
+and the FPGA board's VGA output to the projector.
+We mount an accelerometer on the projector and measure its signals to determine the projector's tilt angle on two axes.
+We then run a perspective transformation algorithm on the FPGA that warps the camera output based on the tilt angles and produces the results at the VGA output for the projector to display.
+We also provide a manual correction mode so that any desired correction can be achieved.
+This is of use in mainly two cases:
+\begin{itemize}
+\item The automatic correction obtained using the accelerometer readings is unsatisfactory or inadequate.
+\item The user desires to correct for projector orientation in the third axis, or in the case when the screen is non-vertical.
+\end{itemize}
+Finally, we also provide a useful voice output for the percentage of pixels kept after the perspective transformation (this is a lossy transformation in general),
+and also audio help for a general description of usage of this system.
+
+A comparison of the result without using our system versus using our system is provided below.
+TODO: ACTUAL IMAGE
+
+\section{Previous Work}
+Given the practical importance of keystone correction, there has been significant research on doing automatic keystone correction.
+While \citet{raskar2001self} and \citet{sukthankar2001smarter} provide a solution to this problem, their methods suffer from one principal weakness,
+already noted in \citet{baoxin2004automatic}, namely that their algorithms are not well suited for implementation in an embedded system.
+For instance, their methods require solving an 8x8 system of linear equations via Gaussian elimination or similar methods,
+which is not suitable for embedded platforms, particularly those with slow dividers.
+Our key technical contribution is the elimination of the Gaussian elmination algorithm,
+and instead replacing it with closed form solutions for the equations.
+Moreover, we implement our algorithm on a 6 million gate Xilinx Virtex 2 FPGA, demonstrating that our algorithm is suitable for embedded systems use.
+The work done in \citet{baoxin2004automatic} in fact subsumes most of our work here.
+However, it is a much more complex system, as evidenced by the use of a camera for computing the precise perspective transformation.
+For the scope of this term final project,
+we use a simpler accelerometer based approach instead, paying the price of loss of automatic correction along one axis.
+Note that we still retain fully general manual correction ability.
+
+\section{Module Architecture}
+Our keystone correction system can be divided into roughly 4 sections:
+\begin{enumerate}
+\item Accelerometer interface
+\item Perspective transformation
+\item  I/O (Input/Output) interface
+\item Audio system
+\end{enumerate}
+
+TODO (JAMES): BRIEF PARA ON ACCELEROMETER AT HIGH LEVEL
+
+The perspective transformation section is where all core computations are computed.
+The accel\_lut module accepts the accelerometer readings from the accelerometer as an index into a ROM (read-only memory) containing coordinates of four coordinates of a quadrilateral.
+The corners of the quadrilateral (after multiplexing with manual override parameters) are fed into the perspective\_params module, which computes necessary perspective transformation parameters.
+The perspective parameters are then fed into pixel\_map, which maps the screen rectangle onto the quadrilateral described above via a perspective transformation.
+The pixels\_lost module is a side module that accepts the corners of the quadrilateral, and computes the percentage of pixels lost during the transformation.
+This is of use in the audio system.
+
+The input/output interface to various buttons/switches is contained in the top-level labkit.v file.
+The relevant buttons/switches are passed to move\_cursor module, which manipulates the corners of the quadrilateral when the user wishes to manually adjust the correction.
+The bram module implements a very simple 2 port block memory on the FPGA.
+Two instances of this are created, one called ntsc\_buf storing the camera input, and one called vga\_buf containing the processed output (from the perspective transformation).
+Essentially, we have a pipeline formed:
+input camera writes to ntsc\_buf, perspective transformation reads from ntsc\_buf and writes to vga\_buf, and the output VGA signal is formed by looping over the vga\_buf.
+
+TODO (SHAWN): BRIEF PARA ON AUDIO SYSTEM AT HIGH LEVEL
+
+TODO (JAMES/SHAWN): DETAILED BLOCK DIAGRAM, PREFERABLY WITH BIT WIDTHS
+
+\section{Design Decisions}
+
+There are a couple of noteworthy design decisions.
+The first of them is the use of a 640x480@60 Hz VGA display.
+The use of 640x480 as opposed to the more common higher resolutions found today is due to the memory and computational limitations of our FPGA kit.
+Initially, we hoped that we could get away with generic code that does not explicitly tie in heavily with the specific screen resolution.
+Unfortunately, this is not easy, since the choice of resolution influences many different aspects.
+Chief among these are the sizes of memory vs available memory tradeoff, the bit widths of x and y coordinates, the size of the accel\_lut ROM,
+and the bit widths of numerous other quantites such as the dividers and the multipliers in pixel\_map and perspective\_params respectively.
+The choice of 60 Hz was made on the basis of its almost guaranteed availability: almost all VGA displays support this refresh rate.
+
+The second major design decision made was the choice of memory architecture.
+We initially planned on using the available 36 Mbits of ZBT memory spread across 2 banks.
+This would allow us to store at least 4 frames at full 640x480 resolution and 24 bit color (8 bit R, 8 bit G, 8 bit B).
+Unfortunately, it turns out that ZBT memory is not dual-ported, so read and write on the same bank can't be achieved simultaneously.
+Since the perspective transform turns out to be a huge computational bottleneck, we did not want to waste additional time waiting for read/write on ZBT.
+Moreover, coordination between the memory banks storing processed and unprocessed data would require some sort of arbiter, adding complexity to our project.
+Thus, we chose instead to go with the block memory on the FPGA.
+This can be made into true dual-port memory, and has a single read/write cycle latency, as opposed to the multi-cycle latency of ZBT memory.
+However, the amount of block memory available on the FPGA is only 2.5 Mbits.
+This required sacrifice on image quality.
+We chose a combination of image downsampling and color depth reduction.
+More specifically, we chose a 320x240 sized memory, with 12 bits per line (4 bit R, 4 bit G, 4 bit B).
+This results in approximately 1 Mbit per buffer, and we use 2 buffers, leaving us with nearly 512k for the accel\_lut ROM.
+That is more than sufficient for our accel\_lut.
+It is certainly possible to squeeze some more color depth, e.g a 14 bit asymmetrical division among R, G, and B.
+This should help the image quality, but our visual tests indicated no substantial improvement, and hence we omitted this.
+
+The last noteworthy design decision is our choice of clocks.
+To avoid clock domain issues, as much as possible we used multiples of a common system clock.
+Using the Xilinx DCM (Digital Clock Manager), we synthesized a 50 MHz clock from the labkit's standard 27 MHz clock.
+We used this as a global sys\_clk.
+640x480@60Hz needs to be driven at nearly 25 MHz, and was thus obtained by multiplying the time period of sys\_clk by 2.
+The NTSC camera must be driven at around 27 MHz, and the appropriate clock is already generated by the labkit.
+To avoid change of the perspective parameters mid-frame, we also needed a slow\_clk signal,
+i.e one who's time period is on the order of seconds.
+This can't be accomplished through the use of DCM that easily.
+Moreover, since actual timing violations for this signal are not really that important,
+we implemented a simple ``flip clock on reaching a count'' style ``clock divider''.
+TODO: SHAWN, ADD NOTE ON CLOCKS USED FOR AUDIO
+
+\subsection{Module Descriptions}
+
+\subsubsection{acc (James)}
+TODO: JAMES, FILL THIS OUT WITH THE GORY DETAILS
+
+\subsubsection{accel\_lut (Ganesh)}
+The accel\_lut module provides a lookup table from the accelerometer readings in two directions to the four corners of the quadrilateral.
+The module is essentially implemented as a giant case statement, from which Xilinx's tools are able to infer a ROM of the appropriate size.
+Although the data coming out of the accelerometer has 12 bits of precision in each axis (TODO: JAMES, CHECK AND CORRECT THIS VALUE),
+using the full precision would require too much space for the ROM.
+Instead, we use 6 bits for each of the 2 axes, for a total of 12 bits as an index into the ROM.
+Each word of the ROM is 76 bits wide.
+This is because each x coordinate is 10 bits wide (0 to 639).
+
+TODO: ALL, COMPLETE WITH RESPECTIVE MODULES IN GORY DETAIL
+ADD PICTURES WHEREVER APPROPRIATE
+
+\section{Source Code}
+Source code for the project may be obtained on GitHub: \url{https://github.com/gajjanag/6111_Project}.
+For completeness, we include all source code here as well.
+For ease of browsing through the code, we have divided the modules into roughly three categories:
+\begin{itemize}
+\item Staff Modules: modules that are essentially the same as staff provided modules, with minor modifications for our specific needs.
+\item Labkit: top level labkit module with general instantiations, including clock generators, and ucf file
+\item Our Modules: modules created by us for our project
+\end{itemize}
+
+% For fast compilation, disable inclusion of source code files
+% Include these for final submission
+\begin{comment}
+\subsection{Staff Modules}
+\subsubsection{debounce.v}
+\inputminted[linenos]{verilog}{../../src/debounce.v}
+\subsubsection{delay.v}
+\inputminted[linenos]{verilog}{../../src/delay.v}
+\subsubsection{display\_16hex.v}
+\inputminted[linenos]{verilog}{../../src/display_16hex.v}
+\subsubsection{vga.v}
+\inputminted[linenos]{verilog}{../../src/vga.v}
+\subsubsection{divider.v}
+\inputminted[linenos]{verilog}{../../src/divider.v}
+\subsubsection{ycrcb2rgb.v}
+\inputminted[linenos]{verilog}{../../src/ycrcb2rgb.v}
+\subsubsection{ntsc2zbt.v}
+\inputminted[linenos]{verilog}{../../src/ntsc2zbt.v}
+\subsubsection{video\_decoder.v}
+\inputminted[linenos]{verilog}{../../src/video_decoder.v}
+
+\subsection{Labkit}
+\subsubsection{labkit.v}
+\inputminted[linenos]{verilog}{../../src/labkit.v}
+\subsubsection{labkit.ucf}
+\inputminted[linenos]{verilog}{../../src/labkit.ucf}
+
+\subsection{Our Modules}
+\subsubsection{acc.v}
+\inputminted[linenos]{verilog}{../../src/acc.v}
+\subsubsection{accel\_lut.v}
+\inputminted[linenos]{verilog}{../../src/accel_lut.v}
+\subsubsection{accel\_lut.jl}
+\inputminted[linenos]{julia}{../../src/accel_lut.jl}
+\subsubsection{accel\_lut.txt}
+\inputminted[linenos]{todotxt}{../../src/accel_lut.txt}
+\subsubsection{pixels\_lost.v}
+\inputminted[linenos]{verilog}{../../src/pixels_lost.v}
+\subsubsection{addr\_map.v}
+\inputminted[linenos]{verilog}{../../src/addr_map.v}
+\subsubsection{bram.v}
+\inputminted[linenos]{verilog}{../../src/bram.v}
+\subsubsection{slow\_clk.v}
+\inputminted[linenos]{verilog}{../../src/slow_clk.v}
+\subsubsection{pixel\_map.v}
+\inputminted[linenos]{verilog}{../../src/pixel_map.v}
+\subsubsection{move\_cursor.v}
+\inputminted[linenos]{verilog}{../../src/move_cursor.v}
+\subsubsection{perspective\_params.v}
+\inputminted[linenos]{verilog}{../../src/perspective_params.v}
+\end{comment}
+
+\section{Conclusion}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

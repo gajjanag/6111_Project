@@ -12,6 +12,7 @@
 *.out
 *.bbl
 *.blg
+*.pyg
 
 # verilog test compilations
 *.vvp
