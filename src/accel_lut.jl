@@ -53,7 +53,7 @@ function parse_data(path)
     y3 = zeros(Int64, num_samples)
     x4 = zeros(Int64, num_samples)
     y4 = zeros(Int64, num_samples)
-    base = 10
+    base = 16
     for i = 1:num_samples
         x_accel[i] = parseint(raw_data[i,1], base)
         y_accel[i] = parseint(raw_data[i,2], base)
@@ -93,12 +93,12 @@ function write_file(path, x_accel, y_accel, x1, y1, x2, y2, x3, y3, x4, y4)
     # do the spline interpolation
     # we do linear fits for now
     # as we add more points, we can do something more sophisticated
-    x_deg = 1;
-    y_deg = 1;
+    x_deg = 2;
+    y_deg = 2;
     # we also use a smoothing factor
     # this trades off exact interpolation vs weighted least squares
     # for more details, see doc at: https://github.com/kbarbary/Dierckx.jl
-    smooth_factor = 0.0;
+    smooth_factor = 454.0;
     spline_x1 = Spline2D(x_accel, y_accel, x1; kx=x_deg, ky=y_deg, s=smooth_factor)
     spline_x2 = Spline2D(x_accel, y_accel, x2; kx=x_deg, ky=y_deg, s=smooth_factor)
     spline_x3 = Spline2D(x_accel, y_accel, x3; kx=x_deg, ky=y_deg, s=smooth_factor)
