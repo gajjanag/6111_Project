@@ -192,9 +192,9 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    
    // Audio Input and Output
    assign beep= 1'b0;
-   assign audio_reset_b = 1'b0;
-   assign ac97_synch = 1'b0;
-   assign ac97_sdata_out = 1'b0;
+   // assign audio_reset_b = 1'b0;
+   // assign ac97_synch = 1'b0;
+   // assign ac97_sdata_out = 1'b0;
    // ac97_sdata_in is an input
 
    // Video Output
@@ -243,14 +243,14 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    // clock_feedback_in is an input
    
    // Flash ROM
-   assign flash_data = 16'hZ;
-   assign flash_address = 24'h0;
-   assign flash_ce_b = 1'b1;
-   assign flash_oe_b = 1'b1;
-   assign flash_we_b = 1'b1;
-   assign flash_reset_b = 1'b0;
-   assign flash_byte_b = 1'b1;
-   // flash_sts is an input
+   // assign flash_data = 16'hZ;
+   // assign flash_address = 24'h0;
+   // assign flash_ce_b = 1'b1;
+   // assign flash_oe_b = 1'b1;
+   // assign flash_we_b = 1'b1;
+   // assign flash_reset_b = 1'b0;
+   // assign flash_byte_b = 1'b1;
+   // // flash_sts is an input
 
    // RS-232 Interface
    assign rs232_txd = 1'b1;
@@ -267,7 +267,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    // button_left, button_down, button_up, and switches are inputs
 
    // User I/Os
-   assign user1[31:4] = 28'hZ;
+   assign user1[21:4] = 28'hZ;
    assign user2 = 32'hZ;
    assign user3 = 32'hZ;
    assign user4 = 32'hZ;
@@ -331,10 +331,12 @@ DCM int_dcm(.CLKIN(sys_clk), .CLKFX(vga_clk_unbuf), .LOCKED(clk_locked));
 // synthesis attribute CLKIN_PERIOD of int_dcm is 20
 BUFG int_dcm2(.O(vga_clk), .I(vga_clk_unbuf));
 assign led[7] = ~clk_locked;
-assign led[5:0] = {7{1'b1}};
+assign led[5:1] = {6{1'b1}};
 slow_clk slow(.clk(sys_clk),
             .slow_clk(slow_clk));
 assign led[6] = ~slow_clk;
+wire busy
+assign led[0] = busy;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // create debounced buttons
@@ -655,4 +657,88 @@ display_16hex display_16hex(.reset(reset),
             .disp_rs(disp_rs),
             .disp_ce_b(disp_ce_b),
             .disp_reset_b(disp_reset_b));
+
+  // AC97
+
+  wire [7:0] from_ac97_data, to_ac97_data;
+  wire ready;
+
+  // allow user to adjust volume
+  wire vup,vdown;
+  reg old_vup,old_vdown;
+  debounce bup(.reset(reset),.clock(clock_27mhz),.noisy(~button_up),.clean(vup));
+  debounce bdown(.reset(reset),.clock(clock_27mhz),.noisy(~button_down),.clean(vdown));
+  reg [4:0] volume;
+  always @ (posedge clock_27mhz) begin
+    if (reset) volume <= 5'd8;
+    else begin
+      if (vup & ~old_vup & volume != 5'd31) volume <= volume+1;       
+      if (vdown & ~old_vdown & volume != 5'd0) volume <= volume-1;       
+    end
+    old_vup <= vup;
+    old_vdown <= vdown;
+  end
+
+  // AC97 driver
+  lab5audio a(clock_27mhz, reset, volume, from_ac97_data, to_ac97_data, ready,
+        audio_reset_b, ac97_sdata_out, ac97_sdata_in,
+        ac97_synch, ac97_bit_clock);
+
+  // writeSwitch UP to write, DOWN to read
+  wire writeSwitch;
+  debounce sw7(.reset(reset),.clock(clock_27mhz),.noisy(switch[3]),.clean(writeSwitch));
+
+  wire startSwitch;
+  debounce sw6(.reset(reset),.clock(clock_27mhz),.noisy(switch[2]),.clean(startSwitch));
+
+  wire memReset;
+  debounce benter(.reset(reset),.clock(clock_27mhz),.noisy(~button_enter),.clean(memReset));
+
+  wire audioTrigger;
+  debounce b3(.reset(reset),.clock(clock_27mhz),.noisy(~button0),.clean(audioTrigger));
+
+  wire buttonup;
+  debounce buup(.reset(reset),.clock(clock_27mhz),.noisy(~button_up),.clean(buttonup));
+
+  wire buttondown;
+  debounce budo(.reset(reset),.clock(clock_27mhz),.noisy(~button_down),.clean(buttondown));
+
+  wire [63:0] hexdisp;
+
+  // Receive and Playback module
+  audioManager management(
+    .clock(clock_27mhz), 
+    .reset(memReset), 
+
+    // User I/O
+    .startSwitch(startSwitch),
+    .audioSelector(percent_lost),
+    .writeSwitch(writeSwitch), 
+    .hexdisp(hexdisp),
+    .buttonup(buttonup),
+    .buttondown(buttondown),
+    .audioTrigger(audioTrigger), 
+
+    // AC97 I/O
+    .ready(ready),
+    .from_ac97_data(from_ac97_data),
+    .to_ac97_data(to_ac97_data),
+
+    // Flash I/O
+    .flash_data(flash_data),
+    .flash_address(flash_address),
+    .flash_ce_b(flash_ce_b),
+    .flash_oe_b(flash_oe_b),
+    .flash_we_b(flash_we_b),
+    .flash_reset_b(flash_reset_b),
+    .flash_byte_b(flash_byte_b),
+    .flash_sts(flash_sts),
+    .busy(busy),
+
+    // USB I/O
+    .data(user1[31:24]), //the data pins from the USB fifo
+    .rxf(user1[23]), //the rxf pin from the USB fifo
+    .rd(user1[22]), //the rd pin TO the USB FIFO (OUTPUT)
+  );
+
 endmodule
