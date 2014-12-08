@@ -332,7 +332,7 @@ DCM int_dcm(.CLKIN(sys_clk), .CLKFX(vga_clk_unbuf), .LOCKED(clk_locked));
 BUFG int_dcm2(.O(vga_clk), .I(vga_clk_unbuf));
 assign led[7] = ~clk_locked;
 assign led[5:0] = {7{1'b1}};
-slow_clk slow(.clk(vga_clk),
+slow_clk slow(.clk(sys_clk),
             .slow_clk(slow_clk));
 assign led[6] = ~slow_clk;
 
@@ -388,9 +388,16 @@ end
 wire acc_ready;
 wire signed [15:0] acc_x;
 wire signed [15:0] acc_y;
+reg signed [15:0] acc_x_reg;
+reg signed [15:0] acc_y_reg;
 acc a(.clk(sys_clk), .sdo(user1[0]), .reset(reset),
 .ncs(user1[1]), .sda(user1[2]), .scl(user1[3]),
 .ready(acc_ready), .x(acc_x), .y(acc_y));
+
+always @(posedge slow_clk) begin
+	acc_x_reg <= acc_ready ? acc_x : 0;
+	acc_y_reg <= acc_ready ? acc_y : 0;
+end
 		
 wire[11:0] accel_val;
 wire[75:0] quad_corners;
@@ -412,7 +419,8 @@ wire[9:0] x4;
 wire[8:0] y4;
 wire[9:0] display_x;
 wire[8:0] display_y;
-assign accel_val = {~acc_x[15], acc_x[7:4], 1'b0, ~acc_y[15], acc_y[7:4], 1'b0}; 
+assign accel_val = {~acc_x_reg[15], acc_x_reg[7:4], 1'b0,
+	~acc_y_reg[15], acc_y_reg[7:4], 1'b0}; 
 accel_lut accel_lut(.clk(slow_clk),
                 .accel_val(accel_val),
                 .quad_corners(quad_corners));
