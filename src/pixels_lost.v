@@ -7,7 +7,7 @@
 // Alternatively, it is easily available on the web
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-module pixels_lost(input clk,
+module pixels_kept(//input clk,
                 input[9:0] x1,
                 input[8:0] y1,
                 input[9:0] x2,
@@ -16,7 +16,7 @@ module pixels_lost(input clk,
                 input[8:0] y3,
                 input[9:0] x4,
                 input[8:0] y4,
-                output reg[6:0] percent_lost); // percent_lost ranges from 0 to 100, a 7 bit number
+                output wire[6:0] percent_kept); // percent_lost ranges from 0 to 100, a 7 bit number
 
 wire signed[10:0] sx1, sx2, sx3, sx4;
 wire signed[9:0] sy1, sy2, sy3, sy4;
@@ -30,8 +30,8 @@ wire[13:0] shift_prod_7;
 wire[11:0] shift_prod_9;
 wire[9:0] shift_prod_11;
 wire[14:0] sum_shift_prod;
-wire[8:0] percent_kept;
-wire[6:0] percent_lost_wire;
+// wire[8:0] percent_kept;
+// wire[6:0] percent_lost_wire;
 
 // sign extensions
 assign sx1 = {1'b0, x1};
@@ -74,11 +74,11 @@ assign shift_prod_9 = unsigned_prod >> 9;
 assign shift_prod_11 = unsigned_prod >> 11;
 assign sum_shift_prod = shift_prod_7 + shift_prod_9 + shift_prod_11;
 assign percent_kept = sum_shift_prod >> 6;
-assign percent_lost_wire = 7'd100 - percent_kept;
+// assign percent_lost_wire = 7'd100 - percent_kept;
 
 // synchronous output
-always @(posedge clk) begin
-    percent_lost <= percent_lost_wire;
-end
+// always @(posedge clk) begin
+//     percent_lost <= percent_lost_wire;
+// end
 
 endmodule

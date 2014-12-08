@@ -9,8 +9,6 @@ module audioManager(
   input wire [6:0] audioSelector, 
   input wire writeSwitch,             // 1=Write, 0=Read
   output wire [63:0] hexdisp,
-  input wire buttonup,
-  input wire buttondown,
   input wire audioTrigger, // 1=Begin Playback as determined by audioSelector
   
   // AC97 I/O
@@ -32,17 +30,11 @@ module audioManager(
   // USB I/O
   input wire [7:0] data, //the data pins from the USB fifo
   input wire rxf, //the rxf pin from the USB fifo
-  output wire rd, // the rd pin from the USB fifo (OUTPUT)
-
-  // DEBUG
-  output reg skipAddrOn = 0
+  output wire rd // the rd pin from the USB fifo (OUTPUT)
 );
   
   // Playback addresses:
   parameter TRACK_LENGTH = 69000; // approx 1 sec
-  // numbers
-  //25% longer 
-  //
 
   parameter ONE_INDEX = 23'd0;
   parameter TWO_INDEX = 23'd1;
@@ -75,18 +67,12 @@ module audioManager(
   parameter SKIP_INDEX = 23'd28; // 1C
   parameter UNUSED_INDEX = 23'd31; // 1F
 
-  //  raddr <= cur_index * TRACK_LENGTH
-
   reg writemode = 0;         //1=write mode; 0=read mode
   reg [15:0] wdata = 0;      //writeData
   reg dowrite = 0;           //1=new data, write it
   reg [22:0] raddr = 2;      //readAddress
   wire [15:0] frdata;        //readData
   reg doread = 0;            //1=execute read
-
-  // UNUSED
-  wire [11:0] fsmstate;
-  // END UNUSED
 
   // FlashManager
   flash_manager fm(
@@ -110,17 +96,12 @@ module audioManager(
     .flash_we_b(flash_we_b), 
     .flash_reset_b(flash_reset_b), 
     .flash_sts(flash_sts), 
-    .flash_byte_b(flash_byte_b), 
-
-    // Debug
-    .fsmstate(fsmstate)
+    .flash_byte_b(flash_byte_b)
   );
 
-  //wire rd;        
   wire [7:0] out; // data from FIFO (OUTPUT)
   wire newout;  // newout=1 out contains new data (OUTPUT)
   wire hold;     //hold=1 the module will not accept new data from the FIFO
-  wire [3:0] state; //for debugging purposes
 
   assign hold = 1'b0; 
 
@@ -136,10 +117,7 @@ module audioManager(
     // Interface
     .out(out[7:0]),
     .newout(newout),
-    .hold(hold),
-
-    // Debug
-    .state(state)
+    .hold(hold)
   );
 
   wire [3:0] hundreds;
@@ -147,44 +125,24 @@ module audioManager(
   wire [3:0] ones;
 
   BCD inputToBCD(
-    .number(audioSelector),
+    .number({1'b0, audioSelector}),
     .hundreds(hundreds),
     .tens(tens),
     .ones(ones)
   );
 
-  reg lastButtonup;
-  reg lastButtondown;
   reg lastAudioTrigger;
   reg [2:0] third = 0;
   reg lastReady;
 
-  // REMOVE
-  wire slowClock;
-  reg lastSlowClock;
-  wire slowClockPulse;
-  assign slowClockPulse = slowClock & ~lastSlowClock;
-  Square #(.Hz(3000)) freq2 (
-    .clock(clock),
-    .reset(reset),
-    .square(slowClock)
-  );
-
-  // REMOVE 
-  wire [19:0] tone;
-  tone750hz xxx(.clock(clock),.ready(slowClockPulse),.pcm_data(tone));
-  reg [5:0] index;
-
   // Set of 4 addresses that represent a playback sequence
   // First track in bottom 23 bits[22:0]. Last track in top bits [91:68].
-  // 23'hFFFFFF means track not used.
   reg [91:0] playbackSeq = 2;
   reg [22:0] trackEndAddr = 0;
   reg playing = 0;
   reg lastPlaying = 0;
   reg [15:0] bytesRxed = 0;
 
-  // frdata has no guaruntees when not in read mode
   assign hexdisp = {playbackSeq[30:23], playbackSeq[7:0], 1'h0 ,trackEndAddr, 1'h0, raddr[22:0]};
   
   reg [7:0] dataFromFifo;
@@ -193,11 +151,8 @@ module audioManager(
   end
 
   always @ (posedge clock) begin
-    lastButtonup <= buttonup;
-    lastButtondown <= buttondown;
     lastAudioTrigger <= audioTrigger;
     lastReady <= ready;
-    lastSlowClock <= slowClock;
     lastPlaying <= playing;
 
     if (startSwitch) begin
@@ -211,16 +166,6 @@ module audioManager(
           wdata <= {dataFromFifo, 8'b0};//{out, 8'b0};
           dowrite <= 1'b1;
         end
-
-        if (1'h0) begin//audioSelector[2]) begin // tone750Hz to flash
-          if (slowClockPulse) begin // WAS: READY
-            if (index <= 6'h3F) begin
-              wdata <= {tone[19:12], 8'b0};
-              dowrite <= 1'b1;
-              index <= index + 1;
-            end
-          end
-        end 
       end
 
       // if button is DOWN - scroll through addresses via buttons
@@ -228,24 +173,12 @@ module audioManager(
         dowrite <= 1'b0;
         writemode <= 1'b0;
         doread <= 1'b1;
-        
-        // scroll through addresses with buttons
-        if(buttonup & ~lastButtonup) begin
-          raddr <= raddr + 1;
-        end
-        else if (buttondown & ~lastButtondown) begin
-          raddr <= raddr - 1;
-        end
 
-        if (playing & audioTrigger & ready) begin // REMOVE audioTrigger
+        if (playing & ready) begin // REMOVE audioTrigger
           if (raddr < trackEndAddr) begin
             // Normal 48K Playback
             raddr <= raddr + 1;
             to_ac97_data <= frdata[15:8]; // PUT BACK
-            // Repeat at addr 63 for tone750Hz
-            // if(audioSelector[3] & raddr == 63) begin
-            //   raddr <= 0;
-            // end
           end
           else begin 
             if (playbackSeq[45:23] < UNUSED_INDEX) begin
@@ -266,14 +199,6 @@ module audioManager(
         // if entering this state, assign start address
         if (audioTrigger & ~lastAudioTrigger) begin
           playing <= 1;
-          // For testing, play 12K addresses (2 sec) for each trigger
-          // case(audioSelector[4:0])
-          //   0: begin playbackSeq <= {UNUSED_ADDR, USED_ADDR, PERCENT_ADDR, ONE_ADDR}; raddr <= 1; end
-          //   1: raddr <= 20001;
-          //   2: raddr <= 24001;
-          //   3: raddr <= 36001;
-          //   default: raddr <= 1;
-          // endcase
           case(ones)
             0: playbackSeq[91:23] <= {UNUSED_INDEX, USED_INDEX, PERCENT_INDEX};
             1: playbackSeq[91:23] <= {USED_INDEX, PERCENT_INDEX, ONE_INDEX};
@@ -322,7 +247,6 @@ module audioManager(
         // Assuming this happens once playbackSeq has been properly set
         if (playing & ~lastPlaying) begin
           if (playbackSeq[22:0] == SKIP_INDEX) begin
-            skipAddrOn <= 1;
             playbackSeq <= {UNUSED_INDEX, playbackSeq[91:23]};
             raddr <= playbackSeq[45:23] * TRACK_LENGTH;
             trackEndAddr <= playbackSeq[45:23] * TRACK_LENGTH + TRACK_LENGTH;

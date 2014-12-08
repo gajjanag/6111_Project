@@ -330,13 +330,15 @@ DCM int_dcm(.CLKIN(sys_clk), .CLKFX(vga_clk_unbuf), .LOCKED(clk_locked));
 // synthesis attribute CLK_FEEDBACK of int_dcm is NONE
 // synthesis attribute CLKIN_PERIOD of int_dcm is 20
 BUFG int_dcm2(.O(vga_clk), .I(vga_clk_unbuf));
-assign led[7] = ~clk_locked;
-assign led[5:1] = {6{1'b1}};
+// assign led[7] = ~clk_locked;
+// assign led[5:1] = {6{1'b1}};
 slow_clk slow(.clk(sys_clk),
             .slow_clk(slow_clk));
-assign led[6] = ~slow_clk;
-wire busy
-assign led[0] = busy;
+// assign led[6] = ~slow_clk;
+wire[6:0] percent_kept;
+assign led[7:1] = ~percent_kept;
+wire busy;
+assign led[0] = ~busy;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // create debounced buttons
@@ -464,8 +466,7 @@ move_cursor move_cursor(.clk(vsync),
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // instantiate pixels_lost module
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-wire[6:0] percent_lost;
-pixels_lost pixels_lost(.clk(vsync),
+pixels_kept pixels_lost(
                 .x1(x1),
                 .y1(y1),
                 .x2(x2),
@@ -474,7 +475,7 @@ pixels_lost pixels_lost(.clk(vsync),
                 .y3(y3),
                 .x4(x4),
                 .y4(y4),
-                .percent_lost(percent_lost));
+                .percent_kept(percent_kept));
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -646,7 +647,7 @@ assign hex_disp_data[8:0] = display_y;
 assign hex_disp_data[15:9] = 7'd0;
 assign hex_disp_data[25:16] = display_x;
 assign hex_disp_data[31:26] = 6'd0;
-// higher bits, put the percent_lost
+// higher bits, put the percent_kept
 assign hex_disp_data[63:32] = {10'b0, accel_val[11:6], 10'b0, accel_val[5:0]};
 display_16hex display_16hex(.reset(reset),
             .clock_27mhz(clock_27mhz),
@@ -666,7 +667,7 @@ display_16hex display_16hex(.reset(reset),
   // allow user to adjust volume
   wire vup,vdown;
   reg old_vup,old_vdown;
-  debounce bup(.reset(reset),.clock(clock_27mhz),.noisy(~button_up),.clean(vup));
+  debounce bup(.reset(reset),.clock(clock_27mhz),.noisy(~button3),.clean(vup));
   debounce bdown(.reset(reset),.clock(clock_27mhz),.noisy(~button_down),.clean(vdown));
   reg [4:0] volume;
   always @ (posedge clock_27mhz) begin
@@ -680,7 +681,7 @@ display_16hex display_16hex(.reset(reset),
   end
 
   // AC97 driver
-  lab5audio a(clock_27mhz, reset, volume, from_ac97_data, to_ac97_data, ready,
+  lab5audio labaudio(clock_27mhz, reset, volume, from_ac97_data, to_ac97_data, ready,
         audio_reset_b, ac97_sdata_out, ac97_sdata_in,
         ac97_synch, ac97_bit_clock);
 
@@ -697,12 +698,6 @@ display_16hex display_16hex(.reset(reset),
   wire audioTrigger;
   debounce b3(.reset(reset),.clock(clock_27mhz),.noisy(~button0),.clean(audioTrigger));
 
-  wire buttonup;
-  debounce buup(.reset(reset),.clock(clock_27mhz),.noisy(~button_up),.clean(buttonup));
-
-  wire buttondown;
-  debounce budo(.reset(reset),.clock(clock_27mhz),.noisy(~button_down),.clean(buttondown));
-
   wire [63:0] hexdisp;
 
   // Receive and Playback module
@@ -712,11 +707,9 @@ display_16hex display_16hex(.reset(reset),
 
     // User I/O
     .startSwitch(startSwitch),
-    .audioSelector(percent_lost),
+    .audioSelector(percent_kept),
     .writeSwitch(writeSwitch), 
-    .hexdisp(hexdisp),
-    .buttonup(buttonup),
-    .buttondown(buttondown),
+    // .hexdisp(hexdisp),
     .audioTrigger(audioTrigger), 
 
     // AC97 I/O
@@ -738,7 +731,7 @@ display_16hex display_16hex(.reset(reset),
     // USB I/O
     .data(user1[31:24]), //the data pins from the USB fifo
     .rxf(user1[23]), //the rxf pin from the USB fifo
-    .rd(user1[22]), //the rd pin TO the USB FIFO (OUTPUT)
+    .rd(user1[22]) //the rd pin TO the USB FIFO (OUTPUT)
   );
 
 endmodule
