@@ -65,8 +65,8 @@ which is not suitable for embedded platforms, particularly those with slow divid
 Our key technical contribution is the elimination of the Gaussian elmination algorithm,
 and instead replacing it with closed form solutions for the equations.
 Moreover, we implement our algorithm on a 6 million gate Xilinx Virtex 2 FPGA, demonstrating that our algorithm is suitable for embedded systems use.
-The work done in \citet{baoxin2004automatic} in fact subsumes most of our work here.
-However, it is a much more complex system, as evidenced by the use of a camera for computing the precise perspective transformation.
+The work done in \citet{baoxin2004automatic} subsumes most of this work.
+However, thier system is much more complex complex, as evidenced by the use of a camera for computing the precise perspective transformation.
 For the scope of this term final project,
 we use a simpler accelerometer based approach instead, paying the price of loss of automatic correction along one axis.
 Note that we still retain fully general manual correction ability.
@@ -442,6 +442,17 @@ For ease of browsing through the code, we have divided the modules into roughly 
 \inputminted[linenos]{verilog}{../../src/ntsc2zbt.v}
 \subsubsection{video\_decoder.v}
 \inputminted[linenos]{verilog}{../../src/video_decoder.v}
+\subsubsection{flash\_int.v}
+\inputminted[linenos]{verilog}{../../assets/flash_IO/flash_int.v}
+\subsubsection{flash\_manager.v}
+\inputminted[linenos]{verilog}{../../assets/flash_IO/flash_manager.v}
+\subsubsection{test\_fsm.v}
+\inputminted[linenos]{verilog}{../../assets/flash_IO/test_fsm.v}
+\subsubsection{usb\_input.v}
+\inputminted[linenos]{verilog}{../../assets/USB_Transfer/usb_input.v}
+\subsubsection{usb\_transfer\_script.py}
+\inputminted[linenos]{python}{../../assets/usb_transfer_script.py}
+
 
 \subsection{Labkit}
 \subsubsection{labkit.v}
@@ -472,6 +483,16 @@ For ease of browsing through the code, we have divided the modules into roughly 
 \inputminted[linenos]{verilog}{../../src/perspective_params.v}
 \subsubsection{pixel\_map.v}
 \inputminted[linenos]{verilog}{../../src/pixel_map.v}
+\subsubsection{audioManager.v}
+\inputminted[linenos]{verilog}{../../src/audioManager.v}
+\subsubsection{binaryToDecimal.py}
+\inputminted[linenos]{python}{../../assets/binaryToDecimal.py}
+\subsubsection{BCD.v}
+\inputminted[linenos]{verilog}{../../src/BCD.v}
+\subsubsection{ClockDivider.v}
+\inputminted[linenos]{verilog}{../../src/ClockDivider.v}
+\subsubsection{Square.v}
+\inputminted[linenos]{verilog}{../../src/Square.v}
 %\end{comment}
 
 \end{document}

@@ -1,20 +1,28 @@
 `default_nettype none
+// Shawn Jain
+// Receives audio samples via FTDI UM245R USB-to-FIFO, stores to
+// onboard flash memory. Plays back the percentage of pixels used 
+// when audioTrigger is pulsed, where the percent is set by 
+// audioSelector. Internally it queues upto four separate tracks
+// to be played. To save memory and for a faster transfer, the 
+// system constructs all numbers 1-100 out of a subset of the 
+// digits. 
 
 module audioManager(
-  input wire clock,            // 27mhz system clock
-  input wire reset,                // 1 to reset to initial state
+  input wire clock, // 27mhz system clock
+  input wire reset, // 1 to reset to initial state
 
   // User I/O
   input wire startSwitch,
   input wire [6:0] audioSelector, 
-  input wire writeSwitch,             // 1=Write, 0=Read
+  input wire writeSwitch,  // 1=Write, 0=Read
   output wire [63:0] hexdisp,
   input wire audioTrigger, // 1=Begin Playback as determined by audioSelector
   
   // AC97 I/O
   input wire ready,                // 1 when AC97 data is available
   input wire [7:0] from_ac97_data, // 8-bit PCM data from mic
-  output reg [7:0] to_ac97_data,    // 8-bit PCM data to headphone // PUT BACK: REG
+  output reg [7:0] to_ac97_data,   // 8-bit PCM data to headphone 
 
   // Flash I/O
   output wire [15:0] flash_data,
@@ -28,9 +36,9 @@ module audioManager(
   output wire busy,
 
   // USB I/O
-  input wire [7:0] data, //the data pins from the USB fifo
-  input wire rxf, //the rxf pin from the USB fifo
-  output wire rd // the rd pin from the USB fifo (OUTPUT)
+  input wire [7:0] data, // the data pins from the USB fifo
+  input wire rxf,        // the rxf pin from the USB fifo
+  output wire rd         // the rd pin from the USB fifo (OUTPUT)
 );
   
   // Playback addresses:
@@ -46,35 +54,34 @@ module audioManager(
   parameter EIGHT_INDEX = 23'd7;
   parameter NINE_INDEX = 23'd8;
   parameter TEN_INDEX = 23'd9;
-  parameter ELEVEN_INDEX = 23'd10; // A
-  parameter TWELVE_INDEX = 23'd11; // B
-  parameter THIRTEEN_INDEX = 23'd12; // C
-  parameter FOURTEEN_INDEX = 23'd13; // D
-  parameter FIFTEEN_INDEX = 23'd14; // E
-  parameter TWENTY_INDEX = 23'd15; // F
-  parameter THIRTY_INDEX = 23'd16; // 10
-  parameter FOURTY_INDEX = 23'd17; // 11
-  parameter FIFTY_INDEX = 23'd18; // 12
-  parameter SIXTY_INDEX = 23'd19; // 13
-  parameter SEVENTY_INDEX = 23'd20; // 14
-  parameter EIGHTY_INDEX = 23'd21; // 15
-  parameter NINETY_INDEX = 23'd22; // 16
-  parameter HUNDRED_INDEX = 23'd23; // 17
-  parameter TEEN_INDEX = 23'd24; // 18
-  parameter PERCENT_INDEX = 23'd25; // 19
-  parameter USED_INDEX = 23'd26; // 1A
-  parameter HELP_AUDIO_INDEX = 23'd27; // 1B
-  parameter SKIP_INDEX = 23'd28; // 1C
-  parameter UNUSED_INDEX = 23'd31; // 1F
+  parameter ELEVEN_INDEX = 23'd10;    // A
+  parameter TWELVE_INDEX = 23'd11;    // B
+  parameter THIRTEEN_INDEX = 23'd12;  // C
+  parameter FOURTEEN_INDEX = 23'd13;  // D
+  parameter FIFTEEN_INDEX = 23'd14;   // E
+  parameter TWENTY_INDEX = 23'd15;    // F
+  parameter THIRTY_INDEX = 23'd16;    // 10
+  parameter FOURTY_INDEX = 23'd17;    // 11
+  parameter FIFTY_INDEX = 23'd18;     // 12
+  parameter SIXTY_INDEX = 23'd19;     // 13
+  parameter SEVENTY_INDEX = 23'd20;   // 14
+  parameter EIGHTY_INDEX = 23'd21;    // 15
+  parameter NINETY_INDEX = 23'd22;    // 16
+  parameter HUNDRED_INDEX = 23'd23;   // 17
+  parameter TEEN_INDEX = 23'd24;      // 18
+  parameter PERCENT_INDEX = 23'd25;   // 19
+  parameter USED_INDEX = 23'd26;      // 1A
+  parameter HELP_AUDIO_INDEX = 23'd27;// 1B
+  parameter SKIP_INDEX = 23'd28;      // 1C
+  parameter UNUSED_INDEX = 23'd31;    // 1F
 
-  reg writemode = 0;         //1=write mode; 0=read mode
-  reg [15:0] wdata = 0;      //writeData
-  reg dowrite = 0;           //1=new data, write it
-  reg [22:0] raddr = 2;      //readAddress
-  wire [15:0] frdata;        //readData
-  reg doread = 0;            //1=execute read
+  reg writemode = 0;         // 1=write mode; 0=read mode
+  reg [15:0] wdata = 0;      // writeData
+  reg dowrite = 0;           // 1=new data, write it
+  reg [22:0] raddr = 2;      // readAddress
+  wire [15:0] frdata;        // readData
+  reg doread = 0;            // 1=execute read
 
-  // FlashManager
   flash_manager fm(
     .clock(clock), 
     .reset(reset), 
@@ -99,9 +106,9 @@ module audioManager(
     .flash_byte_b(flash_byte_b)
   );
 
-  wire [7:0] out; // data from FIFO (OUTPUT)
-  wire newout;  // newout=1 out contains new data (OUTPUT)
-  wire hold;     //hold=1 the module will not accept new data from the FIFO
+  wire [7:0] out;// data from FIFO (OUTPUT)
+  wire newout;   // newout=1 out contains new data (OUTPUT)
+  wire hold;     // hold=1 the module will not accept new data from the FIFO
 
   assign hold = 1'b0; 
 

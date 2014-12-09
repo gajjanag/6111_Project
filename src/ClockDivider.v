@@ -1,4 +1,6 @@
+// Shawn Jain
 // From Lab 4
+// Sends a pulse on oneHertz_enable every Hz clock cycles
 
 module ClockDivider #(parameter Hz = 27000000)(
 	input clock, reset, fastMode,
