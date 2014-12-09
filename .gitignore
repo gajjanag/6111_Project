@@ -19,3 +19,6 @@
 
 # editor temp files
 *.swp
+
+# MAC OS X junk
+*.DS_Store
