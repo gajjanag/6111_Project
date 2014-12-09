@@ -7,8 +7,7 @@
 // Alternatively, it is easily available on the web
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-module pixels_kept(//input clk,
-                input[9:0] x1,
+module pixels_kept(input[9:0] x1,
                 input[8:0] y1,
                 input[9:0] x2,
                 input[8:0] y2,
