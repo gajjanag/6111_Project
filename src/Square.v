@@ -1,4 +1,6 @@
+// Shawn Jain
 // From Lab 4 
+// Generates a square wave that flips every Hz clock cycles
 
 module Square #(parameter Hz = 27000000) (
 	input clock, reset,
