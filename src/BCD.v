@@ -119,24 +119,16 @@ endmodule
 // Note: a computational logic based binary to BCD is found at:
 // http://www.deathbylogic.com/2013/12/binary-to-binary-coded-decimal-bcd-converter/
 
-// module BCDTest;
-//    reg [7:0] number;
-//    reg [3:0] hundreds;
-//    reg [3:0] tens;
-//    reg [3:0] ones;
+module BCDTest;
+   reg [7:0] number = 8'd65;
+   wire [3:0] hundreds;
+   wire [3:0] tens;
+   wire [3:0] ones;
 
-//    BCD BCD(number, hundreds, tens, ones);
-
-//    initial begin
-//       number = 8'd89;
-//       #10
-//       number = 8'd99;
-//       #10
-//       $display("%d, %d, %d, %d", number, hundreds, tens, ones);
-//    end
-
-   
-//    // always @ (*) begin 
-      
-//    // end
-// endmodule
+   BCD bc(number, hundreds, tens, ones);
+   initial begin
+      #100
+      $display("%d, %d, %d", hundreds, tens, ones);
+      $stop();
+   end 
+endmodule

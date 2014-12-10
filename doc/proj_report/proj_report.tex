@@ -9,7 +9,7 @@
 \usepackage{verbatim} % for block comments in the source file
 \usepackage{hyperref} % for useful hyperlinks over the document
 \usepackage{natbib} % for bibliography
-\usepackage{minted} % for source code listing
+%\usepackage{minted} % for source code listing
 % NOTE: MINTED HAS SOME INSTALLATION/USAGE INSTRUCTIONS, SINCE IT ``SHELLS-OUT'' TO PYTHON
 % SEE DOC AT https://github.com/gpoore/minted
 %\usepackage[margin=1in]{geometry} % for adjusting margins
@@ -102,35 +102,50 @@ Note that we still retain fully general manual correction ability.
 \section{Module Architecture}
 TODO (JAMES/SHAWN): DETAILED BLOCK DIAGRAM, PREFERABLY WITH BIT WIDTHS
 
-Our keystone correction system can be divided into roughly 4 sections:
+Our keystone correction system can be divided into roughly four functional components:
 \begin{enumerate}
 \item Accelerometer interface
 \item Perspective transformation
-\item  I/O (Input/Output) interface
+\item I/O (Input/Output) interface
 \item Audio system
 \end{enumerate}
 
+Each functional component handles a specific collection of tasks. Each functional component is further broken down into a set of one or more modules. 
+
+\subsection{Accelerometer interface}
 TODO (JAMES): BRIEF PARA ON ACCELEROMETER AT HIGH LEVEL
 
-The perspective transformation section is where all core computations are computed.
+\subsection{Perspective transformation}
+The perspective transformation component is where all core computations are computed.
 The accel\_lut module accepts the accelerometer readings from the accelerometer as an index into a ROM (read-only memory) containing coordinates of four coordinates of a quadrilateral.
 The corners of the quadrilateral (after multiplexing with manual override parameters) are fed into the perspective\_params module, which computes necessary perspective transformation parameters.
 The perspective parameters are then fed into pixel\_map, which maps the screen rectangle onto the quadrilateral described above via a perspective transformation.
 The pixels\_kept module is a side module that accepts the corners of the quadrilateral, and computes the percentage of pixels kept during the transformation.
 This is of use in the audio system.
 
+\subsection{I/O (Input/Output) interface}
 The input/output interface to various buttons/switches is contained in the top-level labkit.v file.
+Here, the hardware of the labkit is mapped to the modules, and the functional components are connected together.
 The relevant buttons/switches are passed to move\_cursor module, which manipulates the corners of the quadrilateral when the user wishes to manually adjust the correction.
 The bram module implements a very simple 2 port block memory on the FPGA.
 Two instances of this are created, one called ntsc\_buf storing the camera input, and one called vga\_buf containing the processed output (from the perspective transformation).
 Essentially, we have a pipeline formed:
 input camera writes to ntsc\_buf, perspective transformation reads from ntsc\_buf and writes to vga\_buf, and the output VGA signal is formed by looping over the vga\_buf.
 
-TODO (SHAWN): BRIEF PARA ON AUDIO SYSTEM AT HIGH LEVEL
+\subsection{Audio system}
+The audio system is responsible for receiving, saving, and playing back audio. 
+This requires interacting with several different pieces of hardware and external modules. 
+The top-level module of this functional component is audioManager.
+When triggered by a switch setting, audioManager prepares itself for receving the audio tracks as a continous stream of data from the external USB input hardware. 
+Because of the difficult-to-implement timing requirements of the external hardware, we use the 6.111 staff provided usb\_input module to simplifiy receiving data over USB. 
+As audio data is being received over USB, it is written to the labkit's onboard flash memory. 
+Flash memory is also difficult to use, since a time-sensitive start up sequence needs to be followed to enable proper use of the flash hardware. 
+We made use of the staff provided flash\_manager, test\_fsm, and flash\_int modules. This set of modules greatly abstracts away the low-level details of working with the flash. 
+When the audio is triggered via an external button input, audioManager handles queueing up the appropriate set of tracks for sequential playback. The percentage of pixels used is an external input to audioManager from the pixels\_kept module. 
 
 \section{Design Decisions}
 
-There are a couple of noteworthy design decisions.
+There are several noteworthy design decisions.
 
 \subsection{Use of $640 \times 480$ @60 Hz VGA}
 The first of them is the use of a $640 \times 480$ @60 Hz VGA display.
@@ -147,7 +162,7 @@ Ideally, we would have liked to hook up a computer's VGA signal to the FPGA, so 
 Unfortunately, the labkit in this course has only a single VGA port, ruling out this option.
 
 \subsection{Choice of Memory Architecture}
-The second major design decision made was the choice of memory architecture.
+Another major design decision made is the choice of memory architecture.
 We initially planned on using the available 36 Mbits of ZBT memory spread across 2 banks.
 This would allow us to store at least 4 frames at full $640 \times 480$  resolution and 24 bit color (8 bit R, 8 bit G, 8 bit B).
 Unfortunately, it turns out that ZBT memory is not dual-ported, so read and write on the same bank can't be achieved simultaneously.
@@ -166,18 +181,29 @@ It is certainly possible to squeeze some more color depth, e.g a 14 bit asymmetr
 This should help the image quality, but our visual tests indicated no substantial improvement, and hence we omitted this.
 
 \subsection{Choice of clocks}
-The last noteworthy design decision is our choice of clocks.
+A technically noteworthy design decision is our choice of clocks.
 To avoid clock domain issues, as much as possible we used multiples of a common system clock.
 Using the Xilinx DCM (Digital Clock Manager), we synthesized a 50 MHz clock from the labkit's standard 27 MHz clock.
 We used this as a global sys\_clk.
 $640 \times 480$ @60Hz needs to be driven at nearly 25 MHz, and was thus obtained by multiplying the time period of sys\_clk by 2.
-The NTSC camera must be driven at around 27 MHz, and the appropriate clock is already generated by the labkit.
+The NTSC camera must be driven at around 27 MHz, and the appropriate clock is already generated by the labkit - clock\_27mhz
 To avoid change of the perspective parameters mid-frame, we also needed a slow\_clk signal,
 i.e one who's time period is on the order of seconds.
 This can't be accomplished through the use of DCM that easily.
 Moreover, since actual timing violations for this signal are not really that important,
 we implemented a simple ``flip clock on reaching a count'' style ``clock divider''.
-TODO: SHAWN, ADD NOTE ON CLOCKS USED FOR AUDIO
+\\The audio system used the native clock\_27mhz for all logic excluding providing data to the AC97 audio codec hardware. The operation of providing audio samples to the AC97 operated on the AC97's external clock. This is required because the AC97 plays back audio at a 48kHz rate, a common audio sampling rate. On spare cycles between the AC97's external clock and the native clock, the system performed all other operations, including track queueing and track switching. 
+
+\subsection{User interface considerations}
+An important factor in the quality of the projected image is the percentage of pixels used.
+The more correction is applied to the image, the more image quality suffers and the dimmer the resulting projection. 
+We wanted to provide the user of the system this information. 
+They could act on this feedback by further adjusting the projector if possible. 
+Soon we realized only power users would be able to make use of this feedback, so we wanted to provide it in a non-intrusive manner - audio was the most natural candidate.
+The decision to use audio was not without drawbacks. 
+Hearing-impared users would unfortunately not be able to make use of the feedback. 
+Since the labkit's on-board display was already used for the manual correction system, there was no other way to display the percentage of pixels used without showing it on the projected screen, which we had earlier eliminated considering it was only useful to power users. 
+\\The manual adjustment functionality relies on the user to be able to select the corner to be manipulated via a set of switches. While this binary representation would be natural to computer engineers and mathematicians, it would not be self-explanatory to non-technical users. We were again constrained by the labkit's limited hardware input devices from making a more natural interface. 
 
 \section{Module Descriptions}
 
@@ -377,6 +403,16 @@ Furthermore, they discourage creation of pipelined dividers of greater width due
 As such, we require 80 clock cycles per pixel, resulting in a frame rate of 1-2 frames per second.
 Note that with sufficient hardware resources, this may be easily converted into a real-time system.
 
+\subsection{audioManager (Shantanu)}
+The audioManager module is the core module in the audio playback component. It handles the whole lifecycle of audio, from receving over USB, to storing into flash, queueing tracks, and playback. It interfaces with three external hardware components - the flash chip, the USB interface, and the AC97 audio codec hardware.\\
+The module is centered around its interaction with the flash hardware, since the flash memory is manipulated any time the module is active. Depending on the input of the switches, it either sets the flash memory to ``read mode''  or ``write mode''. To prevent the module from resetting the flash memory and deleting its contents, which the labkit automatically does when it is powered on, the module also has a ``reset disable'' switch.\\
+When in ``write mode'', the labkit prepares itself to receive data from the usb hardware, via the usb\_input module provided by the staff. Whenever usb\_input indicates a new data sample is available, the ``dowrite'' input to the staff provided flash\_manager module is asserted to be true, in order to trigger the write operation. The system continues in this cycle until the user's computer indicates all data has been transmitted, at which time he must exit write mode by manipulating the switches to ``read mode''. Due to the limitations of flash\_manager, data must be written in one session - the user does not have the ability to leave ``write mode'', analyze the data on the flash memory, and re-enter ``write mode'' to continue writing, without first resetting the flash, deleting all the data it contains. As a result, this module inherits these limitations, and so a user may have to manually disable the ``reset disable'' switch to trigger a reset if his data transfer was to fail. \\
+When in ``read mode'' the flash memory's contents can be retrived one location at a time, by setting the read address parameter ``raddr''. We keep this value at address 0, until we receive the signal to begin audio playback. Based on the percentage of pixels kept, an input signal to the module, the sequence of audio tracks to be played is decided. For example, if eighty-nine percent of pixels are used, four audio tracks are queued for playback: ``Eighty," ``Nine," ``Percent," ``Used." In particular, the number eighty nine is constructed out of two separate sequential tracks instead of a single recording. This system allows us to save memory, reducing transfer time and accumulated error, at the expense of additional complexity in the module.\\
+Having decided what tracks are to be played back, playback begins by calculating the address of the currently playing track, and retriving the contents of that memory location. While many schemes may be used to calculate the location of the track, we made our recording so that every track is exactly one second long. We then used a simple multiplication of one second of samples by a track index to calculate the track address. Based on the AC97's external 48kHz clock, we provided a new audio sample to the AC97 to acheive audio playback. After one second of samples had been played back, we calculated the address of the next track queued and began playback. A special end of playback marker called ``UNUSED\_TRACK" halted playback. 
+
+\subsection{BCD (Shantanu)}
+This module converts from a binary representation to a decimal representation. It was used within the audioManager module to convert the percentage of pixels kept from binary to a decimal representation in order to assign the tracks to be played. This was necessary since digital systems naturally use binary representations, but our audio output was necessarily in decimal.
+\\ Technically, we opted to implement this module as a look-up table that assigned the decimal ones and tens place based on the input value. The alternative was to use a computational algorithm implemented in verilog, which was widely available. We used the look-up table because we thought it provided more clarity to the user than the seemingly-opaque efficient algorithms, at the expense of utilizing more of the scarce look-up tables on the hardware. 
 
 TODO: ALL, COMPLETE WITH RESPECTIVE MODULES IN GORY DETAIL
 ADD PICTURES WHEREVER APPROPRIATE
@@ -444,7 +480,7 @@ while transcribing the closed form solutions we found for $p_1$ and $p_2$ from p
 \subsection{Labkit I/O}
 TODO: JAMES/SHAWN, SINCE I AM TOO LAZY TO DO THIS :D
 
-\subsection{Starting at code/datasheets}
+\subsection{Staring at code/datasheets}
 This is definitely a questionable inclusion, and we do not recommend this method in general.
 Nevertheless, it is often effective when done correctly and in the right spirit,
 since it forces one to rethink and step through the logic again, questioning all assumptions.
@@ -454,7 +490,13 @@ It did not take us too long to realize the mistake in the implementation,
 and looking back we do not see any other way of correcting the mistake.
 TODO: JAMES/SHAWN, ADD SOME INFO ON USE OF DATASHEETS
 IDEAS: JAMES- ACCEL DATASHEET, DCM DATASHEET
-SHAWN - COMPACT FLASH/AUDIO DATASHEET
+
+\subsection{USB input to Flash memory issues}
+The most challenging issue in the audio component of the project was receiving data over USB and storing the samples into flash memory. When we recieved data over USB, we wrote it immediately to the flash memory. However, after a data transfer, we noticed that many of the bytes were missing. \\
+The flash memory is already difficult to work with because of its tight timing constraints. It is also an old piece of hardware, with read and write times considered slow at the time of manufacture of the labkit over ten years ago. We theorized that the flash memory was too slow to be able to write data at the rate it was being received. \\
+To isolate the device at fault, a series of unit tests were developed. One test took data from a look-up table coded into the device via verilog and placed it into the flash memory. When we analyzed the flash memory contents, we found it was exactly the same as the look-up table. From this test we were able to conclude that the flash memory was functional. \\
+We developed another test that counted the number of bytes received over the USB module before writing them to flash. We found that while the number of bytes received was exactly the number of bytes transmitted from the computer, the number of bytes in memory was still off by a factor between two and three. Even while buffering the data from the USB input device, itself also a buffer, we could not improve the performance of the system. \\
+Despite repeatedly consulting with instructor Gim Hom, teaching assistant Luis Fernandez, who previously implemented a working audio system, and the author of the staff-provided flash\_manager module, our best efforts to understand and modify the code, we could not improve the performace enough to record all samples. We did improve our system so that the audio was intelligible. With Gim's approval, we closed this issue as unresolvable in the scope of our project and moved forward. 
 
 \subsection{Integration tests}
 In addition to testing modules in isolation, we obviously also needed to test whether the modules work together or not.
@@ -478,8 +520,8 @@ apart from the subtle bug in address computation uncovered by our TA Jos\'{e}.
 
 One of the most tedious aspects was the collection of data values for the lookup table.
 It took around 2 hours of fiddling with the manual correction to get 12 readings for doing the interpolation.
-The reason for this is that without appropriate measurement equipment,
-it is hard to verify that the vertical edges of the checkerboard are exactly parallel to the vertical edges of the screen.
+Lacking the appropriate measurement equipment,
+it is difficult to verify that the vertical edges of the checkerboard are exactly parallel to the vertical edges of the screen.
 Furthermore, we also needed to ensure that the 4:3 aspect ratio was not distorted.
 
 \section{Future Work}
@@ -493,7 +535,7 @@ Another improvement that can be made to the images is the use of some sort of an
 For instance, when we compute the coordinates in the pixel\_map module, we only look at the integer part of the division (corresponding to a single pixel index).
 By looking at the fractional part, we could interpolate the color values at neighboring pixels and use that to reduce the ``jagged edges'' associated with aliasing in images.
 
-Another big unknown is how well the accelerometer approach works when the projector is not kept at a fixed distance from the screen.
+Another significant unknown is how well the accelerometer approach works when the projector is not kept at a fixed distance from the screen.
 We have not tested whether this would affect the quality of the automatic correction.
 If this does affect quality, we are confident that by adding an additional distance sensor,
 we could simply incorporate the distance values into the lookup table and make the automatic correction usable again.
@@ -507,8 +549,10 @@ There are two avenues around this:
         as opposed to the number of bits coming from the sensors.
 \end{itemize}
 
-On the audio side as well, there are many avenues for substantial improvement.
-TODO: SHAWN - TALK ABOUT AUDIO FUTURE WORK, TIE IT IN WITH YOUR CURRENT ISSUES
+Within the audio component, there are many avenues for substantial improvement.
+The major unresolved issue was the loss of data samples when transferring data over USB and recording it to flash memory. The preferred alternative would be a more modern hardware platform with an updated flash hardware component, as well as an onboard USB module and reference code supplied from the manufacturer. This would likely solve whatever bottleneck stopped us. Another alternative would be to use the serial port instead of the USB hardware, since the labkit already has a serial port built in. This would require a moderately complex verilog module to implement the serial protocol, although Xilinx may provide some reference code. 
+
+Another opportunity for improvement would be variable length tracks. Every track was one second long, which resulted in artificial sounding two digit numbers because some portion of the one second track was silence. A variable length track would reduce the length of silence and sound overall more natural. Our implementation barred us from pursing this improvement as it requires an end-of-track marker for the track. Since we were randomly losing data samples, we could not reliably determine when the track ended, and so were forced into the fixed-length option. 
 
 Another useful feature which we unfortunately did not have time to implement is persistent storage of a user's manual correction settings.
 After all, no matter how good the accel\_lut is, it is extremely likely that with certain extreme orientations,
@@ -554,7 +598,7 @@ For ease of browsing through the code, we have divided the modules into roughly 
 
 % For fast compilation, disable inclusion of source code files
 % Include these for final submission
-%\begin{comment}
+\begin{comment}
 \subsection{Staff Modules}
 \subsubsection{debounce.v}
 \inputminted[linenos]{verilog}{../../src/debounce.v}
@@ -623,6 +667,6 @@ For ease of browsing through the code, we have divided the modules into roughly 
 \inputminted[linenos]{verilog}{../../src/ClockDivider.v}
 \subsubsection{Square.v}
 \inputminted[linenos]{verilog}{../../src/Square.v}
-%\end{comment}
+\end{comment}
 
 \end{document}
