@@ -9,12 +9,10 @@
 \usepackage{verbatim} % for block comments in the source file
 \usepackage{hyperref} % for useful hyperlinks over the document
 \usepackage{natbib} % for bibliography
-%\usepackage{minted} % for source code listing
+\usepackage{minted} % for source code listing
 % NOTE: MINTED HAS SOME INSTALLATION/USAGE INSTRUCTIONS, SINCE IT ``SHELLS-OUT'' TO PYTHON
 % SEE DOC AT https://github.com/gpoore/minted
 %\usepackage[margin=1in]{geometry} % for adjusting margins
-
-%Please place images in img/ subdir of proj_report for clean directory structure
 
 \begin{document}
 \maketitle
@@ -32,9 +30,9 @@ We also play some useful audio for the percentage of pixels kept by the transfor
 
 \newpage
 \section*{Acknowledgments}
-First and foremost, we would like to thank our 6.111 instructor Gim Hom for his tremondous patience, experience, and intuition regarding digital systems.
+First and foremost, we would like to thank our 6.111 instructor Gim Hom for his tremendous patience, experience, and intuition regarding digital systems.
 This project would never have been possible without him,
-and countless number of times he saved our group a huge amount of time by some very critical observations.
+and countless number of times he saved our group a huge amount of time by some very crucial observations.
 Not only that, he also played a very important role in our choice of project topic.
 Initially, we were planning to create some sort of Bitcoin miner.
 I think it is safe to say that we are all glad that we chose this topic instead on his suggestion.
@@ -60,10 +58,14 @@ today's display projectors can incorporate fairly sophisticated digital processi
 Moreover, there is an increasing prevalence of portable projectors that benefit from fast, automated setup.
 One desired functionality is keystone/tilt correction.
 In other words, even when the projector is tilted, the projector should be able to ``pre-warp'' the image so that its output appears unskewed.
+Figure \ref{fig:vert_keystone}~ shows what is meant by the keystone effect and what its desired correction should look like
+\footnote{\url{https://en.wikipedia.org/wiki/File:Vertical-keystone.jpg}}.
 \begin{center}
-\begin{figure}[h!]
-    \caption{Keystone Correction In Vertical Direction \url{https://en.wikipedia.org/wiki/File:Vertical-keystone.jpg}}
-\includegraphics[width=0.8\textwidth]{./img/keystone}
+\begin{figure}[H]
+\label{fig:vert_keystone}
+\caption{Keystone Correction In Vertical Direction}
+\centering
+\includegraphics[width=\textwidth]{./img/keystone}
 \end{figure}
 \end{center}
 
@@ -79,10 +81,7 @@ This is of use in mainly two cases:
 \item The user desires to correct for projector orientation in the third axis, or in the case when the screen is non-vertical.
 \end{itemize}
 Finally, we also provide a useful voice output for the percentage of pixels kept after the perspective transformation (this is a lossy transformation in general).
-The audio is triggered by pressing a button the FPGA kit.
-
-% A comparison of the result without using our system versus using our system is provided below.
-% TODO: ACTUAL IMAGE (I don't have these images)
+The audio is triggered by pressing a button on the FPGA kit.
 
 \section{Previous Work}
 Given the practical importance of keystone correction, there has been significant research on doing automatic keystone correction.
@@ -94,15 +93,18 @@ Our key technical contribution is the elimination of the Gaussian elmination alg
 and instead replacing it with closed form solutions for the equations.
 Moreover, we implement our algorithm on a 6 million gate Xilinx Virtex 2 FPGA, demonstrating that our algorithm is suitable for embedded systems use.
 The work done in \citet{baoxin2004automatic} subsumes most of this work.
-However, thier system is much more complex complex, as evidenced by the use of a camera for computing the precise perspective transformation.
+However, thier system is much more complex, as evidenced by the use of a camera for computing the precise perspective transformation.
 For the scope of this term final project,
 we use a simpler accelerometer based approach instead, paying the price of loss of automatic correction along one axis.
 Note that we still retain fully general manual correction ability.
 
 \section{Module Architecture}
-Below is a block diagram including all of the major modules in our system, which are explained further below and in later sections:
+Figure \ref{fig:block_diag}~ shows a block diagram including all of the major modules in our system, which are explained further below and in later sections:
 \begin{center}
 \begin{figure}[H]
+\caption{Block Diagram}
+\label{fig:block_diag}
+\centering
 \includegraphics[width=\textwidth]{./img/block_diag}
 \end{figure}
 \end{center}
@@ -115,13 +117,19 @@ Our keystone correction system can be divided into roughly four functional compo
 \item Audio system
 \end{enumerate}
 
-Each functional component handles a specific collection of tasks. Each functional component is further broken down into a set of one or more modules. 
+Each functional component handles a specific collection of tasks, and is further broken down into a set of one or more modules.
 
 \subsection{Accelerometer interface}
-The accelerometer presents a SPI interface for data transfer. The par\_to\_ser module converts a multi-bit value to a serial stream of bits for transfer to the accelerometer. The ser\_to\_par module converts a serial stream of bits read from the accelerometer to a multi-bit value of desired width. The moving\_avg module computes the average of 32 accelerometer readings. The acc module uses the par\_to\_ser and ser\_to\_par modules to initialize the accelerometer and fetch x and y acceleration readings from it in a loop, averaging them using the moving\_avg module.
+The accelerometer presents a SPI interface for data transfer.
+The par\_to\_ser module converts a multi-bit value to a serial stream of bits for transfer to the accelerometer.
+The ser\_to\_par module converts a serial stream of bits read from the accelerometer to a multi-bit value of desired width.
+The moving\_avg module computes the average of 32 accelerometer readings.
+This is done to counteract some of the noise in the accelerometer readings.
+The acc module uses the par\_to\_ser and ser\_to\_par modules to initialize the accelerometer and fetch x and y acceleration readings from it in a loop,
+averaging them using the moving\_avg module.
 
 \subsection{Perspective transformation}
-The perspective transformation component is where all core computations are computed.
+The perspective transformation component is where all core computations are performed.
 The accel\_lut module accepts the accelerometer readings from the accelerometer as an index into a ROM (read-only memory) containing coordinates of four coordinates of a quadrilateral.
 The corners of the quadrilateral (after multiplexing with manual override parameters) are fed into the perspective\_params module, which computes necessary perspective transformation parameters.
 The perspective parameters are then fed into pixel\_map, which maps the screen rectangle onto the quadrilateral described above via a perspective transformation.
@@ -138,15 +146,15 @@ Essentially, we have a pipeline formed:
 input camera writes to ntsc\_buf, perspective transformation reads from ntsc\_buf and writes to vga\_buf, and the output VGA signal is formed by looping over the vga\_buf.
 
 \subsection{Audio system}
-The audio system is responsible for receiving, saving, and playing back audio. 
-This requires interacting with several different pieces of hardware and external modules. 
+The audio system is responsible for receiving, saving, and playing back audio.
+This requires interacting with several different pieces of hardware and external modules.
 The top-level module of this functional component is audioManager.
-When triggered by a switch setting, audioManager prepares itself for receving the audio tracks as a continous stream of data from the external USB input hardware. 
-Because of the difficult-to-implement timing requirements of the external hardware, we use the 6.111 staff provided usb\_input module to simplifiy receiving data over USB. 
-As audio data is being received over USB, it is written to the labkit's onboard flash memory. 
-Flash memory is also difficult to use, since a time-sensitive start up sequence needs to be followed to enable proper use of the flash hardware. 
-We made use of the staff provided flash\_manager, test\_fsm, and flash\_int modules. This set of modules greatly abstracts away the low-level details of working with the flash. 
-When the audio is triggered via an external button input, audioManager handles queueing up the appropriate set of tracks for sequential playback. The percentage of pixels used is an external input to audioManager from the pixels\_kept module. 
+When triggered by a switch setting, audioManager prepares itself for receiving the audio tracks as a continous stream of data from the external USB input hardware.
+Because of the difficult-to-implement timing requirements of the external hardware, we use the 6.111 staff provided usb\_input module to simplifiy receiving data over USB.
+As audio data is being received over USB, it is written to the labkit's onboard flash memory.
+Flash memory is also difficult to use, since a time-sensitive start up sequence needs to be followed to enable proper use of the flash hardware.
+We made use of the staff provided flash\_manager, test\_fsm, and flash\_int modules. This set of modules greatly abstracts away the low-level details of working with the flash.
+When the audio is triggered via an external button input, audioManager handles queueing up the appropriate set of tracks for sequential playback. The percentage of pixels used is an external input to audioManager from the pixels\_kept module.
 
 \section{Design Decisions}
 
@@ -191,56 +199,100 @@ To avoid clock domain issues, as much as possible we used multiples of a common 
 Using the Xilinx DCM (Digital Clock Manager), we synthesized a 50 MHz clock from the labkit's standard 27 MHz clock.
 We used this as a global sys\_clk.
 $640 \times 480$ @60Hz needs to be driven at nearly 25 MHz, and was thus obtained by multiplying the time period of sys\_clk by 2.
-The NTSC camera must be driven at around 27 MHz, and the appropriate clock is already generated by the labkit - clock\_27mhz
+The NTSC camera must be driven at around 27 MHz, and the appropriate clock is already generated by the labkit - clock\_27mhz.
 To avoid change of the perspective parameters mid-frame, we also needed a slow\_clk signal,
 i.e one who's time period is on the order of seconds.
 This can't be accomplished through the use of DCM that easily.
 Moreover, since actual timing violations for this signal are not really that important,
 we implemented a simple ``flip clock on reaching a count'' style ``clock divider''.
-\\The audio system used the native clock\_27mhz for all logic excluding providing data to the AC97 audio codec hardware. The operation of providing audio samples to the AC97 operated on the AC97's external clock. This is required because the AC97 plays back audio at a 48kHz rate, a common audio sampling rate. On spare cycles between the AC97's external clock and the native clock, the system performed all other operations, including track queueing and track switching. 
+
+The audio system used the native clock\_27mhz for all logic excluding providing data to the AC97 audio codec hardware.
+The operation of providing audio samples to the AC97 operated on the AC97's external clock.
+This is required because the AC97 plays back audio at a 48kHz rate, a common audio sampling rate.
+On spare cycles between the AC97's external clock and the native clock, the system performed all other operations, including track queueing and track switching.
 
 \subsection{User interface considerations}
 An important factor in the quality of the projected image is the percentage of pixels used.
-The more correction is applied to the image, the more image quality suffers and the dimmer the resulting projection. 
-We wanted to provide the user of the system this information. 
-They could act on this feedback by further adjusting the projector if possible. 
-Soon we realized only power users would be able to make use of this feedback, so we wanted to provide it in a non-intrusive manner - audio was the most natural candidate.
-The decision to use audio was not without drawbacks. 
-Hearing-impared users would unfortunately not be able to make use of the feedback. 
-Since the labkit's on-board display was already used for the manual correction system, there was no other way to display the percentage of pixels used without showing it on the projected screen, which we had earlier eliminated considering it was only useful to power users. 
-\\The manual adjustment functionality relies on the user to be able to select the corner to be manipulated via a set of switches. While this binary representation would be natural to computer engineers and mathematicians, it would not be self-explanatory to non-technical users. We were again constrained by the labkit's limited hardware input devices from making a more natural interface. 
+The more correction is applied to the image, the more image quality suffers and the dimmer the resulting projection.
+We wanted to provide the user of the system this information.
+They could act on this feedback by further adjusting the projector if possible.
+We realized only power users would be able to make use of this feedback, so we wanted to provide it in a non-intrusive manner - audio was the most natural candidate.
+The decision to use audio was not without drawbacks.
+Hearing-impared users would unfortunately not be able to make use of the feedback.
+Since the labkit's on-board display was already used for the manual correction system,
+there was no other way to display the percentage of pixels used without showing it on the projected screen,
+which we had earlier eliminated considering it was only useful to power users.
+
+The manual adjustment functionality relies on the user being able to select the corner to be manipulated via a set of switches.
+While this binary representation would be natural to computer engineers and mathematicians, it would not be self-explanatory to non-technical users.
+We were again constrained by the labkit's limited hardware input devices from making a more natural interface.
+Of course, in theory we could have hooked up an external keyboard to another one of the labkit's ports,
+but this would have increased the complexity of our project.
 
 \section{Module Descriptions}
 
 In this section, we give a more detailed description of each module, along with the respective contributors.
 
 \subsection{par\_to\_ser (James)}
-This module converts a word of some size W (e.g. reg[W-1:0]) to a stream of bits, one at each clock cycle, to be sent to the accelerometer. The higher-order bits are produced first. This module is necessitated by the SPI communication protocol of the accelerometer.
+This module converts a word of some size W (e.g. reg[W-1:0]) to a stream of bits, one at each clock cycle, to be sent to the accelerometer.
+The higher-order bits are produced first.
+This module is necessitated by the SPI communication protocol of the accelerometer.
 
 \subsection{ser\_to\_par (James)}
-This module converts a stream of bits received from the accelerometer, one per clock cycle, to a word of desired width. It expects that the higher-order bits will be received first.
+This module converts a stream of bits received from the accelerometer, one per clock cycle, to a word of desired width.
+It expects that the higher-order bits will be received first.
 
 \subsection{moving\_avg (James)}
-This module uses a ring buffer to store the last 32 acceleration readings received from the accelerometer for a particular dimension. When a new sample is received, the oldest sample is removed, the sum of the last 32 samples is adjusted accordingly, and the average is recomputed. Since we compute the average over 32 ($2^5$) samples, we do not need dividers and can use bit shifts for the needed divisions. This module is meant to smooth acceleration readings, which are expected to fluctuate slightly even when the accelerometer is held fixed.
+This module uses a ring buffer to store the last 32 acceleration readings received from the accelerometer for a particular dimension.
+When a new sample is received, the oldest sample is removed, the sum of the last 32 samples is adjusted accordingly, and the average is recomputed.
+Since we compute the average over 32 ($2^5$) samples, we do not need dividers and can use bit shifts for the needed divisions.
+This module is meant to smooth acceleration readings, which are expected to fluctuate slightly even when the accelerometer is held fixed.
 
 \subsection{acc (James)}
 The timing diagram for 4-wire SPI interaction with the accelerometer is shown below:
 
 \begin{center}
 \begin{figure}[H]
+\label{fig:acc_timing}
+\centering
 \includegraphics[width=\textwidth]{./img/acc_timing}
 \end{figure}
 \end{center}
 
-This module first initializes the acclerometer and then reads x and y acceleration values from it in a loop. The clock used for accelerometer communications is our 50 MHz system clock slowed by a factor of 20, which meets the the max clock frequency spec of 5 MHz. Most of the default configurations for the accelerometer are acceptable for our purposes; the only initialization we need to do is set the measure bit of the POWER\_CTL register (each register contains a single byte). Since this register is at address 0x2D, and since we want to perform a single-byte write to it, we first drive the SDI pin with the serial bit stream 8'b00101101 (see Figure 5 in the timing diagram: upper two bits for mode and lower six bits for register address) to specify the mode and register address, and then drive it with the data to be stored in the register. By default, the accelerometer can measure acceleration values in the range of $\pm 2g$, which is sufficient for our purposes since we care only about static acceleration (which is in the range $\pm 1g$).
+This module first initializes the acclerometer and then reads x and y acceleration values from it in a loop.
+The clock used for accelerometer communications is our 50 MHz system clock slowed by a factor of 20, which meets the the max clock frequency spec of 5 MHz.
+Most of the default configurations for the accelerometer are acceptable for our purposes;
+the only initialization we need to do is set the measure bit of the POWER\_CTL register (each register contains a single byte).
+Since this register is at address 0x2D, and since we want to perform a single-byte write to it,
+we first drive the SDI pin with the serial bit stream 8'b00101101 (see Figure 5 in the timing diagram upper two bits for mode and lower six bits for register address).
+This specifies the mode and register address, and can then be used to drive it with the data to be stored in the register.
+By default, the accelerometer can measure acceleration values in the range of $\pm 2g$.
+This is sufficient for our purposes since we care only about static acceleration (which is in the range $\pm 1g$).
 
-After 16 accelerometer clock cycles have passed, we know that we have sent all of the necessary initialization data to the accelerometer, and we transition our accelerometer state machine to the x-y read loop. Since the x and y acceleration readings are 16 bits (two registers' worth, since the accelerometer gives us 10 bits of precision), we want to perform a multi-byte read of the x and y registers, which can be done in the manner shown in Figure 6 of the timing diagram. We simply assert the R and MB bits, continue driving SDI with the address bits for the first x or first y register (the second registers for x and y immediately follow the first, which is why is multi-byte read of contiguous registers is acceptable), and then wait 16 additional cycles for all of our data to be produced on the SDO line. We rotate between a state for reading the x registers and a state for reading the y registers. We feed the produced x and y readings into instantiations of the moving\_avg filter, and the output of the acc module is the output of these filters.
+After 16 accelerometer clock cycles have passed, we know that we have sent all of the necessary initialization data to the accelerometerx.
+We then transition our accelerometer state machine to the x-y read loop.
+Since the x and y acceleration readings are 16 bits (two registers' worth, since the accelerometer gives us 10 bits of precision),
+we want to perform a multi-byte read of the x and y registers.
+This can be done in the manner shown in Figure 6 of the timing diagram.
+We simply assert the R and MB bits, continue driving SDI with the address bits for the first x or first y register (the second registers for x and y immediately follow the first, which is why the multi-byte read of contiguous registers is acceptable),
+and then wait 16 additional cycles for all of our data to be produced on the SDO line.
+We rotate between a state for reading the x registers and a state for reading the y registers.
+We feed the produced x and y readings into instantiations of the moving\_avg filter.
+The output of the acc module is the output of these filters.
 
-One challenge we faced was getting the accelerometer clock period correct. Even though the spec states that the maximum clock frequency is 5 MHz, if we use a 5 MHz clock and then use a single clock cycle to implement the $t_{CS,DIS}$ waiting period shown in Figures 5 and 6 of the timing diagram, we will not meet the minimum $t_{CS,DIS}$ spec of 250ns. So we had to pick a clock frequency lower than 1s/250ns = 4 MHz to use a one-cycle wait to meet the $t_{CS,DIS}$ spec. This bug took quite a while to find.
+One challenge we faced was getting the accelerometer clock period correct.
+Even though the spec states that the maximum clock frequency is 5 MHz,
+if we use a 5 MHz clock and then use a single clock cycle to implement the $t_{CS,DIS}$ waiting period shown in Figures 5 and 6 of the timing diagram,
+we will not meet the minimum $t_{CS,DIS}$ spec of 250ns.
+So we had to pick a clock frequency lower than $\frac{1s}{250ns} = 4$ MHz to use a one-cycle wait to meet the $t_{CS,DIS}$ spec.
+This bug took quite a while to find.
 
-Below is a picture of the accelerometer module working in isolation, with averaged accelerometer readings displayed on the hex display:
+The picture below shows the accelerometer module working in isolation, with averaged accelerometer readings displayed on the hex display:
 \begin{center}
 \begin{figure}[H]
+\label{fig:acc_reading}
+\caption{Accelerometer readings on hex display}
+\centering
 \includegraphics[width=0.8\textwidth, angle=270]{./img/accel-complete}
 \end{figure}
 \end{center}
@@ -391,6 +443,7 @@ $d_x, d_y, d_d$ are a couple of parameters used to avoid multiplications in the 
 \eqref{eqn:perspective_transform}.
 More precisely, they allow clients of this module (such as pixel\_map in our case) to simply execute a two dimensional loop over the image,
 incrementing/decrementing the numerator and denominator on each iteration as opposed to performing a fresh multiplication.
+Essentially, they correspond to the decrement needed at the end of each horizontal scan line.
 Note the use of 480, 640 (i.e $\frac{1920}{4}$ and $\frac{1920}{4}$) as opposed to the more precise 479, 639.
 The reason for this is that 480, 640 are multiples of sizable powers of two, reducing the bit width needed for certain multiplications required in the solution.
 Moreover, the difference caused by this slight error can be ignored, due to the continuity of the perspective transformation.
@@ -428,53 +481,123 @@ A test bench (runnable under the free software Icarus Verilog simulator) confirm
 Another test bench then verified that the results of the division were indeed incorrect.
 Finally, a close examination of the divider code resulted in the identification of the bug.
 Once this bug was fixed, the module worked correctly.
-Unfortunately, the divider needs a width of 80 bits, and the staff provided divider is not pipelined.
+Unfortunately, the divider needs a width of 79 bits, and the staff provided divider is not pipelined.
 Xilinx's IP Coregen provides pipelined dividers up to a width of 32 bits, which is insufficient for our needs.
 Furthermore, they discourage creation of pipelined dividers of greater width due to the high area cost.
 As such, we require 80 clock cycles per pixel, resulting in a frame rate of 1-2 frames per second.
 Note that with sufficient hardware resources, this may be easily converted into a real-time system.
 
 \subsection{ntsc\_to\_bram (James)}
-Most of the staff code from the zbt\_6111 example was kept intact, including the ADV7185 initialization module and the NTSC decoding module. ntsc\_to\_zbt was converted to ntsc\_to\_bram, which involved a few changes. First off, ROW\_START and COL\_START were changed to be 0, since we want our image to fill the entire screen (as opposed to the staff example, where the upper left corner of the image does not start at pixel (0,0)). We expanded all of the registers holding NTSC data to have widths of 30 bits (as opposed to 8), since we want 12-bit color and need the full YCrCb data. We maintained the original approach of reading only scan lines from field 0 and alternately writing them to even and odd screen rows. Since we stored pixels in BRAM, which has a maximum capacity of 2.5 Mbits, and we needed to store a frame from the camera and another frame with the transformed output in addition to the lookup table (discussed above), we only had space to store a 320 by 240 frame with 12 bits of color per pixel. So we cropped the NTSC input by taking only the upper left 320 by 240 rectangle.
+Most of the staff code from the zbt\_6111 example was kept intact, including the ADV7185 initialization module and the NTSC decoding module.
+ntsc\_to\_zbt was converted to ntsc\_to\_bram, which involved a few changes.
+First off, ROW\_START and COL\_START were changed to be 0, since we want our image to fill the entire screen
+(as opposed to the staff example, where the upper left corner of the image does not start at pixel (0,0)).
+We expanded all of the registers holding NTSC data to have widths of 30 bits (as opposed to 8), since we want 12-bit color and need the full YCrCb data.
+We maintained the original approach of reading only scan lines from field 0 and alternately writing them to even and odd screen rows.
+Since we stored pixels in BRAM, which has a maximum capacity of 2.5 Mbits,
+and we needed to store a frame from the camera and another frame with the transformed output in addition to the lookup table (discussed above),
+we only had space to store a 320 by 240 frame with 12 bits of color per pixel.
+So we cropped the NTSC input by taking only the upper left 320 by 240 rectangle.
 
-Since we now store one pixel per memory location as opposed to four (we were able to size our BRAM so that each location was 12 bits), we write to BRAM whenever the x address is less than 320 and the y address is less than 240 and we are at a write enable positive edge (given by the we\_edge signal in the code). (In the staff code, we wrote to ZBT only when the x address was a multiple of 4 since we stored 4 pixels per memory location.) We determined the BRAM address from the x and y coordinates by treating BRAM as a 2D array with 240 rows and 320 columns laid out in row-major order (row 1 in the first 320 locations, row 2 in the next 320, etc.). So we simply multiplied the y coordinate by 320 and added the x coordinate to get the BRAM address. Finally, since we needed to convert the YCrCb data to RGB using the staff-provided module, which takes 3 clock cycles, we needed to delay the BRAM address and BRAM write enable signals by three clock cycles as well using the staff-provided synchronize module so that we wrote the right data to the right addresses.
+Since we now store one pixel per memory location as opposed to four (we were able to size our BRAM so that each location was 12 bits),
+we write to BRAM whenever the x address is less than 320 and the y address is less than 240 and we are at a write enable positive edge,
+given by the we\_edge signal in the code.
+(In the staff code, we wrote to ZBT only when the x address was a multiple of 4 since we stored 4 pixels per memory location).
+We determined the BRAM address from the x and y coordinates by treating BRAM as a 2D array with 240 rows and 320 columns laid out in row-major order (row 1 in the first 320 locations, row 2 in the next 320, etc.).
+So we simply multiplied the y coordinate by 320 and added the x coordinate to get the BRAM address.
+Finally, since we needed to convert the YCrCb data to RGB using the staff-provided module, which takes 3 clock cycles,
+we needed to delay the BRAM address and BRAM write enable signals by three clock cycles as well using the staff-provided synchronize module so that we wrote the right data to the right addresses.
 
-Since our BRAM has both read and write ports, we were able to write camera data to the BRAM at the same time that our transformation code fetched pixels from this BRAM, eliminating the need for any coordination mechanisms.
+Since our BRAM has both read and write ports, we were able to write camera data to the BRAM at the same time that our transformation code fetched pixels from this BRAM,
+eliminating the need for any coordination mechanisms.
 
-One major challenge in designing this module was eliminating the appearance of randomly colored pixels in the video output. We expected the video to be grainy because we were scaling a 320 by 240 image to 640 by 480 resolution for projection, but the random pixels were unexplained until Gim pointed out that we were writing the BRAM at a different clock rate (the system clock rate) than the NTSC data was coming to us (the tv\_in\_line\_clock1 rate), which was causing some setup times at the BRAM to be violated when clocks were out of phase and the BRAM to be written with unstable values.
+One major challenge in designing this module was eliminating the appearance of randomly colored pixels in the video output.
+We expected the video to be grainy because we were scaling a 320 by 240 image to 640 by 480 resolution for projection,
+but the random pixels were unexplained until Gim pointed out that we were writing the BRAM at a different clock rate (the system clock rate) than the NTSC data was coming to us (the tv\_in\_line\_clock1 rate).
+This was causing some setup times at the BRAM to be violated when clocks were out of phase and the BRAM to be written with unstable values.
 
 Below is an image of the ntsc\_to\_bram code working in isolation:
 \begin{center}
 \begin{figure}[H]
+\label{fig:ntsc_to_bram}
+\caption{camera output using bram}
+\centering
 \includegraphics[width=0.8\textwidth, angle=270]{./img/ntsc-complete}
 \end{figure}
 \end{center}
 
 \subsection{audioManager (Shantanu)}
-The audioManager module is the core module in the audio playback component. It handles the whole lifecycle of audio, from receving over USB, to storing into flash, queueing tracks, and playback. It interfaces with three external hardware components - the flash chip, the USB interface, and the AC97 audio codec hardware.\\
-The module is centered around its interaction with the flash hardware, since the flash memory is manipulated any time the module is active. Depending on the input of the switches, it either sets the flash memory to ``read mode''  or ``write mode.'' To prevent the module from resetting the flash memory and deleting its contents, which the labkit automatically does when it is powered on, the module also has a ``reset disable'' switch.\\
-When in ``write mode'', the labkit prepares itself to receive data from the usb hardware, via the usb\_input module provided by the staff. Whenever usb\_input indicates a new data sample is available, the ``dowrite'' input to the staff provided flash\_manager module is asserted to be true, in order to trigger the write operation. The system continues in this cycle until the user's computer indicates all data has been transmitted, at which time he must exit write mode by manipulating the switches to ``read mode.'' Due to the limitations of flash\_manager, data must be written in one session - the user does not have the ability to leave ``write mode,'' analyze the data on the flash memory, and re-enter ``write mode'' to continue writing, without first resetting the flash, deleting all the data it contains. As a result, this module inherits these limitations, and so a user may have to manually disable the ``reset disable'' switch to trigger a reset if his data transfer was to fail. \\
-When in ``read mode'' the flash memory's contents can be retrived one location at a time, by setting the read address parameter ``raddr''. We keep this value at address 0, until we receive the signal to begin audio playback. Based on the percentage of pixels kept, an input signal to the module, the sequence of audio tracks to be played is decided. For example, if eighty-nine percent of pixels are used, four audio tracks are queued for playback: ``Eighty," ``Nine," ``Percent," ``Used." In particular, the number eighty nine is constructed out of two separate sequential tracks instead of a single recording. This system allows us to save memory, reducing transfer time and accumulated error, at the expense of additional complexity in the module.\\
-Having decided what tracks are to be played back, playback begins by calculating the address of the currently playing track, and retriving the contents of that memory location. While many schemes may be used to calculate the location of the track, we made our recording so that every track is exactly one second long. We then used a simple multiplication of one second of samples by a track index to calculate the track address. Based on the AC97's external 48kHz clock, we provided a new audio sample to the AC97 to acheive audio playback. After one second of samples had been played back, we calculated the address of the next track queued and began playback. A special end of playback marker called ``UNUSED\_TRACK" halted playback. 
+The audioManager module is the core module in the audio playback component.
+It handles the whole lifecycle of audio, from receving over USB, to storing into flash, queueing tracks, and playback.
+It interfaces with three external hardware components - the flash chip, the USB interface, and the AC97 audio codec hardware.
+
+The module is centered around its interaction with the flash hardware, since the flash memory is manipulated any time the module is active.
+Depending on the input of the switches, it either sets the flash memory to ``read mode''  or ``write mode.''
+To prevent the module from resetting the flash memory and deleting its contents, which the labkit automatically does when it is powered on,
+the module also has a ``reset disable'' switch.
+
+When in ``write mode'', the labkit prepares itself to receive data from the usb hardware, via the usb\_input module provided by the staff.
+Whenever usb\_input indicates a new data sample is available, the ``dowrite'' input to the staff provided flash\_manager module is asserted to be true, in order to trigger the write operation.
+The system continues in this cycle until the user's computer indicates all data has been transmitted,
+at which time he must exit write mode by manipulating the switches to ``read mode.''
+Due to the limitations of flash\_manager, data must be written in one session - the user does not have the ability to leave ``write mode,''
+analyze the data on the flash memory, and re-enter ``write mode'' to continue writing, without first resetting the flash and deleting all the data it contains.
+As a result, this module inherits these limitations, and so a user may have to manually disable the ``reset disable'' switch to trigger a reset if his data transfer was to fail.
+When in ``read mode'' the flash memory's contents can be retrived one location at a time, by setting the read address parameter ``raddr''.
+We keep this value at address 0, until we receive the signal to begin audio playback.
+Based on the percentage of pixels kept, an input signal to the module, the sequence of audio tracks to be played is decided.
+For example, if eighty-nine percent of pixels are used, four audio tracks are queued for playback: ``Eighty,'' ``Nine,'' ``Percent,'' ``Used.''
+In particular, the number eighty nine is constructed out of two separate sequential tracks instead of a single recording.
+This system allows us to save memory, reducing transfer time and accumulated error, at the expense of additional complexity in the module.
+
+Having decided what tracks are to be played back, playback begins by calculating the address of the currently playing track,
+and retriving the contents of that memory location.
+While many schemes may be used to calculate the location of the track, we made our recording so that every track is exactly one second long.
+We then used a simple multiplication of one second of samples by a track index to calculate the track address.
+Based on the AC97's external 48kHz clock, we provided a new audio sample to the AC97 to acheive audio playback.
+After one second of samples had been played back, we calculated the address of the next track queued and began playback.
+A special end of playback marker called ``UNUSED\_TRACK" halted playback.
 
 \subsection{BCD (Shantanu)}
-This module converts from a binary representation to a decimal representation. It was used within the audioManager module to convert the percentage of pixels kept from binary to a decimal representation in order to assign the tracks to be played. This was necessary since digital systems naturally use binary representations, but our audio output was necessarily in decimal.
-\\ Technically, we opted to implement this module as a look-up table that assigned the decimal ones and tens place based on the input value. The alternative was to use a computational algorithm implemented in verilog, which was widely available. We used the look-up table because we thought it provided more clarity to the user than the seemingly-opaque efficient algorithms, at the expense of utilizing more of the scarce look-up tables on the hardware. 
+This module converts from a binary representation to a decimal representation.
+It was used within the audioManager module to convert the percentage of pixels kept from binary to a decimal representation in order to assign the tracks to be played.
+This was necessary since digital systems naturally use binary representations, but our audio output was necessarily in decimal.
+
+Technically, we opted to implement this module as a look-up table that assigned the decimal ones and tens place based on the input value.
+The alternative was to use a computational algorithm implemented in Verilog, which was widely available.
+We used the look-up table because we thought it provided more clarity to the user than the seemingly-opaque efficient algorithms,
+at the expense of utilizing more of the scarce look-up tables on the hardware.
 
 \section{Final Product and User Interface}
 Below is an image of our working system automatically correcting the input to a tilted projector so that it appears rectangular:
 \begin{center}
 \begin{figure}[H]
+\label{fig:working_correction}
+\caption{Automatic Keystone Correction}
+\centering
 \includegraphics[width=0.8\textwidth]{./img/full-system}
 \end{figure}
 \end{center}
 Below is an image of the user interface (UI) to our correction system:
 \begin{center}
 \begin{figure}[H]
+\label{fig:ui}
+\caption{User Interface}
+\centering
 \includegraphics[width=0.8\textwidth, angle=90]{./img/ui}
 \end{figure}
 \end{center}
-When pressed, button 0 triggers the audio system, which announces the percentage of screen pixels currently used for the corrected image. Buttons 2 and 3 adjust the volume of the audio system up or down. The first four digits on the hex display show the current x acceleration value, the next four show the current y acceleration value, the next four show the x coordinate of the corner of the quadrilateral selected by switches 0 and 1, and the last four show the y coordinate of this corner. If switch 7 is high, we are in manual correction mode, and the accelerometer readings are ignored and we can manually adjust the corner of the quadrilateral selected by switches 0 and 1 by pressing the up and down buttons (to adjust the x coordinate) and the left and right buttons (to adjust the y coordinate). When switch 5 is high, we display a checkerboard on the screen instead of the NTSC camera input.
+
+When pressed, button 0 triggers the audio system, which announces the percentage of screen pixels currently used for the corrected image.
+Buttons 2 and 3 adjust the volume of the audio system up or down.
+The first four digits on the hex display show the current x acceleration value,
+the next four show the current y acceleration value,
+the next four show the x coordinate of the corner of the quadrilateral selected by switches 0 and 1,
+and the last four show the y coordinate of this corner.
+If switch 7 is high, we are in manual correction mode,
+and the accelerometer readings are ignored.
+In this mode, we can manually adjust the corner of the quadrilateral selected by switches 0 and 1 by pressing the up and down buttons (to adjust the x coordinate) and the left and right buttons (to adjust the y coordinate).
+When switch 5 is high, we display a checkerboard on the screen instead of the NTSC camera input.
 
 \section{Testing And Debugging}
 
@@ -514,9 +637,16 @@ and its decreasing utility with complex state machines and other sequential logi
 The first of these drawbacks is addressed quite well by Xilinx ModelSim.
 
 \subsection{Xilinx ModelSim test benches/verification}
-ModelSim helped us to discover a bug in the staff-provided divider module. We instantiated a 79-bit divider and were not getting correct results. When we examined waveforms in ModelSim, we saw that the ready bit was being asserted far fewer than 79 cycles after we started the division. Upon closer examination of the module, it turned out that the counter the module was using to keep track of the current bit was only 6 bits wide, which supports only operand bit widths up to 63. We extended the width of this counter to 7 bits to solve this issue.
+ModelSim helped us to discover a bug in the staff-provided divider module.
+We instantiated a 79-bit divider and were not getting correct results.
+When we examined waveforms in ModelSim, we saw that the ready bit was being asserted far fewer than 79 cycles after we started the division.
+Upon closer examination of the module, it turned out that the counter the module was using to keep track of the current bit was only 6 bits wide,
+which supports only operand bit widths up to 63.
+We extended the width of this counter to 7 bits to solve this issue.
 
-ModelSim was also used to verify the functionality of the BCD module. After uncovering a bug in the percentage of pixels kept during integration, the first area of investigation was the BCD module, since it was the least tested module. It was trivial to write a test bench for the module and verify the output was correct using ModelSim. 
+ModelSim was also used to verify the functionality of the BCD module.
+After uncovering a bug in the percentage of pixels kept during integration, the first area of investigation was the BCD module, since it was the least tested module.
+It was trivial to write a test bench for the module and verify the output was correct using ModelSim.
 
 \subsection{Julia implementations/tests of algorithms}
 Prior to implementing the perspective transforms on the FPGA,
@@ -536,7 +666,8 @@ Essentially, the bug was an interchange of two terms in the closed form expressi
 while transcribing the closed form solutions we found for $p_1$ and $p_2$ from paper to the computer code.
 
 \subsection{Labkit I/O}
-We wired up the logic analyzer to the accelerometer pins to verify that the acc module was correctly initializing the accelerometer (e.g. the par\_to\_ser module was producing the correct serial bit stream for the register address and data). It turned out that the bug in the accelerometer was elsewhere (see the next section).
+We wired up the logic analyzer to the accelerometer pins to verify that the acc module was correctly initializing the accelerometer (e.g. the par\_to\_ser module was producing the correct serial bit stream for the register address and data).
+It turned out that the bug in the accelerometer was elsewhere (see the next section).
 
 \subsection{Staring at code/datasheets}
 This is definitely a questionable inclusion, and we do not recommend this method in general.
@@ -550,11 +681,28 @@ and looking back we do not see any other way of correcting the mistake.
 As described in the section on the acc module, taking a second pass through the datasheet for the accelerometer helped us to identify an issue with a violated timing constraint ($t_{CS,DIS}$).
 
 \subsection{USB input to flash memory issues}
-The most challenging issue in the audio component of the project was receiving data over USB and storing the samples into flash memory. When we recieved data over USB, we wrote it immediately to the flash memory. However, after a data transfer, we noticed that many of the bytes were missing. \\
-The flash memory is already difficult to work with because of its tight timing constraints. It is also an old piece of hardware, with read and write times considered slow at the time of manufacture of the labkit over ten years ago. We theorized that the flash memory was too slow to be able to write data at the rate it was being received. \\
-To isolate the device at fault, a series of unit tests were developed. One test took data from a look-up table coded into the device via verilog and placed it into the flash memory. When we analyzed the flash memory contents, we found it was exactly the same as the look-up table. From this test we were able to conclude that the flash memory was functional. \\
-We developed another test that counted the number of bytes received over the USB module before writing them to flash. We found that while the number of bytes received was exactly the number of bytes transmitted from the computer, the number of bytes in memory was still off by a factor between two and three. Even while buffering the data from the USB input device, itself also a buffer, we could not improve the performance of the system. \\
-Despite repeatedly consulting with instructor Gim Hom, teaching assistant Luis Fernandez, who previously implemented a working audio system, and the author of the staff-provided flash\_manager module, our best efforts to understand and modify the code, we could not improve the performace enough to record all samples. We did improve our system so that the audio was intelligible. With Gim's approval, we closed this issue as unresolvable in the scope of our project and moved forward. 
+The most challenging issue in the audio component of the project was receiving data over USB and storing the samples into flash memory.
+When we recieved data over USB, we wrote it immediately to the flash memory.
+However, after a data transfer, we noticed that many of the bytes were missing.
+
+The flash memory is already difficult to work with because of its tight timing constraints.
+It is also an old piece of hardware, with read and write times considered slow at the time of manufacture of the labkit over ten years ago.
+We theorized that the flash memory was too slow to be able to write data at the rate it was being received.
+
+To isolate the device at fault, a series of unit tests were developed.
+One test took data from a look-up table coded into the device via verilog and placed it into the flash memory.
+When we analyzed the flash memory contents, we found it was exactly the same as the look-up table.
+From this test we were able to conclude that the flash memory was functional.
+We developed another test that counted the number of bytes received over the USB module before writing them to flash.
+We found that while the number of bytes received was exactly the number of bytes transmitted from the computer,
+the number of bytes in memory was still off by a factor between two and three.
+Even while buffering the data from the USB input device, itself also a buffer, we could not improve the performance of the system.
+
+Despite repeatedly consulting with instructor Gim Hom, teaching assistant Luis Fernandez (who previously implemented a working audio system), and the author of the staff-provided flash\_manager module,
+and in spite of our best efforts to understand and modify the code,
+we could not improve the performace enough to record all samples.
+We did improve our system so that the audio was intelligible.
+With Gim's approval, we closed this issue as unresolvable in the scope of our project and moved forward.
 
 \subsection{Integration tests}
 In addition to testing modules in isolation, we obviously also needed to test whether the modules work together or not.
@@ -607,9 +755,18 @@ There are two avenues around this:
 \end{itemize}
 
 Within the audio component, there are many avenues for substantial improvement.
-The major unresolved issue was the loss of data samples when transferring data over USB and recording it to flash memory. The preferred alternative would be a more modern hardware platform with an updated flash hardware component, as well as an onboard USB module and reference code supplied from the manufacturer. This would likely solve whatever bottleneck stopped us. Another alternative would be to use the serial port instead of the USB hardware, since the labkit already has a serial port built in. This would require a moderately complex verilog module to implement the serial protocol, although Xilinx may provide some reference code. 
+The major unresolved issue was the loss of data samples when transferring data over USB and recording it to flash memory.
+The preferred alternative would be a more modern hardware platform with an updated flash hardware component,
+as well as an onboard USB module and reference code supplied from the manufacturer.
+This would likely solve whatever bottleneck stopped us.
+Another alternative would be to use the serial port instead of the USB hardware, since the labkit already has a serial port built in.
+This would require a moderately complex verilog module to implement the serial protocol, although Xilinx may provide some reference code.
 
-Another opportunity for improvement would be variable length tracks. Every track was one second long, which resulted in artificial sounding two digit numbers because some portion of the one second track was silence. A variable length track would reduce the length of silence and sound overall more natural. Our implementation barred us from pursing this improvement as it requires an end-of-track marker for the track. Since we were randomly losing data samples, we could not reliably determine when the track ended, and so were forced into the fixed-length option. 
+Another opportunity for improvement would be variable length tracks.
+Every track was one second long, which resulted in artificial sounding two digit numbers because some portion of the one second track was silence.
+A variable length track would reduce the length of silence and sound overall more natural.
+Our implementation barred us from pursing this improvement as it requires an end-of-track marker for the track.
+Since we were randomly losing data samples, we could not reliably determine when the track ended, and so were forced into the fixed-length option.
 
 Another useful feature which we unfortunately did not have time to implement is persistent storage of a user's manual correction settings.
 After all, no matter how good the accel\_lut is, it is extremely likely that with certain extreme orientations,
