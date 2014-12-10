@@ -81,8 +81,8 @@ This is of use in mainly two cases:
 Finally, we also provide a useful voice output for the percentage of pixels kept after the perspective transformation (this is a lossy transformation in general).
 The audio is triggered by pressing a button the FPGA kit.
 
-A comparison of the result without using our system versus using our system is provided below.
-TODO: JAMES, ACTUAL IMAGE
+% A comparison of the result without using our system versus using our system is provided below.
+% TODO: ACTUAL IMAGE (I don't have these images)
 
 \section{Previous Work}
 Given the practical importance of keystone correction, there has been significant research on doing automatic keystone correction.
@@ -100,7 +100,8 @@ we use a simpler accelerometer based approach instead, paying the price of loss 
 Note that we still retain fully general manual correction ability.
 
 \section{Module Architecture}
-TODO (JAMES/SHAWN): DETAILED BLOCK DIAGRAM, PREFERABLY WITH BIT WIDTHS
+Below is a block diagram including all of the major modules in our system, which are explained further below and in later sections:
+\includegraphics[width=\textwidth]{img/block_diag}
 
 Our keystone correction system can be divided into roughly 4 sections:
 \begin{enumerate}
@@ -201,6 +202,9 @@ This module first initializes the acclerometer and then reads x and y accelerati
 After 16 accelerometer clock cycles have passed, we know that we have sent all of the necessary initialization data to the accelerometer, and we transition our accelerometer state machine to the x-y read loop. Since the x and y acceleration readings are 16 bits (two registers' worth, since the accelerometer gives us 10 bits of precision), we want to perform a multi-byte read of the x and y registers, which can be done in the manner shown in Figure 6 of the timing diagram. We simply assert the R and MB bits, continue driving SDI with the address bits for the first x or first y register (the second registers for x and y immediately follow the first, which is why is multi-byte read of contiguous registers is acceptable), and then wait 16 additional cycles for all of our data to be produced on the SDO line. We rotate between a state for reading the x registers and a state for reading the y registers. We feed the produced x and y readings into instantiations of the moving\_avg filter, and the output of the acc module is the output of these filters.
 
 One challenge we faced was getting the accelerometer clock period correct. Even though the spec states that the maximum clock frequency is 5 MHz, if we use a 5 MHz clock and then use a single clock cycle to implement the $t_{CS,DIS}$ waiting period shown in Figures 5 and 6 of the timing diagram, we will not meet the minimum $t_{CS,DIS}$ spec of 250ns. So we had to pick a clock frequency lower than $1s/250ns = 4 MHz$ to use a one-cycle wait to meet the $t_{CS,DIS}$ spec. This bug took quite a while to find.
+
+Below is a picture of the accelerometer module working in isolation, with averaged accelerometer readings displayed on the hex display:
+\includegraphics[width=\textwidth]{img/accel-complete}
 
 \subsection{accel\_lut (Ganesh)}
 The accel\_lut module provides a lookup table from the accelerometer readings in two directions to the four corners of the quadrilateral.
@@ -398,12 +402,21 @@ Since we now store one pixel per memory location as opposed to four (we were abl
 
 Since our BRAM has both read and write ports, we were able to write camera data to the BRAM at the same time that our transformation code fetched pixels from this BRAM, eliminating the need for any coordination mechanisms.
 
-One major challenge in designing this module was eliminating the appearance of randomly colored pixels in the video output. We expected the video to be grainy because we were scaling a 320 by 240 image to 640 by 480 resolution for projection, but the random pixels were unexplained until Gim pointed out that we were writing the BRAM at a different clock rate (the system clock rate) than the NTSC data was coming to us (the tv\_\in\_line\_clock1 rate), which was causing some setup times at the BRAM to be violated when clocks were out of phase and the BRAM to be written with unstable values.
+One major challenge in designing this module was eliminating the appearance of randomly colored pixels in the video output. We expected the video to be grainy because we were scaling a 320 by 240 image to 640 by 480 resolution for projection, but the random pixels were unexplained until Gim pointed out that we were writing the BRAM at a different clock rate (the system clock rate) than the NTSC data was coming to us (the tv\_in\_line\_clock1 rate), which was causing some setup times at the BRAM to be violated when clocks were out of phase and the BRAM to be written with unstable values.
 
+Below is an image of the ntsc\_to\_bram code working in isolation:
+\includegraphics[width=\textwidth]{img/ntsc-complete}
 
 TODO: ALL, COMPLETE WITH RESPECTIVE MODULES IN GORY DETAIL
 ADD PICTURES WHEREVER APPROPRIATE
 DO NOT ADD STAFF MODULES SEPARATELY, BUT DESCRIBE THEM IN OUR RELEVANT MODULES
+
+\section{Final Product and User Interface}
+Below is an image of our working system automatically correcting the input to a tilted projector so that it appears rectangular:
+\includegraphics[width=\textwidth]{img/full-system}
+Below is an image of the user interface (UI) to our correction system:
+\includegraphics[width=\textwidth]{img/ui}
+When pressed, button 0 triggers the audio system, which announces the percentage of screen pixels currently used for the corrected image. Buttons 2 and 3 adjust the volume of the audio system up or down. The first four digits on the hex display show the current x acceleration value, the next four show the current y acceleration value, the next four show the x coordinate of the corner of the quadrilateral selected by switches 0 and 1, and the last four show the y coordinate of this corner. If switch 7 is high, we are in manual correction mode, and the accelerometer readings are ignored and we can manually adjust the corner of the quadrilateral selected by switches 0 and 1 by pressing the up and down buttons (to adjust the x coordinate) and the left and right buttons (to adjust the y coordinate). When switch 5 is high, we display a checkerboard on the screen instead of the NTSC camera input.
 
 \section{Testing And Debugging}
 
@@ -465,7 +478,7 @@ Essentially, the bug was an interchange of two terms in the closed form expressi
 while transcribing the closed form solutions we found for $p_1$ and $p_2$ from paper to the computer code.
 
 \subsection{Labkit I/O}
-TODO: JAMES/SHAWN, SINCE I AM TOO LAZY TO DO THIS :D
+We wired up the logic analyzer to the accelerometer pins to verify that the acc module was correctly initializing the accelerometer (e.g. the par\_to\_ser module was producing the correct serial bit stream for the register address and data). It turned out that the bug in the accelerometer was elsewhere (see the next section).
 
 \subsection{Starting at code/datasheets}
 This is definitely a questionable inclusion, and we do not recommend this method in general.
