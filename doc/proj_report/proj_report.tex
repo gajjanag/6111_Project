@@ -27,10 +27,30 @@ The parameters of the perspective transformation are obtained from an accelerome
 This allows automatic keystone correction in the two directions sensed by the accelerometer provided the output screen is vertical.
 Our method also includes options for manual keystone correction to any degree desired, for any projector and screen orientations.
 For ease of manual correction, we provide the option of using a test pattern (a checkerboard).
-We also play some useful audio for the percentage of pixels lost by the transformation and for general help regarding the system.
+We also play some useful audio for the percentage of pixels kept by the transformation.
 \end{abstract}
 
 \newpage
+\section*{Acknowledgments}
+First and foremost, we would like to thank our 6.111 instructor Gim Hom for his tremondous patience, experience, and intuition regarding digital systems.
+This project would never have been possible without him,
+and countless number of times he saved our group a huge amount of time by some very critical observations.
+Not only that, he also played a very important role in our choice of project topic.
+Initially, we were planning to create some sort of Bitcoin miner.
+I think it is safe to say that we are all glad that we chose this topic instead on his suggestion.
+
+We would also like to thank all the teaching assistants, lab assistants, and CI-M writing instructors for their very useful suggestions and feedback.
+We particularly appreciate the guidance of one of our TA's Jos\'{e} E. Cruz Serall\'{e}s for his wealth of experience with Verilog and Xilinx's tools.
+His project on recursive augmented reality was also very useful as a reference point for certain aspects,
+such as generation of clocks of different frequencies and the correct timing of sync and blank signals for a $640 \times 480$  @60 Hz VGA display.
+Furthermore, he was able to identify a subtle bug with our memory address computation.
+
+Last, but not least, we would like to thank all our peers in this class.
+Their thoughtful questions during our proposal presentation raised issues that we had not anticipated.
+Furthermore, they often were willing to help with some commonly faced issues in the lab, thereby avoiding duplication of effort.
+We particularly appreciate the note on Piazza (our online discussion forum) by Andres Erbsen regarding test benches and use of Icarus Verilog.
+\newpage
+
 \tableofcontents
 \newpage
 
@@ -40,21 +60,29 @@ today's display projectors can incorporate fairly sophisticated digital processi
 Moreover, there is an increasing prevalence of portable projectors that benefit from fast, automated setup.
 One desired functionality is keystone/tilt correction.
 In other words, even when the projector is tilted, the projector should be able to ``pre-warp'' the image so that its output appears unskewed.
+\begin{center}
+\begin{figure}[h!]
+    \caption{Keystone Correction In Vertical Direction \url{https://en.wikipedia.org/wiki/File:Vertical-keystone.jpg}}
+\includegraphics[width=0.8\textwidth]{./img/keystone}
+\end{figure}
+\end{center}
+
 In this project, we project the output of a camera, connect the camera's output to the FPGA (Field Programmable Gate Array) board,
 and the FPGA board's VGA output to the projector.
 We mount an accelerometer on the projector and measure its signals to determine the projector's tilt angle on two axes.
 We then run a perspective transformation algorithm on the FPGA that warps the camera output based on the tilt angles and produces the results at the VGA output for the projector to display.
 We also provide a manual correction mode so that any desired correction can be achieved.
+This manual correction mode is exposed to the user via the arrow keys and switches on the FPGA kit.
 This is of use in mainly two cases:
 \begin{itemize}
 \item The automatic correction obtained using the accelerometer readings is unsatisfactory or inadequate.
 \item The user desires to correct for projector orientation in the third axis, or in the case when the screen is non-vertical.
 \end{itemize}
-Finally, we also provide a useful voice output for the percentage of pixels kept after the perspective transformation (this is a lossy transformation in general),
-and also audio help for a general description of usage of this system.
+Finally, we also provide a useful voice output for the percentage of pixels kept after the perspective transformation (this is a lossy transformation in general).
+The audio is triggered by pressing a button the FPGA kit.
 
 A comparison of the result without using our system versus using our system is provided below.
-TODO: ACTUAL IMAGE
+TODO: JAMES, ACTUAL IMAGE
 
 \section{Previous Work}
 Given the practical importance of keystone correction, there has been significant research on doing automatic keystone correction.
@@ -65,13 +93,15 @@ which is not suitable for embedded platforms, particularly those with slow divid
 Our key technical contribution is the elimination of the Gaussian elmination algorithm,
 and instead replacing it with closed form solutions for the equations.
 Moreover, we implement our algorithm on a 6 million gate Xilinx Virtex 2 FPGA, demonstrating that our algorithm is suitable for embedded systems use.
-The work done in \citet{baoxin2004automatic} in fact subsumes most of our work here.
-However, it is a much more complex system, as evidenced by the use of a camera for computing the precise perspective transformation.
+The work done in \citet{baoxin2004automatic} subsumes most of this work.
+However, thier system is much more complex complex, as evidenced by the use of a camera for computing the precise perspective transformation.
 For the scope of this term final project,
 we use a simpler accelerometer based approach instead, paying the price of loss of automatic correction along one axis.
 Note that we still retain fully general manual correction ability.
 
 \section{Module Architecture}
+TODO (JAMES/SHAWN): DETAILED BLOCK DIAGRAM, PREFERABLY WITH BIT WIDTHS
+
 Our keystone correction system can be divided into roughly 4 sections:
 \begin{enumerate}
 \item Accelerometer interface
@@ -86,7 +116,7 @@ The perspective transformation section is where all core computations are comput
 The accel\_lut module accepts the accelerometer readings from the accelerometer as an index into a ROM (read-only memory) containing coordinates of four coordinates of a quadrilateral.
 The corners of the quadrilateral (after multiplexing with manual override parameters) are fed into the perspective\_params module, which computes necessary perspective transformation parameters.
 The perspective parameters are then fed into pixel\_map, which maps the screen rectangle onto the quadrilateral described above via a perspective transformation.
-The pixels\_lost module is a side module that accepts the corners of the quadrilateral, and computes the percentage of pixels lost during the transformation.
+The pixels\_kept module is a side module that accepts the corners of the quadrilateral, and computes the percentage of pixels kept during the transformation.
 This is of use in the audio system.
 
 The input/output interface to various buttons/switches is contained in the top-level labkit.v file.
@@ -98,28 +128,31 @@ input camera writes to ntsc\_buf, perspective transformation reads from ntsc\_bu
 
 TODO (SHAWN): BRIEF PARA ON AUDIO SYSTEM AT HIGH LEVEL
 
-TODO (JAMES/SHAWN): DETAILED BLOCK DIAGRAM, PREFERABLY WITH BIT WIDTHS
-
 \section{Design Decisions}
 
 There are a couple of noteworthy design decisions.
-The first of them is the use of a 640x480@60 Hz VGA display.
-The use of 640x480 as opposed to the more common higher resolutions found today is due to the memory and computational limitations of our FPGA kit.
+
+\subsection{Use of $640 \times 480$ @60 Hz VGA}
+The first of them is the use of a $640 \times 480$ @60 Hz VGA display.
+The use of $640 \times 480$  as opposed to the more common higher resolutions found today is due to the memory and computational limitations of our FPGA kit.
 Initially, we hoped that we could get away with generic code that does not explicitly tie in heavily with the specific screen resolution.
 Unfortunately, this is not easy, since the choice of resolution influences many different aspects.
-Chief among these are the sizes of memory vs available memory tradeoff, the bit widths of x and y coordinates, the size of the accel\_lut ROM,
+Chief among these are the sizes of memory vs available memory tradeoff, the bit widths of $x$ and $y$ coordinates, the size of the accel\_lut ROM,
 and the bit widths of numerous other quantites such as the dividers and the multipliers in pixel\_map and perspective\_params respectively.
 The choice of 60 Hz was made on the basis of its almost guaranteed availability: almost all VGA displays support this refresh rate.
 
+\subsection{Use of NTSC Camera as Input}
 Also related to input/output is our decision to use an NTSC camera feed as the input to the FPGA.
 Ideally, we would have liked to hook up a computer's VGA signal to the FPGA, so that we can demonstrate the correction system in a more realistic setting.
 Unfortunately, the labkit in this course has only a single VGA port, ruling out this option.
 
+\subsection{Choice of Memory Architecture}
 The second major design decision made was the choice of memory architecture.
 We initially planned on using the available 36 Mbits of ZBT memory spread across 2 banks.
-This would allow us to store at least 4 frames at full 640x480 resolution and 24 bit color (8 bit R, 8 bit G, 8 bit B).
+This would allow us to store at least 4 frames at full $640 \times 480$  resolution and 24 bit color (8 bit R, 8 bit G, 8 bit B).
 Unfortunately, it turns out that ZBT memory is not dual-ported, so read and write on the same bank can't be achieved simultaneously.
-Since the perspective transform turns out to be a huge computational bottleneck, we did not want to waste additional time waiting for read/write on ZBT.
+Since the perspective transform (operating pixel by pixel) turns out to be a huge computational bottleneck,
+we did not want to waste additional time waiting for read/write on ZBT.
 Moreover, coordination between the memory banks storing processed and unprocessed data would require some sort of arbiter, adding complexity to our project.
 Thus, we chose instead to go with the block memory on the FPGA.
 This can be made into true dual-port memory, and has a single read/write cycle latency, as opposed to the multi-cycle latency of ZBT memory.
@@ -132,11 +165,12 @@ That is more than sufficient for our accel\_lut.
 It is certainly possible to squeeze some more color depth, e.g a 14 bit asymmetrical division among R, G, and B.
 This should help the image quality, but our visual tests indicated no substantial improvement, and hence we omitted this.
 
+\subsection{Choice of clocks}
 The last noteworthy design decision is our choice of clocks.
 To avoid clock domain issues, as much as possible we used multiples of a common system clock.
 Using the Xilinx DCM (Digital Clock Manager), we synthesized a 50 MHz clock from the labkit's standard 27 MHz clock.
 We used this as a global sys\_clk.
-640x480@60Hz needs to be driven at nearly 25 MHz, and was thus obtained by multiplying the time period of sys\_clk by 2.
+$640 \times 480$ @60Hz needs to be driven at nearly 25 MHz, and was thus obtained by multiplying the time period of sys\_clk by 2.
 The NTSC camera must be driven at around 27 MHz, and the appropriate clock is already generated by the labkit.
 To avoid change of the perspective parameters mid-frame, we also needed a slow\_clk signal,
 i.e one who's time period is on the order of seconds.
@@ -172,33 +206,37 @@ One challenge we faced was getting the accelerometer clock period correct. Even 
 The accel\_lut module provides a lookup table from the accelerometer readings in two directions to the four corners of the quadrilateral.
 The output is synchronized to the global sys\_clk.
 The module is essentially implemented as a giant case statement, from which Xilinx's tools are able to infer a ROM of the appropriate size.
-Although the data coming out of the accelerometer has 12 bits of precision in each axis (TODO: JAMES, CHECK AND CORRECT THIS VALUE),
+Although the data coming out of the accelerometer has 10 bits of precision in each axis,
 using the full precision would require too much space for the ROM.
 Instead, we use 6 bits for each of the 2 axes, for a total of 12 bits as an index into the ROM.
 Each word of the ROM is 76 bits wide.
-This is because each x coordinate is 10 bits wide (0 to 639), each y coordinate is 9 bits wide (0 to 479), and there are 4 corners.
+This is because each $x$ coordinate is 10 bits wide (0 to 639), each $y$ coordinate is 9 bits wide (0 to 479), and there are 4 corners.
 Since each entry corresponds to a choice of quadrilateral corners, and there are $2^{12} = 4096$ entries, manual entry of the lookup table is infeasible.
 Instead, we wrote a code generator accel\_lut.jl in the Julia programming language (\url{julialang.org}).
 Essentially, the code generator accepts an input CSV (comma separated values) file containing some entries of the desired lookup table obtained via manual testing.
 The code generator then does a mathematical interpolation to obtain the remaining values of the lookup table, and writes out the accel\_lut.v file.
 Of course, it may be argued that the interpolation is not sufficient to get fine grained accuracy.
-This maybe the case, but we felt that we can get sufficient accuracy with enough data points and sufficient polynomial degree of the interpolator.
-Our demonstration vindicated this belief.
-Moreover, one can note another appealing aspect of this method: as the user obtains more and more entries, they can simply populate the CSV file with them.
-The quality of the interpolation can then only improve.
+Indeed, our demonstration did show that our lookup table could use some refinement.
+However, we believe that this is not an inherent deficiency of the approach; it just means that we need more data points and sufficient polynomial degree of the interpolator.
+Also related to this is another merit to this method: as the user obtains more and more entries,
+he/she can simply populate the CSV file with them.
+The quality of interpolation can then only improve.
 
-\subsection{pixels\_lost (Ganesh)}
-The pixels\_lost module accepts the four corners of the quadrilateral, computes its area, and expresses it as a percentage of the total area.
+\subsection{pixels\_kept (Ganesh)}
+The pixels\_kept module accepts the four corners of the quadrilateral, computes its area, and expresses it as a percentage of the total area.
 The area formula of a quadrilateral in terms of the coordinates of its four corners is a simple determinant expansion,
 and may be found easily in elementary geometry references.
+For a quadrilateral with coordinates $(x_1, y_1), (x_2, y_2), (x_3, y_3), (x_4, y_4)$, its area $A$ is given by the expression:
+\begin{equation}
+    2A = | (x_1 - x_3)(y_2 - y_4) - (y_1 - y_3)(x_2 - x_4) |.
+\end{equation}
+
 The division by $640 \times 480$,
 and subsequent multiplication by $100$ is accomplished without doing either a hardware division or multiplication for efficiency reasons.
 The key observation here is that $64 \times 48 = 2^{10} \times 3$.
 Thus, it suffices to figure out how to divide by $3$ without performing a hardware division.
 For this, we approximate $3$ by $\frac{21}{64}$, giving us the result correct to the nearest percent.
-The output (a 7 bit value expressing the percentage from 0 to 100) is then synchronized to the slow\_clk signal.
-The rationale for this is that more frequent changes of the percentage signal are unnecessary
-and could even be distracting depending on the implementation of the audio system.
+The output is then a 7 bit value expressing the percentage from 0 to 100.
 
 \subsection{bram (Ganesh)}
 The bram module is a very simple true dual port memory module,
@@ -220,11 +258,11 @@ It also gave us one additional benefit: Coregen modules often take significantly
 
 \subsection{addr\_map (Ganesh)}
 The addr\_map is a critical single-line module that abstracts away memory address computations,
-allowing one to address the correct location in memory by providing the x coordinate and y coordinate locations.
+allowing one to address the correct location in memory by providing the $x$ coordinate and $y$ coordinate locations.
 This is a pure combinational logic module, with no synchronization to any clock.
-Essentially, it takes in an x coordinate in $[0, 639]$ and a y coordinate in $[0, 479]$,
+Essentially, it takes in an $x$ coordinate in $[0, 639]$ and a $y$ coordinate in $[0, 479]$,
 and computes the memory address in the 320x240 line BRAM buffer.
-This is achieved by taking the integer part of a division by 2 of the x and y coordinates,
+This is achieved by taking the integer part of a division by 2 of the $x$ and $y$ coordinates,
 followed by a standard mapping of a 2 dimensional matrix address to a flat array,
 an exact analog of manipulating a matrix that has been heap allocated in the C programming language.
 We unfortunately had a somewhat subtle bug in our memory address computation.
@@ -280,9 +318,37 @@ something we would have done with additional time for the project.
 Note that the $p_i$ (or $pinv_i$) may be scaled by an arbitrary constant, so without loss of generality, we assumed that $p_3 = 1$.
 However, to avoid needless divisions, in the actual solutions implemented on the FPGA,
 we scale all parameters to ensure that they are all integers.
-The closed-form solution to this set of equations (as implemented on the FPGA) is given below:
-TODO: GANESH INSERT EQUATIONS
-Note the use of 480, 640 as opposed to the more precise 479, 639.
+The closed-form solution to the set of equations  \eqref{eqn:perspective_transform} (as implemented on the FPGA) is given below:
+\begin{align}
+    p_7 &= 3[(x_1 - x_4)(y_2 - y_3) + (y_1 - y_4)(x_3 - x_2)] \\
+    p_8 &= 4[(x_1 = x_2)(y_3 - y_4) + (x_4 - x_3)(y_1 - y_2)] \\
+    d &= x_4(y_2 - y_3) + x_2(y_3 - y_4) + x_3(y_4 - y_2) \\
+    p_9 &= 1920 d \\
+    p_3 &= 1920 x_1 d \\
+    p_6 &= 1920 y_1 d \\
+    p_1 &= x_4 p_7 + 3(x_4 - x_1)d \\
+    p_2 &= x_2 p_8 + 4(x_2 - x_1)d \\
+    p_4 &= y_4 p_7 + 3(y_4 - y_1)d \\
+    p_5 &= y_2 p_8 + 4(y_2 - y_1)d \\
+    pinv_1 &= p_6 p_8 - p_5 p_9 \\
+    pinv_2 &= p_2 p_9 - p_3 p_8 \\
+    pinv_3 &= p_3 p_5 - p_2 p_6 \\
+    pinv_4 &= p_4 p_9 - p_6 p_7 \\
+    pinv_5 &= p_3 p_7 - p_1 p_9 \\
+    pinv_6 &= p_1 p_6 - p_3 p_4 \\
+    pinv_7 &= p_5 p_7 - p_4 p_8 \\
+    pinv_8 &= p_1 p_8 - p_2 p_7 \\
+    pinv_9 &= p_2 p_4 - p_1 p_5 \\
+    d_x &= 639 pinv_1 \\
+    d_y &= 639 pinv_4 \\
+    d_d &= 639 pinv_7
+\end{align}
+
+$d_x, d_y, d_d$ are a couple of parameters used to avoid multiplications in the actual mapping described by the perspective transformation
+\eqref{eqn:perspective_transform}.
+More precisely, they allow clients of this module (such as pixel\_map in our case) to simply execute a two dimensional loop over the image,
+incrementing/decrementing the numerator and denominator on each iteration as opposed to performing a fresh multiplication.
+Note the use of 480, 640 (i.e $\frac{1920}{4}$ and $\frac{1920}{4}$) as opposed to the more precise 479, 639.
 The reason for this is that 480, 640 are multiples of sizable powers of two, reducing the bit width needed for certain multiplications required in the solution.
 Moreover, the difference caused by this slight error can be ignored, due to the continuity of the perspective transformation.
 Quite crucial to the ease of solving this set of equations symbolically by hand was a good choice of basis.
@@ -296,12 +362,12 @@ The rationale for this is two fold:
 \end{enumerate}
 
 \subsection{pixel\_map (Ganesh)}
-The pixel\_map module uses the parameters $pinv_i$ obtained in the perspective\_params module to do the actual perspective transformation pixel by pixel.
-At a high level, it is doing a simple loop through x and y through $[0, 639]$ and $[0, 479]$ respectively, computing
+The pixel\_map module uses the parameters $pinv_i$ and $d_x, d_y, d_d$ obtained in the perspective\_params module to do the actual perspective transformation pixel by pixel.
+At a high level, it is doing a simple loop through $x$ and $y$ through $[0, 639]$ and $[0, 479]$ respectively, computing
 \begin{equation*}
     \left( \frac{pinv_1 x + pinv_2 y + pinv_3}{pinv_7 x + pinv_8 y + pinv_9}, \frac{pinv_4 x + pinv_5 y + pinv_6}{pinv_7 x + pinv_8 y + pinv_9} \right)
 \end{equation*}
-at each x and y.
+at each $x$ and $y$.
 It then uses the results to obtain the memory address via addr\_map in the ntsc buffer,
 and uses another addr\_map to write the data found in the ntsc buffer to the VGA buffer.
 When the coordinates of the inverse transformation are out of range,
@@ -338,8 +404,6 @@ One major challenge in designing this module was eliminating the appearance of r
 TODO: ALL, COMPLETE WITH RESPECTIVE MODULES IN GORY DETAIL
 ADD PICTURES WHEREVER APPROPRIATE
 DO NOT ADD STAFF MODULES SEPARATELY, BUT DESCRIBE THEM IN OUR RELEVANT MODULES
-TODO: JAMES, ADD SOME MORE DETAILED INFO ABOUT VIDEO INTERFACE
-(EXCEPTION TO ABOVE)
 
 \section{Testing And Debugging}
 
@@ -353,7 +417,7 @@ We also consciously often commented out unnecessary modules.
 This provided dual benefits:
 \begin{itemize}
 \item Much shorter synthesis times
-\item Ensuring that the bug is being isolated as much as possible
+\item Ensuring that the bug is being isolated as much as possible.
 \end{itemize}
 Nevertheless, these two steps are certainly not sufficient in efficient debugging.
 As such, we adopted a multi-pronged testing and debugging approach.
@@ -364,12 +428,13 @@ Broadly speaking, we used the following methods:
 \item Julia implementations/tests of algorithms
 \item Labkit I/O, e.g led's, hex display, logic analyzer probes
 \item Staring at code/datasheets
+\item Integration tests
 \end{itemize}
 
 \subsection{Icarus Verilog test benches/verification}
 By far the most effective and efficient way of testing simple modules in our experience was the use of Icarus Verilog.
 We are extremely grateful to a fellow student Andres for posting a note on our online discussion forum (Piazza) regarding the benefits and use of Icarus Verilog.
-Defining test benches is extremely easy and efficient.
+Defining and using test benches through Icarus Verilog is extremely easy and efficient.
 In our experience, this was most useful for verifying long and complicated chains of combinational logic, such as mathematical algorithms.
 It was also very useful for checking the syntax of our Verilog code.
 As an example of its utility, we found a bug with perspective\_params that originated from incorrect mixed use of signed and unsigned arithmetic.
@@ -378,7 +443,9 @@ and its decreasing utility with complex state machines and other sequential logi
 The first of these drawbacks is addressed quite well by Xilinx ModelSim.
 
 \subsection{Xilinx ModelSim test benches/verification}
-TODO: JAMES/SHAWN, SINCE I DID NOT USE THIS AT ALL
+ModelSim helped us to discover a bug in the staff-provided divider module. We instantiated a 79-bit divider and were not getting correct results. When we examined waveforms in ModelSim, we saw that the ready bit was being asserted far fewer than 79 cycles after we started the division. Upon closer examination of the module, it turned out that the counter the module was using to keep track of the current bit was only 6 bits wide, which supports only operand bit widths up to 63. We extended the width of this counter to 7 bits to solve this issue.
+
+TODO: SHAWN describe any further work you did with ModelSim, especially something involving waveforms 
 
 \subsection{Julia implementations/tests of algorithms}
 Prior to implementing the perspective transforms on the FPGA,
@@ -389,7 +456,7 @@ This was by far the most effective means of testing whether an algorithm is corr
 since one can rely on the benefits of fast debug/iterate cycles in software.
 This is particularly true in the case of languages featuring a REPL (read, evaluate, print loop) based interpreter, such as Julia.
 Correcting code is as simple as making some changes, reincluding the file in the REPL, and rerunning.
-This helped us particularly in the verification of the pixels\_lost and perspective\_params module.
+This helped us particularly in the verification of the pixels\_kept and perspective\_params module.
 As an aside, to avoid using too many languages for software implementations,
 we used Julia for our code generator for the accel\_lut as well.
 As a concrete example of a serious bug caught using the help of our software implementations,
@@ -408,23 +475,84 @@ For instance, once we confirmed that the divider implementation was incorrect,
 we had to examine the divider code line by line.
 It did not take us too long to realize the mistake in the implementation,
 and looking back we do not see any other way of correcting the mistake.
-TODO: JAMES/SHAWN, ADD SOME INFO ON USE OF DATASHEETS
-IDEAS: JAMES- ACCEL DATASHEET, DCM DATASHEET
+
+As described in the section on the acc module, taking a second pass through the datasheet for the accelerometer helped us to identify an issue with a violated timing constraint ($t_{CS,DIS}$).
+TODO: SHAWN, ADD ANY FURTHER INFO ON USE OF DATASHEETS
 SHAWN - COMPACT FLASH/AUDIO DATASHEET
+
+\subsection{Integration tests}
+In addition to testing modules in isolation, we obviously also needed to test whether the modules work together or not.
+Fortunately, the audio system could be quite easily separated from the rest of the system, so we anticipated easy integration here.
+Ironically, we faced a strange problem here, which we never understood.
+The issue was with the percentage value computed by pixels\_kept.
+Initially, pixels\_kept was actually named pixels\_lost, and was computing 100 minus the percentage of pixels\_kept.
+The audio module was written for percentage of pixels kept however,
+so initially the audio module did a second subtraction from 100 to get the correct value.
+The playback of the percentage was often incorrect for some reason (never identified).
+Initially, we were keen on fixing the issue from the audio end, since pixels\_lost was a known correct module.
+However, we had no luck fixing it from the audio end, so instead we renamed pixels\_lost to pixels\_kept and removed the subtraction from 100.
+This somehow fixed the issue.
+
+Much easier was the integration with the accelerometer.
+This went flawlessly after we agreed upon the clock frequencies used by the accelerometer and the system. We made sure that the clocks used by the accelerometer and the accel\_lut (to which the accelerometer readings are sent) were integer multiples of one another to prevent any setup or hold time violations when clocks were out of phase.
+
+Integration of the transformation logic with the memory interface was also extremely smooth,
+apart from the subtle bug in address computation uncovered by our TA Jos\'{e}.
+
+One of the most tedious aspects was the collection of data values for the lookup table.
+It took around 2 hours of fiddling with the manual correction to get 12 readings for doing the interpolation.
+The reason for this is that without appropriate measurement equipment,
+it is hard to verify that the vertical edges of the checkerboard are exactly parallel to the vertical edges of the screen.
+Furthermore, we also needed to ensure that the 4:3 aspect ratio was not distorted.
+
+\section{Future Work}
+Although our projector tilt compensation system met most of our initial goals,
+there are a wide variety of extensions and modifications to the project that we would have liked to implement.
+
+On the image side, we would like to take some steps to improve the quality of the projected image.
+As noted earlier, one of our key design decisions was the use of reduced resolution ($320 \times 240$) and reduced color depth (12 bit as opposed to 24 bit).
+This can be achieved with either a labkit with more dual-ported memory, or our existing labkit with a sophisticated ZBT based memory design (with an arbiter).
+Another improvement that can be made to the images is the use of some sort of anti-aliasing filter.
+For instance, when we compute the coordinates in the pixel\_map module, we only look at the integer part of the division (corresponding to a single pixel index).
+By looking at the fractional part, we could interpolate the color values at neighboring pixels and use that to reduce the ``jagged edges'' associated with aliasing in images.
+
+Another big unknown is how well the accelerometer approach works when the projector is not kept at a fixed distance from the screen.
+We have not tested whether this would affect the quality of the automatic correction.
+If this does affect quality, we are confident that by adding an additional distance sensor,
+we could simply incorporate the distance values into the lookup table and make the automatic correction usable again.
+Of course, the lookup table could become very large if we do this.
+There are two avenues around this:
+\begin{itemize}
+    \item Store the lookup table in a larger memory, e.g ZBT.
+    \item A more scalable approach is to start doing interpolation in the hardware itself.
+        This will require additional hardware resources and more logic,
+        but the size of the logic will only grow with the number of data points,
+        as opposed to the number of bits coming from the sensors.
+\end{itemize}
+
+On the audio side as well, there are many avenues for substantial improvement.
+TODO: SHAWN - TALK ABOUT AUDIO FUTURE WORK, TIE IT IN WITH YOUR CURRENT ISSUES
+
+Another useful feature which we unfortunately did not have time to implement is persistent storage of a user's manual correction settings.
+After all, no matter how good the accel\_lut is, it is extremely likely that with certain extreme orientations,
+the settings obtained through the lookup table are unsatisfactory.
+One option for dealing with this would be saving manual override settings into some non-volatile storage such as flash,
+and using them on the next power cycle.
+Given our issues with compact flash in the audio domain, progress on this front would likely be negligible.
+Hopefully, with an improved labkit, we would not run into the flash issues.
 
 \section{Conclusion}
 Our projector tilt compensation system used digital logic to successfully perform a perspective transform on an image.
 This enables fully general manual correction of distortions of the projected image on the screen.
 Moreover, we also created an automatic correction system for correction of distortion resulting from 2 axes of tilt
 via the usage of an accelerometer that would sense the angle of tilt along these two axes.
-We also implemented useful audio features, such as audio help and output regarding the percentage of pixels lost
-due to our correction system.
+We also implemented a useful audio features regarding the percentage of pixels kept by our correction system.
 
-Nevertheless, there are a large array of improvements that can be made.
-On the image side, these include improving the image quality, improving the frame rate,
-and perhaps an anti-aliasing filter to reduce the jaggy edges especially noticeable while projecting straight lines.
-On the audio side, these include improvement of the audio quality.
-On the memory side, an option for saving the manual override settings to flash for persistence would be useful.
+We believe that there were a number of factors that allowed us to succeed with this project.
+First and foremost, we started early and tackled potential issues as early as possible, with a consistent time commitment every week.
+Second, we spent a lot of time doing software simulations/verifications before diving in and writing Verilog.
+The rationale behind this is that correction and testing in software is much faster than synthesis on the FPGA.
+Third, we had regular meetings among ourselves to ensure that issues some member of our team had would be addressed collectively.
 
 Overall, we are satisfied with the quality of this system,
 especially considering the time limitations/scope of this project.
@@ -467,6 +595,17 @@ For ease of browsing through the code, we have divided the modules into roughly 
 \inputminted[linenos]{verilog}{../../src/ntsc2zbt.v}
 \subsubsection{video\_decoder.v}
 \inputminted[linenos]{verilog}{../../src/video_decoder.v}
+\subsubsection{flash\_int.v}
+\inputminted[linenos]{verilog}{../../assets/flash_IO/flash_int.v}
+\subsubsection{flash\_manager.v}
+\inputminted[linenos]{verilog}{../../assets/flash_IO/flash_manager.v}
+\subsubsection{test\_fsm.v}
+\inputminted[linenos]{verilog}{../../assets/flash_IO/test_fsm.v}
+\subsubsection{usb\_input.v}
+\inputminted[linenos]{verilog}{../../assets/USB_Transfer/usb_input.v}
+\subsubsection{usb\_transfer\_script.py}
+\inputminted[linenos]{python}{../../assets/usb_transfer_script.py}
+
 
 \subsection{Labkit}
 \subsubsection{labkit.v}
@@ -483,8 +622,8 @@ For ease of browsing through the code, we have divided the modules into roughly 
 \inputminted[linenos]{julia}{../../src/accel_lut.jl}
 \subsubsection{accel\_lut.txt}
 \inputminted[linenos]{todotxt}{../../src/accel_lut.txt}
-\subsubsection{pixels\_lost.v}
-\inputminted[linenos]{verilog}{../../src/pixels_lost.v}
+\subsubsection{pixels\_kept.v}
+\inputminted[linenos]{verilog}{../../src/pixels_kept.v}
 \subsubsection{bram.v}
 \inputminted[linenos]{verilog}{../../src/bram.v}
 \subsubsection{addr\_map.v}
@@ -497,6 +636,16 @@ For ease of browsing through the code, we have divided the modules into roughly 
 \inputminted[linenos]{verilog}{../../src/perspective_params.v}
 \subsubsection{pixel\_map.v}
 \inputminted[linenos]{verilog}{../../src/pixel_map.v}
+\subsubsection{audioManager.v}
+\inputminted[linenos]{verilog}{../../src/audioManager.v}
+\subsubsection{binaryToDecimal.py}
+\inputminted[linenos]{python}{../../assets/binaryToDecimal.py}
+\subsubsection{BCD.v}
+\inputminted[linenos]{verilog}{../../src/BCD.v}
+\subsubsection{ClockDivider.v}
+\inputminted[linenos]{verilog}{../../src/ClockDivider.v}
+\subsubsection{Square.v}
+\inputminted[linenos]{verilog}{../../src/Square.v}
 %\end{comment}
 
 \end{document}

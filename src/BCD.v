@@ -1,5 +1,7 @@
-// FROM: http://www.deathbylogic.com/2013/12/binary-to-binary-coded-decimal-bcd-converter/
-// Converts an 8-bit binary number into a decimal number.
+// Shawn Jain
+// Converts an 8-bit binary number into a decimal representation
+// LUT generated from assets/binaryToDecimal.py
+
 module BCD(
    input wire [7:0] number,
    output reg [3:0] hundreds,
@@ -113,6 +115,9 @@ module BCD(
       hundreds <= 0;
    end
 endmodule
+
+// Note: a computational logic based binary to BCD is found at:
+// http://www.deathbylogic.com/2013/12/binary-to-binary-coded-decimal-bcd-converter/
 
 // module BCDTest;
 //    reg [7:0] number;
