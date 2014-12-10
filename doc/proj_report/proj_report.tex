@@ -89,11 +89,11 @@ While \citet{raskar2001self} and \citet{sukthankar2001smarter} provide a solutio
 already noted in \citet{baoxin2004automatic}, namely that their algorithms are not well suited for implementation in an embedded system.
 For instance, their methods require solving an 8x8 system of linear equations via Gaussian elimination or similar methods,
 which is not suitable for embedded platforms, particularly those with slow dividers.
-Our key technical contribution is the elimination of the Gaussian elmination algorithm,
+Our key technical contribution is the elimination of the Gaussian elimination algorithm,
 and instead replacing it with closed form solutions for the equations.
 Moreover, we implement our algorithm on a 6 million gate Xilinx Virtex 2 FPGA, demonstrating that our algorithm is suitable for embedded systems use.
 The work done in \citet{baoxin2004automatic} subsumes most of this work.
-However, thier system is much more complex, as evidenced by the use of a camera for computing the precise perspective transformation.
+However, their system is much more complex, as evidenced by the use of a camera for computing the precise perspective transformation.
 For the scope of this term final project,
 we use a simpler accelerometer based approach instead, paying the price of loss of automatic correction along one axis.
 Note that we still retain fully general manual correction ability.
@@ -149,12 +149,12 @@ input camera writes to ntsc\_buf, perspective transformation reads from ntsc\_bu
 The audio system is responsible for receiving, saving, and playing back audio.
 This requires interacting with several different pieces of hardware and external modules.
 The top-level module of this functional component is audioManager.
-When triggered by a switch setting, audioManager prepares itself for receiving the audio tracks as a continous stream of data from the external USB input hardware.
-Because of the difficult-to-implement timing requirements of the external hardware, we use the 6.111 staff provided usb\_input module to simplifiy receiving data over USB.
-As audio data is being received over USB, it is written to the labkit's onboard flash memory.
+When triggered by a switch setting, audioManager prepares itself for receiving the audio tracks as a continuous stream of data from the external USB input hardware.
+Because of the difficult-to-implement timing requirements of the external hardware, we use the 6.111 staff provided usb\_input module to simplify receiving data over USB.
+As audio data is being received over USB, it is written to the labkit's on-board flash memory.
 Flash memory is also difficult to use, since a time-sensitive start up sequence needs to be followed to enable proper use of the flash hardware.
 We made use of the staff provided flash\_manager, test\_fsm, and flash\_int modules. This set of modules greatly abstracts away the low-level details of working with the flash.
-When the audio is triggered via an external button input, audioManager handles queueing up the appropriate set of tracks for sequential playback. The percentage of pixels used is an external input to audioManager from the pixels\_kept module.
+When the audio is triggered via an external button input, audioManager handles queuing up the appropriate set of tracks for sequential playback. The percentage of pixels used is an external input to audioManager from the pixels\_kept module.
 
 \section{Design Decisions}
 
@@ -165,8 +165,8 @@ The first of them is the use of a $640 \times 480$ @60 Hz VGA display.
 The use of $640 \times 480$  as opposed to the more common higher resolutions found today is due to the memory and computational limitations of our FPGA kit.
 Initially, we hoped that we could get away with generic code that does not explicitly tie in heavily with the specific screen resolution.
 Unfortunately, this is not easy, since the choice of resolution influences many different aspects.
-Chief among these are the sizes of memory vs available memory tradeoff, the bit widths of $x$ and $y$ coordinates, the size of the accel\_lut ROM,
-and the bit widths of numerous other quantites such as the dividers and the multipliers in pixel\_map and perspective\_params respectively.
+Chief among these are the sizes of memory vs available memory trade-off, the bit widths of $x$ and $y$ coordinates, the size of the accel\_lut ROM,
+and the bit widths of numerous other quantities such as the dividers and the multipliers in pixel\_map and perspective\_params respectively.
 The choice of 60 Hz was made on the basis of its almost guaranteed availability: almost all VGA displays support this refresh rate.
 
 \subsection{Use of NTSC Camera as Input}
@@ -186,7 +186,7 @@ Thus, we chose instead to go with the block memory on the FPGA.
 This can be made into true dual-port memory, and has a single read/write cycle latency, as opposed to the multi-cycle latency of ZBT memory.
 However, the amount of block memory available on the FPGA is only 2.5 Mbits.
 This required sacrifice on image quality.
-We chose a combination of image downsampling and color depth reduction.
+We chose a combination of image down-sampling and color depth reduction.
 More specifically, we chose a 320x240 sized memory, with 12 bits per line (4 bit R, 4 bit G, 4 bit B).
 This results in approximately 1 Mbit per buffer, and we use 2 buffers, leaving us with nearly 512k for the accel\_lut ROM.
 That is more than sufficient for our accel\_lut.
@@ -218,7 +218,7 @@ We wanted to provide the user of the system this information.
 They could act on this feedback by further adjusting the projector if possible.
 We realized only power users would be able to make use of this feedback, so we wanted to provide it in a non-intrusive manner - audio was the most natural candidate.
 The decision to use audio was not without drawbacks.
-Hearing-impared users would unfortunately not be able to make use of the feedback.
+Hearing-impaired users would unfortunately not be able to make use of the feedback.
 Since the labkit's on-board display was already used for the manual correction system,
 there was no other way to display the percentage of pixels used without showing it on the projected screen,
 which we had earlier eliminated considering it was only useful to power users.
@@ -259,7 +259,7 @@ The timing diagram for 4-wire SPI interaction with the accelerometer is shown be
 \end{figure}
 \end{center}
 
-This module first initializes the acclerometer and then reads x and y acceleration values from it in a loop.
+This module first initializes the accelerometer and then reads x and y acceleration values from it in a loop.
 The clock used for accelerometer communications is our 50 MHz system clock slowed by a factor of 20, which meets the the max clock frequency spec of 5 MHz.
 Most of the default configurations for the accelerometer are acceptable for our purposes;
 the only initialization we need to do is set the measure bit of the POWER\_CTL register (each register contains a single byte).
@@ -269,7 +269,7 @@ This specifies the mode and register address, and can then be used to drive it w
 By default, the accelerometer can measure acceleration values in the range of $\pm 2g$.
 This is sufficient for our purposes since we care only about static acceleration (which is in the range $\pm 1g$).
 
-After 16 accelerometer clock cycles have passed, we know that we have sent all of the necessary initialization data to the accelerometerx.
+After 16 accelerometer clock cycles have passed, we know that we have sent all of the necessary initialization data to the accelerometer.
 We then transition our accelerometer state machine to the x-y read loop.
 Since the x and y acceleration readings are 16 bits (two registers' worth, since the accelerometer gives us 10 bits of precision),
 we want to perform a multi-byte read of the x and y registers.
@@ -298,7 +298,7 @@ The picture below shows the accelerometer module working in isolation, with aver
 \end{center}
 
 \subsection{accel\_lut (Ganesh)}
-The accel\_lut module provides a lookup table from the accelerometer readings in two directions to the four corners of the quadrilateral.
+The accel\_lut module provides a look-up table from the accelerometer readings in two directions to the four corners of the quadrilateral.
 The output is synchronized to the global sys\_clk.
 The module is essentially implemented as a giant case statement, from which Xilinx's tools are able to infer a ROM of the appropriate size.
 Although the data coming out of the accelerometer has 10 bits of precision in each axis,
@@ -306,12 +306,12 @@ using the full precision would require too much space for the ROM.
 Instead, we use 6 bits for each of the 2 axes, for a total of 12 bits as an index into the ROM.
 Each word of the ROM is 76 bits wide.
 This is because each $x$ coordinate is 10 bits wide (0 to 639), each $y$ coordinate is 9 bits wide (0 to 479), and there are 4 corners.
-Since each entry corresponds to a choice of quadrilateral corners, and there are $2^{12} = 4096$ entries, manual entry of the lookup table is infeasible.
+Since each entry corresponds to a choice of quadrilateral corners, and there are $2^{12} = 4096$ entries, manual entry of the look-up table is infeasible.
 Instead, we wrote a code generator accel\_lut.jl in the Julia programming language (\url{julialang.org}).
-Essentially, the code generator accepts an input CSV (comma separated values) file containing some entries of the desired lookup table obtained via manual testing.
-The code generator then does a mathematical interpolation to obtain the remaining values of the lookup table, and writes out the accel\_lut.v file.
+Essentially, the code generator accepts an input CSV (comma separated values) file containing some entries of the desired look-up table obtained via manual testing.
+The code generator then does a mathematical interpolation to obtain the remaining values of the look-up table, and writes out the accel\_lut.v file.
 Of course, it may be argued that the interpolation is not sufficient to get fine grained accuracy.
-Indeed, our demonstration did show that our lookup table could use some refinement.
+Indeed, our demonstration did show that our look-up table could use some refinement.
 However, we believe that this is not an inherent deficiency of the approach; it just means that we need more data points and sufficient polynomial degree of the interpolator.
 Also related to this is another merit to this method: as the user obtains more and more entries,
 he/she can simply populate the CSV file with them.
@@ -335,7 +335,7 @@ The output is then a 7 bit value expressing the percentage from 0 to 100.
 
 \subsection{bram (Ganesh)}
 The bram module is a very simple true dual port memory module,
-with exactly enough storage for a downsampled frame (320x240) with 12 bit color depth per pixel.
+with exactly enough storage for a down-sampled frame (320x240) with 12 bit color depth per pixel.
 By convention, the first port is always a write port, triggered by a WE (write enable) signal.
 The second port is a read port.
 The ports have their own individual address lines and clock signals in order to achieve the dual ported-ness.
@@ -395,7 +395,7 @@ and finds the parameters $p_i, 1 \leq i \leq 9$ such that the general perspectiv
 maps the outer coordinates of the screen $(0, 0), (0, 480), (640, 480), (640, 0)$ onto $(x_1, y_1), (x_2, y_2), (x_3, y_3), (x_4, y_4)$ respectively.
 The module also computes the coefficients $pinv_i$ of the inverse mapping, which is also a perspective transformation
 (due to the algebraic group structure of perspective transformations which can be checked by direct calculation).
-The reason for computing the $pinv_i$ is mainly due to our initial goal of having a ``memoryless'' output transformation,
+The reason for computing the $pinv_i$ is mainly due to our initial goal of having a ``memory-less'' output transformation,
 in the sense that given the desired VGA coordinate, we can compute the pre-image of that point.
 This in turn was due to an inadequate understanding of the FPGA memory and VGA behavior.
 For instance, we assumed that the VGA frame rate can be controlled simply by adjusting the VGA clock,
@@ -443,7 +443,7 @@ $d_x, d_y, d_d$ are a couple of parameters used to avoid multiplications in the 
 \eqref{eqn:perspective_transform}.
 More precisely, they allow clients of this module (such as pixel\_map in our case) to simply execute a two dimensional loop over the image,
 incrementing/decrementing the numerator and denominator on each iteration as opposed to performing a fresh multiplication.
-Essentially, they correspond to the decrement needed at the end of each horizontal scan line.
+Essentially, they correspond to the decrements needed at the end of each horizontal scan line.
 Note the use of 480, 640 (i.e $\frac{1920}{4}$ and $\frac{1920}{4}$) as opposed to the more precise 479, 639.
 The reason for this is that 480, 640 are multiples of sizable powers of two, reducing the bit width needed for certain multiplications required in the solution.
 Moreover, the difference caused by this slight error can be ignored, due to the continuity of the perspective transformation.
@@ -453,7 +453,7 @@ We were fortunate that the ``natural basis'' in terms of the screen coordinates 
 The outputs of this module are synchronized on a slow\_clk signal.
 The rationale for this is two fold:
 \begin{enumerate}
-    \item Due to large number of multiplications, even with pipelining, it is unlikely that we can meet timing requirements of sys\_clk (50 MHz).
+    \item Due to large number of multiplications, even with pipe-lining, it is unlikely that we can meet timing requirements of sys\_clk (50 MHz).
     \item It is undesirable to change the parameters mid-frame anyway, and having a huge latency in changing these parameters may thus in fact be desirable.
 \end{enumerate}
 
@@ -481,9 +481,9 @@ A test bench (runnable under the free software Icarus Verilog simulator) confirm
 Another test bench then verified that the results of the division were indeed incorrect.
 Finally, a close examination of the divider code resulted in the identification of the bug.
 Once this bug was fixed, the module worked correctly.
-Unfortunately, the divider needs a width of 79 bits, and the staff provided divider is not pipelined.
-Xilinx's IP Coregen provides pipelined dividers up to a width of 32 bits, which is insufficient for our needs.
-Furthermore, they discourage creation of pipelined dividers of greater width due to the high area cost.
+Unfortunately, the divider needs a width of 79 bits, and the staff provided divider is not pipe-lined.
+Xilinx's IP Coregen provides pipe-lined dividers up to a width of 32 bits, which is insufficient for our needs.
+Furthermore, they discourage creation of pipe-lined dividers of greater width due to the high area cost.
 As such, we require 80 clock cycles per pixel, resulting in a frame rate of 1-2 frames per second.
 Note that with sufficient hardware resources, this may be easily converted into a real-time system.
 
@@ -495,7 +495,7 @@ First off, ROW\_START and COL\_START were changed to be 0, since we want our ima
 We expanded all of the registers holding NTSC data to have widths of 30 bits (as opposed to 8), since we want 12-bit color and need the full YCrCb data.
 We maintained the original approach of reading only scan lines from field 0 and alternately writing them to even and odd screen rows.
 Since we stored pixels in BRAM, which has a maximum capacity of 2.5 Mbits,
-and we needed to store a frame from the camera and another frame with the transformed output in addition to the lookup table (discussed above),
+and we needed to store a frame from the camera and another frame with the transformed output in addition to the look-up table (discussed above),
 we only had space to store a 320 by 240 frame with 12 bits of color per pixel.
 So we cropped the NTSC input by taking only the upper left 320 by 240 rectangle.
 
@@ -528,7 +528,7 @@ Below is an image of the ntsc\_to\_bram code working in isolation:
 
 \subsection{audioManager (Shantanu)}
 The audioManager module is the core module in the audio playback component.
-It handles the whole lifecycle of audio, from receving over USB, to storing into flash, queueing tracks, and playback.
+It handles the whole life-cycle of audio, from receiving over USB, to storing into flash, queuing tracks, and playback.
 It interfaces with three external hardware components - the flash chip, the USB interface, and the AC97 audio codec hardware.
 
 The module is centered around its interaction with the flash hardware, since the flash memory is manipulated any time the module is active.
@@ -589,7 +589,7 @@ Below is an image of the user interface (UI) to our correction system:
 \end{center}
 
 When pressed, button 0 triggers the audio system, which announces the percentage of screen pixels currently used for the corrected image.
-LEDs 7-1 show the binary representation of this value. 
+LEDs 7-1 show the binary representation of this value.
 Buttons 2 and 3 adjust the volume of the audio system up or down.
 The first four digits on the hex display show the current x acceleration value,
 the next four show the current y acceleration value,
@@ -605,7 +605,7 @@ When switch 5 is high, we display a checkerboard on the screen instead of the NT
 Testing and debugging Verilog-defined hardware is complicated due to the large synthesis times.
 Unlike software, where one can change a single line of code,
 and trigger an incremental build that can complete on the order of seconds,
-synthesis of FGPA hardware is a lengthy process,
+synthesis of FPGA hardware is a lengthy process,
 taking on the order of minutes or even hours depending on the amount of logic.
 Our complete avoidance of Coregen modules definitely served us well in this respect.
 We also consciously often commented out unnecessary modules.
@@ -622,7 +622,7 @@ Broadly speaking, we used the following methods:
 \item Xilinx ModelSim test benches/verification
 \item Julia implementations/tests of algorithms
 \item Labkit I/O, e.g led's, hex display, logic analyzer probes
-\item Staring at code/datasheets
+\item Staring at code/data-sheets
 \item Integration tests
 \end{itemize}
 
@@ -657,7 +657,7 @@ though in all likelihood MATLAB or Python(+numpy/scipy/matplotlib) would have se
 This was by far the most effective means of testing whether an algorithm is correct or not,
 since one can rely on the benefits of fast debug/iterate cycles in software.
 This is particularly true in the case of languages featuring a REPL (read, evaluate, print loop) based interpreter, such as Julia.
-Correcting code is as simple as making some changes, reincluding the file in the REPL, and rerunning.
+Correcting code is as simple as making some changes, re-including the file in the REPL, and rerunning.
 This helped us particularly in the verification of the pixels\_kept and perspective\_params module.
 As an aside, to avoid using too many languages for software implementations,
 we used Julia for our code generator for the accel\_lut as well.
@@ -670,7 +670,7 @@ while transcribing the closed form solutions we found for $p_1$ and $p_2$ from p
 We wired up the logic analyzer to the accelerometer pins to verify that the acc module was correctly initializing the accelerometer (e.g. the par\_to\_ser module was producing the correct serial bit stream for the register address and data).
 It turned out that the bug in the accelerometer was elsewhere (see the next section).
 
-\subsection{Staring at code/datasheets}
+\subsection{Staring at code/data-sheets}
 This is definitely a questionable inclusion, and we do not recommend this method in general.
 Nevertheless, it is often effective when done correctly and in the right spirit,
 since it forces one to rethink and step through the logic again, questioning all assumptions.
@@ -679,11 +679,11 @@ we had to examine the divider code line by line.
 It did not take us too long to realize the mistake in the implementation,
 and looking back we do not see any other way of correcting the mistake.
 
-As described in the section on the acc module, taking a second pass through the datasheet for the accelerometer helped us to identify an issue with a violated timing constraint ($t_{CS,DIS}$).
+As described in the section on the acc module, taking a second pass through the data-sheet for the accelerometer helped us to identify an issue with a violated timing constraint ($t_{CS,DIS}$).
 
 \subsection{USB input to flash memory issues}
 The most challenging issue in the audio component of the project was receiving data over USB and storing the samples into flash memory.
-When we recieved data over USB, we wrote it immediately to the flash memory.
+When we received data over USB, we wrote it immediately to the flash memory.
 However, after a data transfer, we noticed that many of the bytes were missing.
 
 The flash memory is already difficult to work with because of its tight timing constraints.
@@ -691,7 +691,7 @@ It is also an old piece of hardware, with read and write times considered slow a
 We theorized that the flash memory was too slow to be able to write data at the rate it was being received.
 
 To isolate the device at fault, a series of unit tests were developed.
-One test took data from a look-up table coded into the device via verilog and placed it into the flash memory.
+One test took data from a look-up table coded into the device via Verilog and placed it into the flash memory.
 When we analyzed the flash memory contents, we found it was exactly the same as the look-up table.
 From this test we were able to conclude that the flash memory was functional.
 We developed another test that counted the number of bytes received over the USB module before writing them to flash.
@@ -701,9 +701,9 @@ Even while buffering the data from the USB input device, itself also a buffer, w
 
 Despite repeatedly consulting with instructor Gim Hom, teaching assistant Luis Fernandez (who previously implemented a working audio system), and the author of the staff-provided flash\_manager module,
 and in spite of our best efforts to understand and modify the code,
-we could not improve the performace enough to record all samples.
+we could not improve the performance enough to record all samples.
 We did improve our system so that the audio was intelligible.
-With Gim's approval, we closed this issue as unresolvable in the scope of our project and moved forward.
+With Gim's approval, we closed this issue as not resolvable in the scope of our project and moved forward.
 
 \subsection{Integration tests}
 In addition to testing modules in isolation, we obviously also needed to test whether the modules work together or not.
@@ -724,7 +724,7 @@ This went flawlessly after we agreed upon the clock frequencies used by the acce
 Integration of the transformation logic with the memory interface was also extremely smooth,
 apart from the subtle bug in address computation uncovered by our TA Jos\'{e}.
 
-One of the most tedious aspects was the collection of data values for the lookup table.
+One of the most tedious aspects was the collection of data values for the look-up table.
 It took around 2 hours of fiddling with the manual correction to get 12 readings for doing the interpolation.
 Lacking the appropriate measurement equipment,
 it is difficult to verify that the vertical edges of the checkerboard are exactly parallel to the vertical edges of the screen.
@@ -748,7 +748,7 @@ we could simply incorporate the distance values into the lookup table and make t
 Of course, the lookup table could become very large if we do this.
 There are two avenues around this:
 \begin{itemize}
-    \item Store the lookup table in a larger memory, e.g ZBT.
+    \item Store the look-up table in a larger memory, e.g ZBT.
     \item A more scalable approach is to start doing interpolation in the hardware itself.
         This will require additional hardware resources and more logic,
         but the size of the logic will only grow with the number of data points,
@@ -758,10 +758,10 @@ There are two avenues around this:
 Within the audio component, there are many avenues for substantial improvement.
 The major unresolved issue was the loss of data samples when transferring data over USB and recording it to flash memory.
 The preferred alternative would be a more modern hardware platform with an updated flash hardware component,
-as well as an onboard USB module and reference code supplied from the manufacturer.
+as well as an on-board USB module and reference code supplied from the manufacturer.
 This would likely solve whatever bottleneck stopped us.
 Another alternative would be to use the serial port instead of the USB hardware, since the labkit already has a serial port built in.
-This would require a moderately complex verilog module to implement the serial protocol, although Xilinx may provide some reference code.
+This would require a moderately complex Verilog module to implement the serial protocol, although Xilinx may provide some reference code.
 
 Another opportunity for improvement would be variable length tracks.
 Every track was one second long, which resulted in artificial sounding two digit numbers because some portion of the one second track was silence.
@@ -771,7 +771,7 @@ Since we were randomly losing data samples, we could not reliably determine when
 
 Another useful feature which we unfortunately did not have time to implement is persistent storage of a user's manual correction settings.
 After all, no matter how good the accel\_lut is, it is extremely likely that with certain extreme orientations,
-the settings obtained through the lookup table are unsatisfactory.
+the settings obtained through the look-up table are unsatisfactory.
 One option for dealing with this would be saving manual override settings into some non-volatile storage such as flash,
 and using them on the next power cycle.
 Given our issues with compact flash in the audio domain, progress on this front would likely be negligible.
@@ -813,7 +813,7 @@ For ease of browsing through the code, we have divided the modules into roughly 
 
 % For fast compilation, disable inclusion of source code files
 % Include these for final submission
-\begin{comment}
+%\begin{comment}
 \subsection{Staff Modules}
 \subsubsection{debounce.v}
 \inputminted[linenos]{verilog}{../../src/debounce.v}
@@ -882,6 +882,6 @@ For ease of browsing through the code, we have divided the modules into roughly 
 \inputminted[linenos]{verilog}{../../src/ClockDivider.v}
 \subsubsection{Square.v}
 \inputminted[linenos]{verilog}{../../src/Square.v}
-\end{comment}
+%\end{comment}
 
 \end{document}
