@@ -1,4 +1,19 @@
-`default_nettype none
+/*
+Copyright (C) {2014}  {Ganesh Ajjanagadde} <gajjanagadde@gmail.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // pixel_map: This module performs the core perspective transformation
 // It computes (X, Y) = ((p1*x+p2*y+p3)/(p7*x+p8*y+p9),
@@ -19,6 +34,7 @@
 // to 20 bits of precision, and still be ok. A careful analysis of this needs
 // to be performed
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+`default_nettype none
 module pixel_map(input clk,
                 input signed[67:0] p1_inv,
                 input signed[68:0] p2_inv,

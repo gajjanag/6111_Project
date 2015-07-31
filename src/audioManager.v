@@ -1,5 +1,20 @@
+/*
+Copyright (C) {2014}  {Shawn Jain} <shawnjain.08@gmail.com>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 `default_nettype none
-// Shawn Jain
 // Receives audio samples via FTDI UM245R USB-to-FIFO, stores to
 // onboard flash memory. Plays back the percentage of pixels used 
 // when audioTrigger is pulsed, where the percent is set by 
